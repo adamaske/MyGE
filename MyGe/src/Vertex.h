@@ -2,7 +2,8 @@
 #include<iostream>
 #include <fstream>
 #include <istream>
-class Vector3D;
+
+#include "glm/glm.hpp"
 class Vertex {
 	//! Overloaded ostream operator which writes all vertex data on an open textfile stream
 	friend std::ostream& operator<< (std::ostream&, const Vertex&);

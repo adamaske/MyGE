@@ -156,6 +156,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\..\..\..\sdk\GLAD\src\glad.c" />
+    <ClCompile Include="src\GameObject.cpp" />
+    <ClCompile Include="src\Components.cpp" />
     <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\RenderWindow.cpp" />
     <ClCompile Include="src\Scene.cpp" />
@@ -165,6 +167,7 @@
     <ClCompile Include="src\Vertex.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\GameObject.h" />
     <ClInclude Include="src\Shader.h" />
     <ClInclude Include="src\Components.h" />
     <ClInclude Include="src\RenderWindow.h" />

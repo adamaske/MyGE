@@ -1,5 +1,5 @@
 #include "vertex.h"
-#include "glm/glm.hpp"
+
 
 Vertex::Vertex()
 {

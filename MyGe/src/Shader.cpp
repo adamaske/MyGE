@@ -3,6 +3,7 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+
 Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
 {
     std::string vertexCode;
@@ -15,9 +16,9 @@ Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
     if (!vShaderFile)
         // mLogger->logText("ERROR SHADER FILE " + std::string(vertexPath) + " NOT SUCCESFULLY READ", LogType::REALERROR);
      //fShaderFile.open(fragmentPath);
-     if (!fShaderFile) {
+        if (!fShaderFile) {
             // mLogger->logText("ERROR SHADER FILE " + std::string(fragmentPath) + " NOT SUCCESFULLY READ", LogType::REALERROR);
-     }
+        }
 
     std::stringstream vShaderStream;
     std::stringstream fShaderStream;
@@ -59,8 +60,8 @@ Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
     if (!success)
     {
         glGetShaderInfoLog(fragment, 512, nullptr, infoLog);
-       // mLogger->logText("ERROR SHADER VERTEX " + std::string(fragmentPath) +
-            //" COMPILATION_FAILED\n" + infoLog, LogType::REALERROR);
+        // mLogger->logText("ERROR SHADER VERTEX " + std::string(fragmentPath) +
+             //" COMPILATION_FAILED\n" + infoLog, LogType::REALERROR);
     }
     // Shader Program linking
     this->mProgram = glCreateProgram();
@@ -77,8 +78,8 @@ Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
     if (!success)
     {
         glGetProgramInfoLog(this->mProgram, 512, nullptr, infoLog);
-       //mLogger->logText("ERROR::SHADER::PROGRAM::LINKING_FAILED\n" +
-            //shadername + "\n   " + infoLog, LogType::REALERROR);
+        //mLogger->logText("ERROR::SHADER::PROGRAM::LINKING_FAILED\n" +
+             //shadername + "\n   " + infoLog, LogType::REALERROR);
     }
     else
     {
@@ -88,24 +89,24 @@ Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
     // The shader program is now on the GPU and we reference it by using the mProgram variable
     glDeleteShader(vertex);
     glDeleteShader(fragment);
-}
+};
 
 void Shader::Use()
 {
     glUseProgram(mProgram);
 }
 
-GLuint Shader::GetProgram() const
-{
-    return mProgram;
-}
+//GLuint Shader::GetProgram()
+//{
+//    return mProgram;
+//}
 
 
-void Shader::SetUniformMatrix4fv(glm::mat4 matrix, std::string name) {
+void Shader::SetUniformMatrix4fv(glm::mat4x4 matrix, std::string name) {
     //What matrix do we want to effect
     auto m = glGetUniformLocation(mProgram, name.c_str());
     //Sets the value from the matrix inserted
-    glUniformMatrix4fv(m, 1, GL_FALSE, matrix.length);
+   // glUniformMatrix4fv(m, 1, GL_FALSE, (GLfloat)matrix.length());
 }
 
 void Shader::SetUniform3f(float v1, float v2, float v3, std::string name) {

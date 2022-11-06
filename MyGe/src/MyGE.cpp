@@ -13,11 +13,12 @@ MyGE::MyGE() {
 int MyGE::run()
 {
     glfwInit();
-   
-    mWindow = new RenderWindow();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+    mWindow = new RenderWindow();
+
     if (mWindow->Init(glfwCreateWindow(800, 600, "MyGE", NULL, NULL)) != 0) {
         std::cout << "Window could not be created!" << std::endl;
         //Terminate glfw
@@ -25,22 +26,24 @@ int MyGE::run()
         glfwPollEvents();
         //CLose app
         return 1;
-    };
+    }
+
     glfwSwapInterval(1);
     
     Scene* mScene = new Scene();
+    mScene->Init();
     mWindow->SetActiveScene(mScene);
+    
     //Main loop
     while (!mWindow->ShouldCloseWindow()) {
         double time = glfwGetTime();
-
+        mWindow->PreRender();
         ProcessInput();
         mWindow->Render();
 
     }
     
     return 0;
-
 }
 
 void MyGE::ProcessInput()
