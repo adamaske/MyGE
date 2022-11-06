@@ -48,7 +48,7 @@ public:
 		return mPosition;
 	};
 	glm::vec3 GetPosition() {
-		return glm::vec3(mPosition[2][0], mPosition[2][1], mPosition[2][2]);
+		return glm::vec3(mPosition[3].x, mPosition[3].y, mPosition[3].z);
 	};
 	void SetPosition(const glm::vec3& position) {
 		
@@ -226,6 +226,7 @@ public:
 	};
 
 	void Render() {
+		std::cout << "RenderComponent : Render!" << std::endl;
 		//use my shader
 		glUseProgram(mMaterial->GetShader()->GetProgram());
 		//Send my model matrix
@@ -234,7 +235,7 @@ public:
 		glBindVertexArray(mVAO);
 		glDrawElements(GL_TRIANGLES, mMesh->mIndices.size(), GL_UNSIGNED_INT, nullptr);
 		glBindVertexArray(0);
-
+		std::cout << "RenderComponent : Render End!" << std::endl;
 	};
 
 private:

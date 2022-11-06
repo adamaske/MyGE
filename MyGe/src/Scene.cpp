@@ -1,5 +1,5 @@
 #include "Scene.h"
-#include "GameObject.h"
+
 void Scene::Init()
 {
 	//
@@ -12,7 +12,7 @@ void Scene::Init()
 	//Create material and material component
 	MaterialComponent* material = new MaterialComponent(cube1);
 	//Plainshader for the material
-	Shader* shader = new Shader("../plainshader.vert", "../plainshader.frag");
+	shader = new Shader("../plainshader.vert", "../plainshader.frag");
 	std::cout << "Shader finished creation!" << std::endl;
 	//Add shader to the material
 	material->SetShader(shader);
@@ -32,18 +32,25 @@ void Scene::Init()
 	//Moves camera to desired position
 	transform->SetPosition(glm::vec3(0, 0, -10));
 	//Give camera a camera component
-	CameraComponent* c = new CameraComponent(mCamera);
+	CameraComponent* camera = new CameraComponent(mCamera);
 	
-	
-	//mCamera->AddComponent();
+	mCamera->AddComponent(transform);
+	mCamera->AddComponent(camera);
+
+	mActiveCamera = camera;
 	std::cout << "Finished init of Scene" << std::endl;
+
+	mObjects.push_back(mCamera);
+	mObjects.push_back(cube1);
+
+	mRenders.push_back(render);
 }
 
 
 void Scene::OnUpdate() {
 
-	for (int i = 0; i < mComponents.size(); i++)
+	for (int i = 0; i < mObjects.size(); i++)
 	{
-		mComponents[i]->OnUpdate(0.1f);
+		mObjects[i]->OnUpdate();
 	}
 }

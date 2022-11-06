@@ -25,12 +25,15 @@ void RenderWindow::Init(GLFWwindow* window)
 	mWindow = window;
 	glfwInit();
 	//Make context current
+	
 	glfwMakeContextCurrent(mWindow);
 	//glViewport(0, 0, 800, 600);
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
 		std::cout << "Failed to initialize GLAD" << std::endl;
 	}
+	glClearColor(0.4f, 0.4f, 0.4f, 1.0f);
+	
 }
 
 void RenderWindow::PreRender()
@@ -40,7 +43,7 @@ void RenderWindow::PreRender()
 
 void RenderWindow::Render() {
 	std::cout << "RenderWindow : Render started!" << std::endl;
-	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+	
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	
@@ -48,11 +51,17 @@ void RenderWindow::Render() {
 	//Cant draw without a scene
 	if (mActiveScene) {
 		//Find all rendercomponents in the scene
-		std::vector<RenderComponent*> render = mActiveScene->GetComponents<RenderComponent>();
+		std::vector<RenderComponent*> render = mActiveScene->GetRenders();
+		std::cout << "RenderWindow : Render amount : " << render.size() << std::endl;
 		for (int i = 0; i < render.size(); i++)
 		{
 			render[i]->Render();
 		}
+		CameraComponent* camera = mActiveScene->GetActiveCamera();
+		mActiveScene->GetActiveSceneShader()->SetUniformMatrix4(camera->GetViewMatrix(), "vMatrix");
+		mActiveScene->GetActiveSceneShader()->SetUniformMatrix4(camera->GetProjectionMatrix(), "pMatrix");
+	
+		
 	}
 	
 	// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)

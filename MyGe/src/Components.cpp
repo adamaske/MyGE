@@ -24,21 +24,6 @@ void Component::OnUpdate(float ts)
 
 void MeshComponent::Readfile(std::string filePath) {
 
-   
-
-    mVertices.push_back( Vertex(glm::vec3(-1,-0.2,1)));
-    mVertices.push_back( Vertex(glm::vec3(1, 0.2, 1)));
-    mVertices.push_back( Vertex(glm::vec3(-1, 0.3, -1)));
-    mVertices.push_back( Vertex(glm::vec3(1, -0.3, -1)));
-
-    mIndices.push_back(0);
-    mIndices.push_back(1);
-    mIndices.push_back(2);
-
-    mIndices.push_back(3);
-    mIndices.push_back(1);
-    mIndices.push_back(2);
-    return;
     std::cout << "Mesh being created from fiel!!" << std::endl;
     std::ifstream file;
     file.open(filePath, std::ifstream::in);
