@@ -5,8 +5,8 @@ Vertex::Vertex()
 {
 }
 
-Vertex::Vertex(float x, float y, float z)
-    :x(x), y(y), z(z)
+Vertex::Vertex(glm::vec3 verts)
+    :x(verts.x), y(verts.y), z(verts.z)
 {
 
 }

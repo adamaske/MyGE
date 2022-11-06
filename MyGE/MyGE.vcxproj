@@ -167,6 +167,7 @@
     <ClCompile Include="src\Vertex.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ShaderManager.h" />
     <ClInclude Include="src\GameObject.h" />
     <ClInclude Include="src\Shader.h" />
     <ClInclude Include="src\Components.h" />

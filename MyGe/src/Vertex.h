@@ -2,8 +2,8 @@
 #include<iostream>
 #include <fstream>
 #include <istream>
-
 #include "glm/glm.hpp"
+
 class Vertex {
 	//! Overloaded ostream operator which writes all vertex data on an open textfile stream
 	friend std::ostream& operator<< (std::ostream&, const Vertex&);
@@ -17,7 +17,7 @@ public:
 	float t1{ 0.f }, t2{ 0.f };
 public:
 	Vertex();
-	Vertex(float x, float y, float z);
+	Vertex(glm::vec3 verts);
 	Vertex(glm::vec3 verts, glm::vec3 norms, std::pair<float, float> uvs);
 	Vertex(float x, float y, float z, float t1, float t2);
 	Vertex(float x, float y, float z, float r, float g, float b);

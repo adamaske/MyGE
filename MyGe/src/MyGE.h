@@ -4,7 +4,9 @@ class MyGE
 {
 public:
 
-	MyGE();
+	MyGE() {
+
+	};
 
 	int run();
 

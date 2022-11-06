@@ -7,7 +7,7 @@ public:
 protected:
 	struct GLFWwindow* mWindow;
 public:
-	virtual int Init(GLFWwindow* window);
+	virtual void Init(GLFWwindow* window);
 
 	bool ShouldCloseWindow();
 

@@ -1,8 +1,8 @@
 #include "Shader.h"
 #include <iostream>
-#include <string>
 #include <fstream>
 #include <sstream>
+
 
 Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
 {
@@ -13,12 +13,14 @@ Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
 
     // Open files and check for errors
     vShaderFile.open(vertexPath);
-    if (!vShaderFile)
-        // mLogger->logText("ERROR SHADER FILE " + std::string(vertexPath) + " NOT SUCCESFULLY READ", LogType::REALERROR);
-     //fShaderFile.open(fragmentPath);
-        if (!fShaderFile) {
-            // mLogger->logText("ERROR SHADER FILE " + std::string(fragmentPath) + " NOT SUCCESFULLY READ", LogType::REALERROR);
-        }
+    if (!vShaderFile) {
+        std::cout << "Could not open vertex shader file!" << std::endl;
+    }
+    std::cout << "Did open fragment shader file!" << std::endl;
+    if (!fShaderFile) {
+        std::cout << "Could not open fragment shader file!" << std::endl;
+    }
+    std::cout << "Did open fragment shader file!" << std::endl;
 
     std::stringstream vShaderStream;
     std::stringstream fShaderStream;
@@ -39,6 +41,8 @@ Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
     GLuint vertex, fragment;
     GLint success;
     GLchar infoLog[512];
+    glViewport(100, 100, 600, 600);
+
     // Vertex Shader
     vertex = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertex, 1, &vShaderCode, nullptr);
@@ -60,8 +64,7 @@ Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
     if (!success)
     {
         glGetShaderInfoLog(fragment, 512, nullptr, infoLog);
-        // mLogger->logText("ERROR SHADER VERTEX " + std::string(fragmentPath) +
-             //" COMPILATION_FAILED\n" + infoLog, LogType::REALERROR);
+        std::cout << "No fragment sucsess!" << std::endl;
     }
     // Shader Program linking
     this->mProgram = glCreateProgram();
@@ -78,12 +81,11 @@ Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
     if (!success)
     {
         glGetProgramInfoLog(this->mProgram, 512, nullptr, infoLog);
-        //mLogger->logText("ERROR::SHADER::PROGRAM::LINKING_FAILED\n" +
-             //shadername + "\n   " + infoLog, LogType::REALERROR);
+        std::cout << "No vertex shader succsess!" << std::endl;
     }
     else
     {
-        //mLogger->logText("GLSL shader " + shadername + " was successfully compiled");
+        std::cout << "Shader succsess!" << std::endl;
     }
     // Delete the shaders as they're linked into our program now and no longer needed
     // The shader program is now on the GPU and we reference it by using the mProgram variable
@@ -96,22 +98,22 @@ void Shader::Use()
     glUseProgram(mProgram);
 }
 
-//GLuint Shader::GetProgram()
-//{
-//    return mProgram;
-//}
+GLuint Shader::GetProgram()
+{
+    return mProgram;
+}
 
 
-void Shader::SetUniformMatrix4fv(glm::mat4x4 matrix, std::string name) {
+void Shader::SetUniformMatrix4(glm::mat4 matrix, std::string name) {
     //What matrix do we want to effect
     auto m = glGetUniformLocation(mProgram, name.c_str());
     //Sets the value from the matrix inserted
-   // glUniformMatrix4fv(m, 1, GL_FALSE, (GLfloat)matrix.length());
+    glUniformMatrix4fv(m, 1, GL_FALSE, glm::value_ptr(matrix));
 }
 
-void Shader::SetUniform3f(float v1, float v2, float v3, std::string name) {
+void Shader::SetUniformVec4(glm::vec4 v1, std::string name) {
     auto m = glGetUniformLocation(mProgram, name.c_str());
-    glUniform3f(m, v1, v2, v3);
+    glUniform4f(m, v1.x, v1.y, v1.z, v1.w);
 }
 
 void Shader::SetUniformVec3(glm::vec3 v1, std::string name)

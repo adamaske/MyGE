@@ -1,10 +1,12 @@
 #pragma once
+#include <vector>
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/quaternion.hpp"
-#include "glm/mat4x4.hpp"
-#include <vector>
+#include "glm/matrix.hpp"
+//#include "glm/mat4x4.hpp"
+
 #include "Vertex.h"
 #include "Shader.h"
 class Component {
@@ -22,7 +24,7 @@ public:
 
 	virtual void OnUpdate(float ts);
 
-private:
+protected:
 	GameObject* mParent;
 };
 
@@ -77,40 +79,123 @@ private:
 	//Kollisjoner
 	glm::vec3 mSize;
 };
+
 class MaterialComponent : public Component {
 public:
+	
 	MaterialComponent(GameObject* parent): Component(parent) {};
 	MaterialComponent(GameObject* parent, Shader* shader) : Component(parent) , mShader(shader) {};
 	MaterialComponent(GameObject* parent, Shader* shader, glm::vec4 colour) : Component(parent), mShader(shader), mColour(colour) {};
 
 	Shader* GetShader() { return mShader; };
+	void SetShader(Shader* shader) {
+		mShader = shader;
+	}
 private:
 	Shader* mShader;
 	glm::vec4 mColour;
 
 };
+
 class MeshComponent : public Component {
 public:
 	MeshComponent(GameObject* parent) : Component(parent) {};
+	MeshComponent(GameObject* parent, std::string filename) : Component(parent) { 
+		Init(filename);
+	};
 	~MeshComponent(){};
-
+	void Init(std::string filename) {
+		Readfile(filename);
+	};
+	void Init(std::vector<Vertex> verts, std::vector<GLuint> ind) {
+		mVertices = verts;
+		mIndices = ind;
+	}
+	void Init(std::vector<Vertex> verts) {
+		mVertices = verts;
+	
+	}
+	void Readfile(std::string filePath);
+	void WriteFile(std::string filePath);
 protected:
 	std::vector<Vertex> mVertices;
 	std::vector<GLuint> mIndices;
-	GLuint mEAB{ 0 };
-	GLuint mVAO{ 0 };
-	GLuint mVBO{ 0 };
-	GLint mTextureUniform{ 0 };
-	GLint mMatrixUniform{ 0 };
+	friend class RenderComponent;
+	
 public:
-	MaterialComponent* mMaterial;
-	TransformComponent* mTransform;
+	
+};
 
-	virtual void Init(MaterialComponent* material, TransformComponent* transform) override {
-		mMaterial = material; 
-		mTransform = transform;
-		//Get the model matrix from shader
-		//mMatrixUniform = glGetUniformLocation(mShader->getProgram(), "mMatrix");
+class CameraComponent : public Component {
+public:
+	CameraComponent(GameObject* parent) :
+		Component(parent), mFOV(90), mAspectRatio(16/9), mNearPlane(0.01f), mFarPlane(1000.f) {};
+	CameraComponent(GameObject* parent, float fov, float aspect, float near, float far) : 
+		Component(parent), mFOV(fov), mAspectRatio(aspect), mNearPlane(near), mFarPlane(far) {};
+	void init() {
+		mUp		= glm::vec3(0,0,1);
+		mRight	= glm::vec3(1,0,0);
+		mForward	= glm::vec3(0,1,0);
+
+		mViewMatrix = glm::mat4(1.f);
+		mViewMatrix = glm::mat4(1.f);
+	};
+
+	virtual void OnUpdate(float ts) override {
+		UpdateProjection();
+		UpdateView();
+	};
+	void UpdateProjection() {
+		mProjectionMatrix = glm::perspective(mFOV, mAspectRatio, mNearPlane, mFarPlane);
+	}
+	void UpdateView() {
+		if (mTransform) {
+			//Get transform from transform component
+			mViewMatrix = glm::lookAt(mTransform->GetPosition(), mPosition + mForward, mUp);
+		}
+		else {
+			mViewMatrix = glm::lookAt(mPosition, mPosition + mForward, glm::vec3(0, 0, 1));
+		}
+		
+	}
+
+	//Delete later
+	void LookAt(glm::vec3 pos, glm::vec3 at, glm::vec3 up) {
+		mViewMatrix = glm::lookAt(pos, at, glm::vec3(0, 0, 1));
+	};
+
+	glm::mat4 GetViewMatrix() { return mViewMatrix; };
+	glm::mat4 GetProjectionMatrix() { return mProjectionMatrix; };
+private:
+	glm::mat4x4* mPmatrix{ nullptr };         // denne,
+	glm::mat4x4* mVmatrix{ nullptr };         // og denne, skal legges inn i kameraklasse
+	glm::mat4 mViewMatrix;
+	glm::mat4 mProjectionMatrix;
+
+	glm::vec3 mUp;
+	glm::vec3 mRight;
+	glm::vec3 mForward;
+
+	float mFOV;
+	float mAspectRatio; 
+	float mNearPlane;
+	float mFarPlane;
+
+	//Incase the camera dosent have a transform component
+	glm::vec3 mPosition{0,0,0};
+	glm::vec3 mTarget{ 0, 1, 0};
+	TransformComponent* mTransform;
+};
+
+class RenderComponent : public Component {
+public:
+	RenderComponent(GameObject* parent) : Component(parent) {};
+
+	void Init(MeshComponent* mesh, TransformComponent* transform, MaterialComponent* material) {
+		mMesh = mesh;
+		mTransform		= transform;
+		mMaterial = material;
+		std::cout << "Render init started!" << std::endl;
 		//Vertex array object-VAO
 		glGenVertexArrays(1, &mVAO);
 		glBindVertexArray(mVAO);
@@ -119,7 +204,7 @@ public:
 		glGenBuffers(1, &mVBO);
 		glBindBuffer(GL_ARRAY_BUFFER, mVBO);
 
-		glBufferData(GL_ARRAY_BUFFER, mVertices.size() * sizeof(Vertex), &mVertices[0], GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, mMesh->mVertices.size() * sizeof(Vertex), &mMesh->mVertices[0], GL_STATIC_DRAW);
 
 		//Verts
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)0);
@@ -134,43 +219,33 @@ public:
 		// Element array buffer - EAB
 		glGenBuffers(1, &mEAB);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mEAB);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, mIndices.size() * sizeof(GLuint), mIndices.data(), GL_STATIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, mMesh->mIndices.size() * sizeof(GLuint), mMesh->mIndices.data(), GL_STATIC_DRAW);
 
-
-		//
-		//glActiveTexture(GL_TEXTURE1);
-		//glBindTexture(GL_TEXTURE_2D, mTexture->id());
-		//if (mTexture) {
-		//	mTextureUniform = glGetUniformLocation(mShader->getProgram(), "textureSampler");
-		//}
 		glBindVertexArray(0);
+		std::cout << "Render init finished!" << std::endl;
 	};
-	virtual void OnUpdate(float ts) override {
-		//Draw function
-		//if (mTexture) {
-		//	glActiveTexture(GL_TEXTURE0);
-		//	glBindTexture(GL_TEXTURE_2D, mTexture->id());
-		//	glUniform1i(mTextureUniform, 0);
-		//}
+
+	void Render() {
 		//use my shader
-		//glUseProgram(mMaterial->GetShader()->GetProgram());
+		glUseProgram(mMaterial->GetShader()->GetProgram());
 		//Send my model matrix
-		mMaterial->GetShader()->SetUniformMatrix4fv(mTransform->GetTransform(), "mMatrix");
+		mMaterial->GetShader()->SetUniformMatrix4(mTransform->GetTransform(), "mMatrix");
 		//Draw object
-		//glBindVertexArray(mVAO);
-		//glDrawElements(GL_TRIANGLES, mIndices.size(), GL_UNSIGNED_INT, nullptr);
-		//glBindVertexArray(0);
+		glBindVertexArray(mVAO);
+		glDrawElements(GL_TRIANGLES, mMesh->mIndices.size(), GL_UNSIGNED_INT, nullptr);
+		glBindVertexArray(0);
+
 	};
 
-	//std::pair<float, float> GetPosition2D();
-
-
-};
-
-class CameraComponent : public Component {
-public:
-	CameraComponent(GameObject* parent) : Component(parent) {};
-	virtual void Init(TransformComponent* transform) override;
 private:
+	MeshComponent* mMesh; 
+	TransformComponent* mTransform;
+	MaterialComponent* mMaterial;
 
+	GLuint mEAB{ 0 };
+	GLuint mVAO{ 0 };
+	GLuint mVBO{ 0 };
+
+	GLint mTextureUniform{ 0 };
+	GLint mMatrixUniform{ 0 };
 };
