@@ -10,7 +10,6 @@ public:
 
 	void ProcessInput();
 
-	void NextScene(int dir);
 protected:
 	class RenderWindow* mWindow{nullptr};
 

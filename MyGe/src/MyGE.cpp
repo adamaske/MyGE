@@ -32,6 +32,7 @@ int MyGE::run()
     
     ScriptingManager scripting = ScriptingManager();
     mScriptingManager = &scripting;
+    mScriptingManager->Init();
     
     SceneManager scenemanager = SceneManager();
     mSceneManager = &scenemanager;
@@ -50,7 +51,6 @@ int MyGE::run()
         //Process input
         ProcessInput();
         //Change Game
-
         mSceneManager->GetScene()->OnUpdate();
         
         //Render
