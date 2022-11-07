@@ -105,6 +105,7 @@ public:
 	};
 	~MeshComponent(){};
 	void Init(std::string filename) {
+
 		Readfile(filename);
 	};
 	void Init(std::vector<Vertex> verts, std::vector<GLuint> ind) {
@@ -195,7 +196,7 @@ public:
 		mMesh = mesh;
 		mTransform		= transform;
 		mMaterial = material;
-		std::cout << "Render init started!" << std::endl;
+
 		//Vertex array object-VAO
 		glGenVertexArrays(1, &mVAO);
 		glBindVertexArray(mVAO);
@@ -205,7 +206,6 @@ public:
 		glBindBuffer(GL_ARRAY_BUFFER, mVBO);
 
 		glBufferData(GL_ARRAY_BUFFER, mMesh->mVertices.size() * sizeof(Vertex), &mMesh->mVertices[0], GL_STATIC_DRAW);
-
 		//Verts
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)0);
 		glEnableVertexAttribArray(0);
@@ -220,7 +220,7 @@ public:
 		glGenBuffers(1, &mEAB);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mEAB);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, mMesh->mIndices.size() * sizeof(GLuint), mMesh->mIndices.data(), GL_STATIC_DRAW);
-
+		std::cout << "mIndices called" << std::endl;
 		glBindVertexArray(0);
 		std::cout << "Render init finished!" << std::endl;
 	};

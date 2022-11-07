@@ -16,11 +16,17 @@ Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
     if (!vShaderFile) {
         std::cout << "Could not open vertex shader file!" << std::endl;
     }
-    std::cout << "Did open fragment shader file!" << std::endl;
+    else {
+        std::cout << "Did open fragment shader file!" << std::endl;
+    }
+    fShaderFile.open(fragmentPath);
     if (!fShaderFile) {
         std::cout << "Could not open fragment shader file!" << std::endl;
     }
-    std::cout << "Did open fragment shader file!" << std::endl;
+    else {
+        std::cout << "Did open fragment shader file!" << std::endl;
+    }
+    
 
     std::stringstream vShaderStream;
     std::stringstream fShaderStream;

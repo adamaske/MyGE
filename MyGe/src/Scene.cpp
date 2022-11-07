@@ -2,7 +2,6 @@
 
 void Scene::Init()
 {
-	//
 	std::cout << "Started init of Scene" << std::endl;
 	//Create cube
 	GameObject* cube1 = new GameObject();
@@ -12,14 +11,14 @@ void Scene::Init()
 	//Create material and material component
 	MaterialComponent* material = new MaterialComponent(cube1);
 	//Plainshader for the material
-	shader = new Shader("../plainshader.vert", "../plainshader.frag");
+	shader = new Shader("C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGe/MyGe/Shaders/plainshader.vert", "C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGe/MyGe/Shaders/plainshader.frag");
 	std::cout << "Shader finished creation!" << std::endl;
 	//Add shader to the material
 	material->SetShader(shader);
 	std::cout << "Material got SHADER!" << std::endl;
 	//Mesh component for verts
 	MeshComponent* mesh = new MeshComponent(cube1);
-	mesh->Init("../src/cube.obj");
+	mesh->Init("C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGe/MyGe/src/cube.obj");
 	std::cout << "Mesh finished init!" << std::endl;
 	RenderComponent* render = new RenderComponent(cube1);
 	render->Init(mesh, transform, material);

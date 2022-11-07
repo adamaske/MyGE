@@ -15,6 +15,7 @@ Component::~Component()
 
 void Component::Init()
 {
+
 }
 
 void Component::OnUpdate(float ts)

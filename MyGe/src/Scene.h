@@ -3,6 +3,7 @@
 #include <vector>
 #include "Components.h"
 #include "GameObject.h"
+
 class Scene
 {
 public:
@@ -13,7 +14,6 @@ public:
 	virtual void Init();
 
 	virtual void OnUpdate();
-
 
 	template<typename T>
 	std::vector<T*> GetComponents() {

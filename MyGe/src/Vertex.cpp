@@ -24,20 +24,21 @@ Vertex::Vertex(glm::vec3 verts, glm::vec3 norms, std::pair<float, float> uvs)
     t1 = uvs.first;
     t2 = uvs.second;
 }
-Vertex::Vertex(float x, float y, float z, float t1, float t2)
-    : x(x), y(y), z(z), t1(t1), t2(t2)
+Vertex::Vertex(glm::vec3 verts, glm::vec2 uvs)
+    : x(verts.x), y(verts.y), z(verts.z), t1(uvs.x), t2(uvs.y)
 {
 }
 
-Vertex::Vertex(float x, float y, float z, float r, float g, float b)
-    :x(x), y(y), z(z), r(r), g(g), b(b)
+Vertex::Vertex(glm::vec3 verts, glm::vec3 norms) :
+x(verts.x), y(verts.y), z(verts.z), r(norms.x), g(norms.y), b(norms.z)
 {
 }
 
-Vertex::Vertex(float x, float y, float z, float r, float g, float b, float t1, float t2)
-    : x(x), y(y), z(z), r(r), g(g), b(b), t1(t1), t2(t2)
+Vertex::Vertex(glm::vec3 verts, glm::vec3 norms, glm::vec2 uvs) :
+    x(verts.x), y(verts.y), z(verts.z), r(norms.x), g(norms.y), b(norms.z), t1(uvs.x), t2(uvs.y)
 {
 }
+
 
 Vertex::~Vertex()
 {

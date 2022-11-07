@@ -19,8 +19,8 @@ public:
 	Vertex();
 	Vertex(glm::vec3 verts);
 	Vertex(glm::vec3 verts, glm::vec3 norms, std::pair<float, float> uvs);
-	Vertex(float x, float y, float z, float t1, float t2);
-	Vertex(float x, float y, float z, float r, float g, float b);
-	Vertex(float x, float y, float z, float r, float g, float b, float t1, float t2);
+	Vertex(glm::vec3 verts, glm::vec2 uvs);
+	Vertex(glm::vec3 verts, glm::vec3 norms);
+	Vertex(glm::vec3 verts, glm::vec3 norms, glm::vec2 uvs);
 	~Vertex();
 };

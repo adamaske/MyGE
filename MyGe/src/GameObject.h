@@ -12,17 +12,6 @@ public:
 	GameObject() {};
 	GameObject(GameObject* parent) : mParent(parent) {};
 
-	std::vector<Component*> mComponents;
-	void AddComponent(Component* comp) { mComponents.push_back(comp); };
-
-	template<typename T>
-	T* GetComponent(GameObject object) {
-		for (int i = 0; i < mComponents.size(); i++)
-		{
-			
-		}
-		return nullptr;
-	}
 	virtual void Init() {
 		for (int i = 0; i < mComponents.size(); i++) {
 			mComponents[i]->Init();
@@ -34,10 +23,23 @@ public:
 			mComponents[i]->OnUpdate(0.1f);
 		}
 	};
+	
+	void AddComponent(Component* comp) { mComponents.push_back(comp); };
+
+	template<typename T>
+	T* GetComponent(GameObject object) {
+		for (int i = 0; i < mComponents.size(); i++)
+		{
+			if (dynamic_cast<T>(mComponents[i])) {
+				return dynamic_cast<T>(mComponents[i]);
+			}
+		}
+		return nullptr;
+	}
 protected:
 	GameObject* mParent;
 	
-
+	std::vector<Component*> mComponents;
 };
 
 class Cube : public GameObject {
