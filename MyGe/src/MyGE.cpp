@@ -70,18 +70,15 @@ void MyGE::ProcessInput()
         std::cout << "Move forward" << std::endl;
         mSceneManager->GetScene()->MoveForward();
     }
-    if (glfwGetKey(mWindow->GetWindow(), GLFW_KEY_S) == GLFW_PRESS) {
+    if (glfwGetKey(mWindow->GetWindow(), GLFW_KEY_N) == GLFW_PRESS) {
         std::cout << "Move forward" << std::endl;
-        glfwSetWindowShouldClose(mWindow->GetWindow(), true);
+        //Launches new scene
+        Scene* s = mSceneManager->GetNextScene(1);
+        //Init the scene
+        s->Init(mShaderManager);
+        //The render window knows what scene to render
+        mWindow->SetActiveScene(s);
     }
 }
 
-void MyGE::NextScene(int dir) {
-    //Gets next scene
-    Scene* s = mSceneManager->GetNextScene(dir);
-    //Init the scene
-    s->Init(mShaderManager);
-    //The render window knows what scene to render
-    mWindow->SetActiveScene(s);
-}
 
