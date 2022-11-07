@@ -32,20 +32,17 @@ void RenderWindow::Init(GLFWwindow* window)
 	{
 		std::cout << "Failed to initialize GLAD" << std::endl;
 	}
-	glClearColor(0.4f, 0.4f, 0.4f, 1.0f);
-	
-}
-
-void RenderWindow::PreRender()
-{
-	std::cout << "RenderWindow PreRender" << std::endl;
+	//general OpenGL stuff:
+	glEnable(GL_DEPTH_TEST);            //enables depth sorting - must then use GL_DEPTH_BUFFER_BIT in glClear
+	//    glEnable(GL_CULL_FACE);       //draws only front side of models - usually what you want - test it out!
+	glClearColor(0.4f, 0.4f, 0.4f, 1.0f);    //gray color used in glClear GL_COLOR_BUFFER_BIT
+	glBindVertexArray(0);
 }
 
 void RenderWindow::Render() {
-	std::cout << "RenderWindow : Render started!" << std::endl;
-	
-	glClear(GL_COLOR_BUFFER_BIT);
-
+	std::cout << std::endl << std::endl << "----RenderWindow : Render started!" << std::endl << std::endl << std::endl;
+	glfwInit();
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
 	//Drawing
 	//Cant draw without a scene
@@ -54,23 +51,19 @@ void RenderWindow::Render() {
 		std::vector<RenderComponent*> render = mActiveScene->GetRenders();
 		for (int i = 0; i < render.size(); i++)
 		{
+			
 			render[i]->Render();
 		}
-		CameraComponent* camera = mActiveScene->GetActiveCamera();
-		mActiveScene->GetActiveSceneShader()->SetUniformMatrix4(camera->GetViewMatrix(), "vMatrix");
-		mActiveScene->GetActiveSceneShader()->SetUniformMatrix4(camera->GetProjectionMatrix(), "pMatrix");
 	
-		
 	}
 	
 	// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 	// -------------------------------------------------------------------------------
-	glfwSwapBuffers(GetWindow());
+	glfwSwapBuffers(mWindow);
 	glfwPollEvents();
 
-
-	glBindVertexArray(0); // no need to unbind it every time 
-	std::cout << "RenderWindow : Render finished!" << std::endl;
+	std::cout << std::endl << std::endl << "-----RenderWindow : Render finished!" << std::endl << std::endl << std::endl;
+	
 }
 
 void RenderWindow::SetActiveScene(Scene* scene)

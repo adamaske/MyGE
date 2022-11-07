@@ -6,7 +6,8 @@
 #include "RenderWindow.h"
 #include "Scene.h"
 #include "ScriptingManager.h"
-
+#include "ShaderManager.h"
+#include "Shader.h"
 
 MyGE::MyGE() {
     
@@ -26,8 +27,6 @@ int MyGE::run()
     glfwSwapInterval(1);
     //In this demo I will render 1 secen
     Scene* scene = new Scene();
-    //Init the scene
-    scene->Init();
     //The render window knows what scene to render
     mWindow->SetActiveScene(scene);
     
@@ -38,19 +37,23 @@ int MyGE::run()
     mSceneManager = &scenemanager;
     mSceneManager->AddScene(*scene);
 
-    mSceneManager->GetScene()->Init();
+    ShaderManager shaderManager = ShaderManager();
+    mShaderManager = &shaderManager;
+
+    //Init
+    mSceneManager->GetScene()->Init(mShaderManager);
+    //The render window knows what scene to render
+    mWindow->SetActiveScene(mSceneManager->GetScene());
     //Main loop
     while (!mWindow->ShouldCloseWindow()) {
         double time = glfwGetTime();
         //Process input
         ProcessInput();
-
         //Change Game
-        //OnUpdate on the scene
+
         mSceneManager->GetScene()->OnUpdate();
         
         //Render
-        mWindow->PreRender();
         mWindow->Render();
     }
     
@@ -63,13 +66,21 @@ void MyGE::ProcessInput()
         std::cout << "Escape Pressed" << std::endl;
         glfwSetWindowShouldClose(mWindow->GetWindow(), true);
     }
+    if (glfwGetKey(mWindow->GetWindow(), GLFW_KEY_W) == GLFW_PRESS) {
+        std::cout << "Move forward" << std::endl;
+        mSceneManager->GetScene()->MoveForward();
+    }
+    if (glfwGetKey(mWindow->GetWindow(), GLFW_KEY_S) == GLFW_PRESS) {
+        std::cout << "Move forward" << std::endl;
+        glfwSetWindowShouldClose(mWindow->GetWindow(), true);
+    }
 }
 
 void MyGE::NextScene(int dir) {
     //Gets next scene
     Scene* s = mSceneManager->GetNextScene(dir);
     //Init the scene
-    s->Init();
+    s->Init(mShaderManager);
     //The render window knows what scene to render
     mWindow->SetActiveScene(s);
 }

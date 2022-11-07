@@ -1,8 +1,12 @@
 ScriptID = 0
 
-object = { ObjectID = "2134"}
+object = { ObjectID = "2134", pos = (1,2,3)}
 
-function AddStuff(a, b)
-	print("[LUA] AddStuff("..a..""..b..") called \n")
-	return a * b
+function GetPos(id)
+	print("[LUA] GetPos from Lua \n")
+	return pos
+end
+
+function OnUpdate()
+
 end

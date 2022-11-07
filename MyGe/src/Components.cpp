@@ -20,6 +20,7 @@ void Component::Init()
 
 void Component::OnUpdate(float ts)
 {
+    std::cout << "Component : OnUpdate" << std::endl;
 }
 
 

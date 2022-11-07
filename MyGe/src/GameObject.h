@@ -12,6 +12,7 @@ public:
 	GameObject() {};
 	GameObject(GameObject* parent) : mParent(parent) {};
 
+
 	virtual void Init() {
 		for (int i = 0; i < mComponents.size(); i++) {
 			mComponents[i]->Init();
@@ -19,6 +20,7 @@ public:
 	};
 
 	virtual void OnUpdate() {
+		std::cout << "GameObject : OnUpdate" << std::endl;
 		for (int i = 0; i < mComponents.size(); i++) {
 			mComponents[i]->OnUpdate(0.1f);
 		}
@@ -30,20 +32,15 @@ public:
 	T* GetComponent(GameObject object) {
 		for (int i = 0; i < mComponents.size(); i++)
 		{
-			if (dynamic_cast<T>(mComponents[i])) {
-				return dynamic_cast<T>(mComponents[i]);
-			}
+			
 		}
 		return nullptr;
 	}
+
+	TransformComponent* GetTransform() { return GetComponent<TransformComponent>(this); };
 protected:
 	GameObject* mParent;
 	
 	std::vector<Component*> mComponents;
 };
 
-class Cube : public GameObject {
-public:
-	Cube();
-	Cube(GameObject* parent) : GameObject(parent) {};
-};

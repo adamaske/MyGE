@@ -6,7 +6,7 @@
 
 Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
 {
-    mProgram = GLuint();
+
     std::string vertexCode;
     std::string fragmentCode;
     std::ifstream vShaderFile;
@@ -16,6 +16,7 @@ Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
     vShaderFile.open(vertexPath);
     if (!vShaderFile) {
         std::cout << "Could not open vertex shader file!" << std::endl;
+        std::cout << vertexPath << std::endl;
     }
     else {
         std::cout << "Did open fragment shader file!" << std::endl;
@@ -108,7 +109,6 @@ void Shader::Use()
 
 GLuint Shader::GetProgram()
 {
-
     return mProgram;
 }
 

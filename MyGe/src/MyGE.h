@@ -18,6 +18,8 @@ protected:
 	class ScriptingManager* mScriptingManager;
 	//Scene manager
 	class SceneManager* mSceneManager;
+
+	class ShaderManager* mShaderManager;
 };
 
 class SceneManager {

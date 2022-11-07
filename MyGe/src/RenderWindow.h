@@ -5,7 +5,6 @@ class RenderWindow : public MainWindow
 public:
 	RenderWindow();
 	virtual void Init(struct GLFWwindow* window) override;
-	void PreRender();
 	void Render();
 
 	void SetActiveScene(class Scene* scene);

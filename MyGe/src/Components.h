@@ -5,7 +5,8 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/quaternion.hpp"
 #include "glm/matrix.hpp"
-
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/type_ptr.hpp"
 #include "Vertex.h"
 #include "Shader.h"
 class Component {
@@ -32,7 +33,16 @@ public:
 	TransformComponent(GameObject* parent) : Component(parent) {};
 
 	virtual void Init() override {
-
+		mMatrix = glm::mat4(1.f);
+		mPosition	= glm::mat4(1.f);
+		mRotation	= glm::mat4(1.f);
+		
+		mScale= glm::mat4(1.f);
+		// Legger til rette for simulering
+		mVelocity = glm::vec3(1);
+		//Kollisjoner
+		mSize = glm::vec3(1);
+		std::cout << "TransformComponent : Init" << std::endl;
 	};
 	virtual void OnUpdate(float ts) override {
 		UpdateTransform();
@@ -41,6 +51,13 @@ public:
 
 	void UpdateTransform() {
 		mMatrix = mPosition * mRotation * mScale;
+		glm::mat4 base(1.f);
+		base = glm::translate(base, glm::vec3(1, 4, 2));
+		base = glm::lookAt(glm::vec3(1, 1, -5), glm::vec3(0, 0, 0), glm::vec3(0, 0, 1));
+		std::cout << base[0].x << base[0].y << base[0].z << base[0].w << std::endl;
+		std::cout << base[1].x << base[1].y << base[1].z << base[1].w << std::endl;
+		std::cout << base[2].x << base[2].y << base[2].z << base[2].w << std::endl;
+		std::cout << base[3].x << base[3].y << base[3].z << base[3].w << std::endl;
 	};
 
 	glm::mat4 GetTransform() { return mMatrix; };
@@ -51,12 +68,17 @@ public:
 		return glm::vec3(mPosition[3].x, mPosition[3].y, mPosition[3].z);
 	};
 	void SetPosition(const glm::vec3& position) {
-		
+		mPosition = glm::mat4(1.f);
+		mPosition = glm::translate(mPosition, position);
 	};
-	void SetPosition(const glm::mat4x4& position) {
+	void SetPosition(const glm::mat4& position) {
 		mPosition = position;
 	};
-
+	void AddLocalOffset(glm::vec3 offset) {
+		glm::vec3 off = GetPosition() + offset;
+		mPosition = glm::mat4(1.f);
+		mPosition = glm::translate(mPosition, off);
+	}
 	glm::vec3 GetScale() const {
 		return glm::vec3(mScale[0][0], mScale[1][1], mScale[2][2]);
 	};
@@ -64,15 +86,17 @@ public:
 	void SetScale(const glm::mat4x4& scale);
 
 	glm::mat4x4 GetRotation() const;
-	void SetRotation(const glm::vec3& rotation);
+	void SetRotation(const glm::vec3& rotation) {
+		
+	};
 	void rotate(float dx, float dy, float dz);
 
 private:
-	glm::mat4x4 mMatrix;
+	glm::mat4 mMatrix;
 
-	glm::mat4x4 mPosition;
-	glm::mat4x4 mRotation;
-	glm::mat4x4 mScale;
+	glm::mat4 mPosition;
+	glm::mat4 mRotation;
+	glm::mat4 mScale;
 
 	// Legger til rette for simulering
 	glm::vec3 mVelocity;
@@ -130,32 +154,36 @@ public:
 class CameraComponent : public Component {
 public:
 	CameraComponent(GameObject* parent) :
-		Component(parent), mFOV(90), mAspectRatio(16/9), mNearPlane(0.01f), mFarPlane(1000.f) {};
+		Component(parent), mFOV(200), mAspectRatio(18/9), mNearPlane(0.01f), mFarPlane(1000.f) {};
 	CameraComponent(GameObject* parent, float fov, float aspect, float near, float far) : 
 		Component(parent), mFOV(fov), mAspectRatio(aspect), mNearPlane(near), mFarPlane(far) {};
-	void init() {
+	void Init(TransformComponent* transform) {
+		mTransform = transform;
 		mUp		= glm::vec3(0,0,1);
 		mRight	= glm::vec3(1,0,0);
 		mForward	= glm::vec3(0,1,0);
 
 		mViewMatrix = glm::mat4(1.f);
-		mViewMatrix = glm::mat4(1.f);
+		mProjectionMatrix = glm::mat4(1.f);
+		
 	};
 
 	virtual void OnUpdate(float ts) override {
 		UpdateProjection();
 		UpdateView();
 	};
+
 	void UpdateProjection() {
-		mProjectionMatrix = glm::perspective(mFOV, mAspectRatio, mNearPlane, mFarPlane);
+		
+		mProjectionMatrix = glm::perspective(glm::radians(mFOV), mAspectRatio, mNearPlane, mFarPlane);
 	}
 	void UpdateView() {
 		if (mTransform) {
-			//Get transform from transform component
-			mViewMatrix = glm::lookAt(mTransform->GetPosition(), mPosition + mForward, mUp);
+			mViewMatrix = glm::lookAt(glm::vec3(0, 0, -5), glm::vec3(0, 0, 0), mUp);
 		}
 		else {
-			mViewMatrix = glm::lookAt(mPosition, mPosition + mForward, glm::vec3(0, 0, 1));
+			std::cout << "CameraComponent : No transform" << std::endl;
+			mViewMatrix = glm::lookAt(mPosition, mPosition + mForward, glm::vec3(0, 1, 0));
 		}
 		
 	}
@@ -165,7 +193,7 @@ public:
 		mViewMatrix = glm::lookAt(pos, at, glm::vec3(0, 0, 1));
 	};
 
-	glm::mat4 GetViewMatrix() { return mViewMatrix; };
+	glm::mat4 GetViewMatrix() { return glm::lookAt(mTransform->GetPosition(), mTransform->GetPosition() + glm::vec3(0, 0, 1), mUp); };
 	glm::mat4 GetProjectionMatrix() { return mProjectionMatrix; };
 private:
 	glm::mat4x4* mPmatrix{ nullptr };         // denne,
@@ -191,7 +219,7 @@ private:
 class RenderComponent : public Component {
 public:
 	RenderComponent(GameObject* parent) : Component(parent) {};
-
+	
 	void Init(MeshComponent* mesh, TransformComponent* transform, MaterialComponent* material) {
 		mMesh = mesh;
 		mTransform		= transform;
@@ -229,8 +257,10 @@ public:
 		//use my shader
 		glUseProgram(mMaterial->GetShader()->GetProgram());
 		//Send my model matrix
+		
 		mMaterial->GetShader()->SetUniformMatrix4(mTransform->GetTransform(), "mMatrix");
 		//Draw object
+		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		glBindVertexArray(mVAO);
 		glDrawElements(GL_TRIANGLES, mMesh->mIndices.size(), GL_UNSIGNED_INT, nullptr);
 		glBindVertexArray(0);
