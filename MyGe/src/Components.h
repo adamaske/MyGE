@@ -250,3 +250,16 @@ private:
 	GLint mTextureUniform{ 0 };
 	GLint mMatrixUniform{ 0 };
 };
+
+class ScriptComponent : public Component {
+public:
+	ScriptComponent(GameObject* parent, int id) : Component(parent), mScriptID(id) {};
+
+	virtual void Init() override;
+
+	virtual void OnUpdate(float ts) override;
+
+	int GetScriptID() { return mScriptID; };
+private:
+	int mScriptID;
+};

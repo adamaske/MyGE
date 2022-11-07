@@ -6,6 +6,19 @@
 #include "RenderWindow.h"
 #include "Scene.h"
 
+
+bool CheckLua(lua_State* L, int r) {
+    if (r != LUA_OK) {
+        std::string errormsg = lua_tostring(L, -1);
+        std::cout << errormsg << std::endl;
+        return false;
+    }
+    return true;
+}
+
+MyGE::MyGE() {
+    
+}
 int MyGE::run()
 {
     //Init gl
@@ -15,29 +28,21 @@ int MyGE::run()
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     //Our window into the game world is a RenderWindow
     mWindow = new RenderWindow();
-    std::cout << "Started init of renderwindow" << std::endl;
     //Init, close if not sucess
     mWindow->Init(glfwCreateWindow(800, 600, "MyGE", NULL, NULL));
-    //if () {
-    //    std::cout << "Window could not be created!" << std::endl;
-    //    //Terminate glfw
-    //    glfwSwapBuffers(mWindow->GetWindow());
-    //    glfwPollEvents();
-    //    //CLose app
-    //    return 1;
-    //}
-    std::cout << "Finished init of renderwindow" << std::endl;
+ 
     glfwSwapInterval(1);
     //In this demo I will render 1 secen
-    Scene* mScene = new Scene();
+    mActiveScene = new Scene();
     //Init the scene
-    mScene->Init();
+    mActiveScene->Init();
     //The render window knows what scene to render
-    mWindow->SetActiveScene(mScene);
+    mWindow->SetActiveScene(mActiveScene);
     
     //Main loop
     while (!mWindow->ShouldCloseWindow()) {
         double time = glfwGetTime();
+        mActiveScene->OnUpdate();
         mWindow->PreRender();
         ProcessInput();
         mWindow->Render();

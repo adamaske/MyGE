@@ -4,15 +4,16 @@ class MyGE
 {
 public:
 
-	MyGE() {
-
-	};
+	MyGE();
 
 	int run();
 
 	void ProcessInput();
 
-private:
+protected:
 	class RenderWindow* mWindow{nullptr};
+
+	//class SceneManager* mSceneManager{ nullptr };
+	class Scene* mActiveScene{ nullptr };
 };
 
