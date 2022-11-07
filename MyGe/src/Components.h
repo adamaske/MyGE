@@ -5,7 +5,6 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/quaternion.hpp"
 #include "glm/matrix.hpp"
-//#include "glm/mat4x4.hpp"
 
 #include "Vertex.h"
 #include "Shader.h"
@@ -36,15 +35,16 @@ public:
 
 	};
 	virtual void OnUpdate(float ts) override {
-
+		UpdateTransform();
+		std::cout << "TransformComponent : OnUpdate" << std::endl;
 	};
 
 	void UpdateTransform() {
 		mMatrix = mPosition * mRotation * mScale;
 	};
 
-	glm::mat4x4 GetTransform() { return mMatrix; };
-	glm::mat4x4 GetPosition() const {
+	glm::mat4 GetTransform() { return mMatrix; };
+	glm::mat4 GetPosition() const {
 		return mPosition;
 	};
 	glm::vec3 GetPosition() {
@@ -220,7 +220,6 @@ public:
 		glGenBuffers(1, &mEAB);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mEAB);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, mMesh->mIndices.size() * sizeof(GLuint), mMesh->mIndices.data(), GL_STATIC_DRAW);
-		std::cout << "mIndices called" << std::endl;
 		glBindVertexArray(0);
 		std::cout << "Render init finished!" << std::endl;
 	};

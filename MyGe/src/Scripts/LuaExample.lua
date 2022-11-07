@@ -1,4 +1,4 @@
-scriptID = 0
+ScriptID = 0
 
 object = { ObjectID = "2134"}
 

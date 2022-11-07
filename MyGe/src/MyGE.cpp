@@ -5,16 +5,8 @@
 #include "MainWindow.h"
 #include "RenderWindow.h"
 #include "Scene.h"
+#include "ScriptingManager.h"
 
-
-bool CheckLua(lua_State* L, int r) {
-    if (r != LUA_OK) {
-        std::string errormsg = lua_tostring(L, -1);
-        std::cout << errormsg << std::endl;
-        return false;
-    }
-    return true;
-}
 
 MyGE::MyGE() {
     
@@ -33,20 +25,33 @@ int MyGE::run()
  
     glfwSwapInterval(1);
     //In this demo I will render 1 secen
-    mActiveScene = new Scene();
+    Scene* scene = new Scene();
     //Init the scene
-    mActiveScene->Init();
+    scene->Init();
     //The render window knows what scene to render
-    mWindow->SetActiveScene(mActiveScene);
+    mWindow->SetActiveScene(scene);
     
+    ScriptingManager scripting = ScriptingManager();
+    mScriptingManager = &scripting;
+    
+    SceneManager scenemanager = SceneManager();
+    mSceneManager = &scenemanager;
+    mSceneManager->AddScene(*scene);
+
+    mSceneManager->GetScene()->Init();
     //Main loop
     while (!mWindow->ShouldCloseWindow()) {
         double time = glfwGetTime();
-        mActiveScene->OnUpdate();
-        mWindow->PreRender();
+        //Process input
         ProcessInput();
-        mWindow->Render();
 
+        //Change Game
+        //OnUpdate on the scene
+        mSceneManager->GetScene()->OnUpdate();
+        
+        //Render
+        mWindow->PreRender();
+        mWindow->Render();
     }
     
     return 0;
@@ -58,5 +63,14 @@ void MyGE::ProcessInput()
         std::cout << "Escape Pressed" << std::endl;
         glfwSetWindowShouldClose(mWindow->GetWindow(), true);
     }
+}
+
+void MyGE::NextScene(int dir) {
+    //Gets next scene
+    Scene* s = mSceneManager->GetNextScene(dir);
+    //Init the scene
+    s->Init();
+    //The render window knows what scene to render
+    mWindow->SetActiveScene(s);
 }
 

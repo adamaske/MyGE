@@ -52,7 +52,6 @@ void RenderWindow::Render() {
 	if (mActiveScene) {
 		//Find all rendercomponents in the scene
 		std::vector<RenderComponent*> render = mActiveScene->GetRenders();
-		std::cout << "RenderWindow : Render amount : " << render.size() << std::endl;
 		for (int i = 0; i < render.size(); i++)
 		{
 			render[i]->Render();

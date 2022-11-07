@@ -2,15 +2,9 @@
 #include <iostream>
 #include <string>
 
-extern "C" {
-#include "../Lua/include/lua.h"
-#include "../Lua/include/lauxlib.h"
-#include "../Lua/include/lualib.h"
-}
+#include "Script.h"
 
-#ifdef _WIN32
-#pragma comment(lib, "../Lua/liblua54.a")
-#endif
+
 
 ScriptingManager::ScriptingManager()
 {
@@ -42,7 +36,7 @@ void ScriptingManager::Init()
                 std::cout << "MyGE : Called in Lua the functio 'AddStuff(3.4, 3.4)', got " << (float)lua_tonumber(L, -1) << std::endl;
             }
         }
-
+    
         //Is there a 'object' in this file
         lua_getglobal(L, "object");
         //the object is a table of variables, check is table
@@ -58,12 +52,23 @@ void ScriptingManager::Init()
             lua_pop(L, 1);
             //This can now be repeated
         }
+    
+        lua_getglobal(L, "ScriptID");
+        if (lua_isstring(L, -1)) {
+            std::string scriptID = (std::string)lua_tostring(L, -1);
+            std::cout << "ScriptingManager: Found script id, creating Script!" << std::endl;
+            AddScript(std::stoi(scriptID));
+        }
     }
-
+    
     lua_close(L);
     return;
 }
 
+void ScriptingManager::AddScript(int id) {
+    Script script = Script(id, "");
+    mScripts.push_back(&script);
+}
 bool ScriptingManager::CheckLua(lua_State* L, int r) {
     if (r != LUA_OK) {
         std::string errormsg = lua_tostring(L, -1);

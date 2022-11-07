@@ -6,6 +6,7 @@
 
 Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
 {
+    mProgram = GLuint();
     std::string vertexCode;
     std::string fragmentCode;
     std::ifstream vShaderFile;
@@ -97,6 +98,7 @@ Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
     // The shader program is now on the GPU and we reference it by using the mProgram variable
     glDeleteShader(vertex);
     glDeleteShader(fragment);
+
 };
 
 void Shader::Use()
@@ -106,6 +108,7 @@ void Shader::Use()
 
 GLuint Shader::GetProgram()
 {
+
     return mProgram;
 }
 

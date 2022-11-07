@@ -148,12 +148,13 @@ void MeshComponent::Readfile(std::string filePath) {
                 --normal;
                 //Check if it has a uv or not
                 if (uv > -1) {
-                    Vertex tempVert(tempVertices[index], tempNormals[normal], tempUVs[uv]);
+                    //glm::vec3(sin(i), cos(i), tan(i))
+                    Vertex tempVert(tempVertices[index], glm::vec3(1), tempUVs[uv]);
                     mVertices.push_back(tempVert);
 
                 }
                 else {
-                    Vertex tempVert(tempVertices[index], tempNormals[normal], std::pair<float, float>(0, 0));
+                    Vertex tempVert(tempVertices[index], glm::vec3(1), std::pair<float, float>(0, 0));
                     mVertices.push_back(tempVert);
                 }
                 mIndices.push_back(temp_index++);

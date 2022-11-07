@@ -156,8 +156,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\..\..\..\sdk\GLAD\src\glad.c" />
-    <ClCompile Include="Script.cpp" />
-    <ClCompile Include="ScriptingManager.cpp" />
+    <ClCompile Include="src\Script.cpp" />
+    <ClCompile Include="src\ScriptingManager.cpp" />
     <ClCompile Include="src\GameObject.cpp" />
     <ClCompile Include="src\Components.cpp" />
     <ClCompile Include="src\Shader.cpp" />
@@ -169,8 +169,9 @@
     <ClCompile Include="src\Vertex.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Script.h" />
-    <ClInclude Include="ScriptingManager.h" />
+    <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="src\Script.h" />
+    <ClInclude Include="src\ScriptingManager.h" />
     <ClInclude Include="src\ScriptManager.h" />
     <ClInclude Include="src\ShaderManager.h" />
     <ClInclude Include="src\GameObject.h" />

@@ -11,7 +11,8 @@ void Scene::Init()
 	//Create material and material component
 	MaterialComponent* material = new MaterialComponent(cube1);
 	//Plainshader for the material
-	shader = new Shader("C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGe/MyGe/src/Shaders/plainshader.vert", "C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGe/MyGe/src/Shaders/plainshader.frag");
+	shader = new Shader("C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGe/MyGe/Shaders/plainshader.vert", "C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGe/MyGe/Shaders/plainshader.frag");
+	//shader = new Shader("C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGe/MyGe/src/Shaders/plainshader.vert", "C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGe/MyGe/src/Shaders/plainshader.frag");
 	std::cout << "Shader finished creation!" << std::endl;
 	//Add shader to the material
 	material->SetShader(shader);
