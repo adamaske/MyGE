@@ -8,36 +8,48 @@ void Scene::Init(ShaderManager* shaderManager)
 	//Create a registry and set it as the current instance
 	mRegistry = Registry();
 	Registry::SetInstance(mRegistry);
+	//Register the components we want to exist
+	Registry::Instance().RegisterComponent<CameraComponent>();
+	Registry::Instance().RegisterComponent<TransformComponent>();
+	Registry::Instance().RegisterComponent<ShaderComponent>();
+	Registry::Instance().RegisterComponent<RenderComponent>();
+
+	
 
 	//Register new GameObject(newID from register)
 	int cubeID = Registry::Instance().GetNewID();
-	Registry::Instance().Register(GameObject(cubeID));
-	
-	Registry::Instance().Register<TransformComponent>(TransformComponent(cubeID));
+	//Create a struct of gameobject called cube
+	GameObject cube = { cubeID };
+	//Registry Add GameObject to count
+	Registry::Instance().RegisterGameObject<GameObject>(cube, cubeID);
+	Registry::Instance().AddGameObject<GameObject>(cube, cubeID);
+
+	TransformComponent t;
+	Registry::Instance().AddComponent<TransformComponent>(cubeID, t);
 	//Create material and material component
 	int a = cubeID;
-	MaterialComponent material = MaterialComponent(cubeID);
+	MaterialComponent material = MaterialComponent();
 	Registry::Instance().Register<MaterialComponent>(material);
 
 	//Mesh component for verts
-	MeshComponent mesh = MeshComponent(cubeID);
+	MeshComponent mesh = MeshComponent();
 	//Register meshcomp
 	Registry::Instance().Register<MeshComponent>(mesh);
 
 	//RenderComponent for rendering, register it
-	RenderComponent render = RenderComponent(cubeID);
+	RenderComponent render = RenderComponent();
 	Registry::Instance().Register<RenderComponent>(render);
 
 	//Create a camera
 	int cameraID = Registry::Instance().GetNewID();
-	Registry::Instance().Register<GameObject>(GameObject(cameraID));
+	Registry::Instance().Register<GameObject>(GameObject());
 
 	//Transform for the camera
-	TransformComponent cameraTransform = TransformComponent(cameraID);
+	TransformComponent cameraTransform = TransformComponent();
 	Registry::Instance().Register<TransformComponent>(cameraTransform);
 
 	//Give camera a camera component
-	CameraComponent camera = CameraComponent(cameraID);
+	CameraComponent camera = CameraComponent();
 	Registry::Instance().Register<CameraComponent>(camera);
 }
 
@@ -51,7 +63,7 @@ void Scene::OnUpdate() {
 	//Prints all gameobject id's
 	for (auto it = gameObjects.begin(); it != gameObjects.end(); it++)
 	{
-		std::cout << "Scene : OnUpdate : " << (*it).GetID() << std::endl;
+		std::cout << "Scene : OnUpdate : " << (*it).mID << std::endl;
 	}
 
 	//Go thorugh camera

@@ -49,23 +49,22 @@ void RenderWindow::Render() {
 	if (mActiveScene) {
 		//Find all rendercomponents in the scene
 		auto render = Registry::Instance().GetObjects<RenderComponent>();
-		std::vector<RenderComponent&> render = Registry::Instance().GetObjects<RenderComponent>();
 		for (auto it = render.begin(); it != render.end(); it++)
 		{
 			//Get my shader
-			auto shader = Registry::GetObject<ShaderComponent>((*it).GetObjectID());
+			auto shader = Registry::GetObject<ShaderComponent>((*it).mGameObjectID);
 
 			//Get my transform
-			auto transform = Registry::GetObject<TransformComponent>((*it).GetObjectID());
+			auto transform = Registry::GetObject<TransformComponent>((*it).mGameObjectID);
 
 			//Get mesh component
-			auto mesh = Registry::GetObject<MeshComponent>((*it).GetObjectID());
+			auto mesh = Registry::GetObject<MeshComponent>((*it).mGameObjectID);
 
 			//Get material component
-			auto material = Registry::GetObject<MaterialComponent>((*it).GetObjectID());
+			auto material = Registry::GetObject<MaterialComponent>((*it).mGameObjectID);
 
 			//Send my model matrix, get the actual shader from the shaderID of the shader component, and send the transform, operator override
-			Registry::GetObject<Shader>(shader.mShaderID).SetUniformMatrix4((glm::mat4)transform, "mMatrix");
+			Registry::GetObject<Shader>(shader.mShaderID).SetUniformMatrix4(transform.mMatrix, "mMatrix");
 		
 			//Draw object
 			glBindVertexArray((*it).mVAO);
