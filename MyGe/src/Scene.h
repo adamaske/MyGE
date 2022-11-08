@@ -10,8 +10,7 @@
 class Scene
 {
 public:
-	Scene() :  {
-		mRegistry = Registry();
+	Scene(Registry& registry) : mRegistry(registry) {
 		std::cout << "Scene created!" << std::endl;
 	};
 
@@ -24,6 +23,6 @@ private:
 	//The scene wants to know of all the shaders
 	ShaderManager* mShaderManager;
 
-	class Registry& mRegistry;
+	Registry& mRegistry;
 };
 

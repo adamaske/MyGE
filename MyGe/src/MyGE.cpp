@@ -26,17 +26,18 @@ int MyGE::run()
  
     glfwSwapInterval(1);
     //In this demo I will render 1 secen
-    Scene* scene = new Scene();
+    Registry r = Registry();
+    Scene* scene = new Scene(r);
     //The render window knows what scene to render
-    mWindow->SetActiveScene(scene);
+    //mWindow->SetActiveScene(scene);
     
     //Creates registry instance
     Registry::Instance();
 
-    ScriptingManager scripting = ScriptingManager();
-    mScriptingManager = &scripting;
-    mScriptingManager->Init();
-    
+    //ScriptingManager scripting = ScriptingManager();
+    //mScriptingManager = &scripting;
+    //mScriptingManager->Init();
+    //
     SceneManager scenemanager = SceneManager();
     mSceneManager = &scenemanager;
     mSceneManager->AddScene(*scene);
@@ -47,7 +48,7 @@ int MyGE::run()
     //Init
     mSceneManager->GetScene()->Init(mShaderManager);
     //The render window knows what scene to render
-    mWindow->SetActiveScene(mSceneManager->GetScene());
+    //mWindow->SetActiveScene(mSceneManager->GetScene());
     //Main loop
     while (!mWindow->ShouldCloseWindow()) {
         double time = glfwGetTime();
@@ -71,7 +72,7 @@ void MyGE::ProcessInput()
     }
     if (glfwGetKey(mWindow->GetWindow(), GLFW_KEY_W) == GLFW_PRESS) {
         std::cout << "Move forward" << std::endl;
-        mSceneManager->GetScene()->MoveForward();
+      
     }
     if (glfwGetKey(mWindow->GetWindow(), GLFW_KEY_N) == GLFW_PRESS) {
         std::cout << "Move forward" << std::endl;
@@ -80,7 +81,7 @@ void MyGE::ProcessInput()
         //Init the scene
         s->Init(mShaderManager);
         //The render window knows what scene to render
-        mWindow->SetActiveScene(s);
+        //mWindow->SetActiveScene(s);
     }
 }
 

@@ -1,16 +1,21 @@
 #pragma once
+#include <iostream>
 #include <vector>
 #include <unordered_map>
 #include <string>
-
+#include <memory>
 #include "Shader.h"
 
 //Uses this abstration to keep a ComponentHolder as refrence without declaring tempalte at compile
 class IUnitHolder
 {
 public:
-	virtual ~IUnitHolder() = default;
-	virtual void EntityDestroyed(int id) = 0;
+	virtual ~IUnitHolder(){
+
+	};
+	virtual void EntityDestroyed(int id) {
+
+	};
 };
 
 //Store components of a certain type
@@ -49,22 +54,15 @@ public:
 		//Reset the ID keeper
 		mID = 0;
 	};
-	static Registry& Instance() {
-		//If there already is an Instance, return it
-		if (&mInstance) {
-			return mInstance;
-		}
-		else { //Else set mInstance to a new one and return it
-			mInstance = Registry();
-			//this.Register<TransformComponent>(TransformComponent());
-			
-			return mInstance;
-		}
-		
-	};
+	static Registry& Instance()
+	{
+		static Registry Instance; // Guaranteed to be destroyed.
+		// Instantiated on first use.
+		return Instance;
+	}
 
-	static void SetInstance(const Registry& r) {
-		mInstance = r;
+	void SetInstance(const Registry& r) {
+		
 	}
 
 	//This should add whatever is sent to the registry
@@ -82,7 +80,7 @@ public:
 
 	//Always returns a new not in-use ID
 	static const int GetNewID() {
-		return mID++;
+		return Registry::Instance().mID++;
 	}
 
 	//Get a object of type
@@ -113,33 +111,35 @@ public:
 	//Tell the registry this component type exists
 	template<typename T>
 	void RegisterComponent() {
-		//We know we want to register
-		const char* typeName = typeid(T).name();
-		if (mComponentTypes.find(typeName)) {
-			//If the components is already registered, return
-			return;
-		}
-		//Register it by inserting it into mComponentTypes
-		mComponentTypes.insert({ typeName, GetNewID() });
-		mComponents.insert({ typeName, UnitHolder<T>() });
-		std::cout << "Registry : Regsitered a new component";
+		////We know we want to register
+		//const char* typeName = typeid(T).name();
+		//if (mComponentTypes.find(typeName)) {
+		//	//If the components is already registered, return
+		//	return;
+		//}
+		////Register it by inserting it into mComponentTypes
+		//mComponentTypes.insert({ typeName, GetNewID() });
+		//mComponents.insert({ typeName, UnitHolder<T>() });
+		//std::cout << "Registry : Regsitered a new component";
 	};
+
 	template<typename T>
 	void RegisterGameObject(T& object, int id) {
-		const char* typeName = typeid(T).name();
-		if (mGameObjects[id].find()) {
-			//This id is already registered
-			return;
-		}
-
-		mGameObjects.insert({ object, id });
+		//const char* typeName = typeid(T).name();
+		//if (mGameObjects.find(id)) {
+		//	//This id is already registered
+		//	return;
+		//}
+		//
+		//mGameObjects.insert({ object, id });
 
 	}
+
 	//Adding a component must also have a entity
 	template<typename T>
 	void AddComponent(int objectID, T& component) {
 		//We know we want to register
-		GetComponentHolder<T>().Insert(objectID, component);
+		GetUnitHolder<T>().Insert(objectID, component);
 		
 	}
 	
@@ -161,16 +161,16 @@ private:
 	std::unordered_map<const char*, int> mComponentTypes;
 
 	//Static instance of this regisrty
-	static Registry& mInstance;
+	Registry* mInstance;
 
-	
-	static int mID;
+	int mID;
+
 	template<typename T>
 	UnitHolder<T> GetUnitHolder() {
 		//Gets the type of the component
 		const char* typeName = typeid(T).name();
 
-		if (!mComponentTypes.find(typeName)) {
+		if (mComponentTypes.find(typeName)) {
 			//No component of this type found 
 			return NULL;
 		}
