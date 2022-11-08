@@ -22,8 +22,9 @@
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{2b3eaeec-acb1-48d2-b957-edc53b252ea4}</ProjectGuid>
-    <RootNamespace>MyGe</RootNamespace>
+    <RootNamespace>MyGE</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>MyGE</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -126,13 +127,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\adama\Documents\GitHub\MyGE\MyGE\Lua\include;C:\sdk\GLAD\include;C:\sdk\glfw-3.3.8.bin.WIN64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>${SolutionDir}\..\..\GLAD\include;${SolutionDir}\..\..\GLFW\include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\adama\Documents\GitHub\MyGE\MyGE\Lua\include;C:\sdk\glfw-3.3.8.bin.WIN64\lib-vc2022;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>lua54.dll;glfw3.lib;glfw3dll.lib;opengl32.lib;user32.lib;gdi32.lib;shell32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\adama\OneDrive\Dokumenter\GitHub\MyGE\GLFW\lib-vc2022;C:\Users\adama\OneDrive\Dokumenter\GitHub\MyGE\MyGE\Lua;$(CoreLibraryDependencies);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);opengl32.lib; glfw3.lib; glfw3dll.lib;</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -143,19 +144,19 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\adama\OneDrive\Dokumenter\GitHub\MyGe\MyGe\Lua\include;C:\sdk\GLAD\include;C:\sdk\glfw-3.3.8.bin.WIN64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>${SolutionDir}\..\..\GLAD\include;${SolutionDir}\..\..\GLFW\include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\adama\OneDrive\Dokumenter\GitHub\MyGe\MyGe\Lua;C:\sdk\glfw-3.3.8.bin.WIN64\lib-vc2022;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;glfw3dll.lib;opengl32.lib;user32.lib;gdi32.lib;shell32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\adama\OneDrive\Dokumenter\GitHub\MyGE\GLFW\lib-vc2022;C:\Users\adama\OneDrive\Dokumenter\GitHub\MyGE\MyGE\Lua;$(CoreLibraryDependencies);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);opengl32.lib; glfw3.lib; glfw3dll.lib;</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\sdk\GLAD\src\glad.c" />
+    <ClCompile Include="..\GLAD\src\glad.c" />
     <ClCompile Include="src\Registry.cpp" />
     <ClCompile Include="src\Script.cpp" />
     <ClCompile Include="src\ScriptingManager.cpp" />
@@ -174,7 +175,6 @@
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="src\Script.h" />
     <ClInclude Include="src\ScriptingManager.h" />
-    <ClInclude Include="src\ScriptManager.h" />
     <ClInclude Include="src\ShaderManager.h" />
     <ClInclude Include="src\GameObject.h" />
     <ClInclude Include="src\Shader.h" />
