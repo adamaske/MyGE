@@ -48,11 +48,30 @@ void RenderWindow::Render() {
 	//Cant draw without a scene
 	if (mActiveScene) {
 		//Find all rendercomponents in the scene
-		std::vector<RenderComponent*> render = mActiveScene->GetRenders();
-		for (int i = 0; i < render.size(); i++)
+		auto render = Registry::Instance().GetObjects<RenderComponent>();
+		std::vector<RenderComponent&> render = Registry::Instance().GetObjects<RenderComponent>();
+		for (auto it = render.begin(); it != render.end(); it++)
 		{
-			
-			render[i]->Render();
+			//Get my shader
+			auto shader = Registry::GetObject<ShaderComponent>((*it).GetObjectID());
+
+			//Get my transform
+			auto transform = Registry::GetObject<TransformComponent>((*it).GetObjectID());
+
+			//Get mesh component
+			auto mesh = Registry::GetObject<MeshComponent>((*it).GetObjectID());
+
+			//Get material component
+			auto material = Registry::GetObject<MaterialComponent>((*it).GetObjectID());
+
+			//Send my model matrix, get the actual shader from the shaderID of the shader component, and send the transform, operator override
+			Registry::GetObject<Shader>(shader.mShaderID).SetUniformMatrix4((glm::mat4)transform, "mMatrix");
+		
+			//Draw object
+			glBindVertexArray((*it).mVAO);
+			glDrawElements(GL_TRIANGLES, mesh.mIndices.size(), GL_UNSIGNED_INT, nullptr);
+			glBindVertexArray(0);
+			std::cout << "RenderComponent : Render End!" << std::endl;
 		}
 	
 	}

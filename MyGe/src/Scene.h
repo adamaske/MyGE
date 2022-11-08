@@ -51,5 +51,7 @@ private:
 	std::vector<RenderComponent*> mRenders;
 	//The scene wants to know of all the shaders
 	ShaderManager* mShaderManager;
+
+	class Registry& mRegistry;
 };
 

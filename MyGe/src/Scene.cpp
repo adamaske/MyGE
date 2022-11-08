@@ -2,62 +2,72 @@
 
 void Scene::Init(ShaderManager* shaderManager) 
 {
+	//Should be removed
 	mShaderManager = shaderManager;
 
-	//Create cube
-	int cubeID = Registry::Instance().GetObjectID();
+	//Create a registry and set it as the current instance
+	mRegistry = Registry();
+	Registry::SetInstance(mRegistry);
+
+	//Register new GameObject(newID from register)
+	int cubeID = Registry::Instance().GetNewID();
 	Registry::Instance().Register(GameObject(cubeID));
 	
-	
-	Registry::Instance().Register<TransformComponent>(TransformComponent(Registry::Instance().GetObjectID()));
-	transform->SetPosition(glm::vec3(1, 1, 1));
+	Registry::Instance().Register<TransformComponent>(TransformComponent(cubeID));
 	//Create material and material component
-	MaterialComponent* material = new MaterialComponent();
-	material->SetShader(&mShaderManager->GetShader("PlainShader"));
-	//Plainshader for the material
-
-	//Add shader to the material
-	material->SetShader(&mShaderManager->GetShader("PlainShader"));
+	int a = cubeID;
+	MaterialComponent material = MaterialComponent(cubeID);
+	Registry::Instance().Register<MaterialComponent>(material);
 
 	//Mesh component for verts
-	MeshComponent* mesh = new MeshComponent(&cube1);
-	mesh->Init("C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGe/MyGe/src/cube.obj");
+	MeshComponent mesh = MeshComponent(cubeID);
+	//Register meshcomp
+	Registry::Instance().Register<MeshComponent>(mesh);
 
-	RenderComponent* render = new RenderComponent(&cube1);
-	render->Init(mesh, transform, material);
+	//RenderComponent for rendering, register it
+	RenderComponent render = RenderComponent(cubeID);
+	Registry::Instance().Register<RenderComponent>(render);
 
 	//Create a camera
-	GameObject* mCamera = new GameObject();
+	int cameraID = Registry::Instance().GetNewID();
+	Registry::Instance().Register<GameObject>(GameObject(cameraID));
 
 	//Transform for the camera
-	TransformComponent* transform2 = new TransformComponent(mCamera);
+	TransformComponent cameraTransform = TransformComponent(cameraID);
+	Registry::Instance().Register<TransformComponent>(cameraTransform);
 
-	//Moves camera to desired position
-	transform2->SetPosition(glm::vec3(0, 0, -5));
 	//Give camera a camera component
-	CameraComponent* camera = new CameraComponent(mCamera);
-	camera->Init(transform2);
-
-	mCamera->AddComponent(transform2);
-	mCamera->AddComponent(camera);
-
-	mActiveCamera = camera;
-
-	mObjects["Camera"] = mCamera;
-	mObjects["Cube1"] = &cube1;
-	
-	mCamera->Init();
-	cube1.Init();
-	mRenders.push_back(render);
+	CameraComponent camera = CameraComponent(cameraID);
+	Registry::Instance().Register<CameraComponent>(camera);
 }
 
 
 void Scene::OnUpdate() {
-	mActiveCamera->LookAt(glm::vec3(0, 0, -10), glm::vec3(0, 0, 2), glm::vec3(0, 0, 1));
-	mShaderManager->GetCamera(mActiveCamera->GetViewMatrix(), mActiveCamera->GetProjectionMatrix());
-	for (auto it = mObjects.begin(); it != mObjects.end(); it++)
+	
+
+
+	//Gets all GameObjects in the registry, a go system
+	auto gameObjects = Registry::Instance().GetObjects<GameObject>();
+	//Prints all gameobject id's
+	for (auto it = gameObjects.begin(); it != gameObjects.end(); it++)
 	{
-		std::cout << "Scene : OnUpdate" << std::endl;
-		(*it).second->OnUpdate();
+		std::cout << "Scene : OnUpdate : " << (*it).GetID() << std::endl;
+	}
+
+	//Go thorugh camera
+	auto cameras = Registry::Instance().GetObjects<CameraComponent>();
+	for (auto it = cameras.begin(); it != cameras.end(); it++)
+	{
+		//Check if it is the main camera
+		if ((*it).bIsMainCamera) {
+
+		}
+	}
+
+	//Go thrugh renderers
+	auto renders = Registry::Instance().GetObjects<RenderComponent>();
+	for (auto it = renders.begin(); it != renders.end(); it++)
+	{
+
 	}
 }

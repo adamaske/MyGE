@@ -25,6 +25,7 @@ public:
 
 	virtual void OnUpdate(float ts);
 
+	int GetObjectID() { return mGameObjectID; };
 protected:
 	int mGameObjectID = 0;
 };
@@ -61,6 +62,7 @@ public:
 		std::cout << base[3].x << base[3].y << base[3].z << base[3].w << std::endl;
 	};
 
+	operator glm::mat4() { return mMatrix; };
 	glm::mat4 GetTransform() { return mMatrix; };
 	glm::mat4 GetPosition() const {
 		return mPosition;
@@ -142,7 +144,7 @@ public:
 	}
 	void Readfile(std::string filePath);
 	void WriteFile(std::string filePath);
-protected:
+public:
 	std::vector<Vertex> mVertices;
 	std::vector<GLuint> mIndices;
 	friend class RenderComponent;
@@ -192,6 +194,8 @@ public:
 		glm::vec3 pos = glm::vec3(m[3].x, m[3].y, m[3].z);
 		return glm::lookAt(pos, pos + glm::vec3(0, 0, 1), mUp); };
 	glm::mat4 GetProjectionMatrix() { return mProjectionMatrix; };
+
+	bool bIsMainCamera = 1;
 private:
 	glm::mat4x4* mPmatrix{ nullptr };         // denne,
 	glm::mat4x4* mVmatrix{ nullptr };         // og denne, skal legges inn i kameraklasse
@@ -253,7 +257,7 @@ public:
 	void Render() {
 		std::cout << "RenderComponent : Render!" << std::endl;
 		//use my shader
-		glUseProgram(Registry::Instance()->GetObject<Shader>(mGameObjectID)->GetProgram());
+		Registry::Instance().GetObject<ShaderComponent>(mGameObjectID);
 		//Send my model matrix
 		
 		Registry::Instance()->GetObject<Shader>(mGameObjectID);
@@ -266,7 +270,7 @@ public:
 		std::cout << "RenderComponent : Render End!" << std::endl;
 	};
 
-private:
+public:
 	MeshComponent* mMesh; 
 	TransformComponent* mTransform;
 	MaterialComponent* mMaterial;
@@ -290,4 +294,12 @@ public:
 	int GetScriptID() { return mScriptID; };
 private:
 	int mScriptID;
+};
+
+struct ShaderComponent
+{
+	int mGameObjectID = 0;
+	int mShaderID = 0;
+	GLchar* mVertexPath = 0; 
+	GLchar* mFragmentPath = 0;
 };
