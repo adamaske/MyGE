@@ -4,9 +4,9 @@
 #include <string>
 #include <sstream>
 #include "Vertex.h"
-Component::Component(GameObject* parent)
+Component::Component(int objectID) : mGameObjectID(objectID)
 {
-	mParent = parent;
+	
 }
 
 Component::~Component()

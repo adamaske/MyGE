@@ -30,6 +30,9 @@ int MyGE::run()
     //The render window knows what scene to render
     mWindow->SetActiveScene(scene);
     
+    //Creates registry instance
+    Registry::Instance();
+
     ScriptingManager scripting = ScriptingManager();
     mScriptingManager = &scripting;
     mScriptingManager->Init();

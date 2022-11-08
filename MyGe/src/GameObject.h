@@ -10,6 +10,9 @@ class GameObject
 {
 public:
 	GameObject() {};
+	GameObject(int ID) {
+		mID = ID;
+	};
 	GameObject(GameObject* parent) : mParent(parent) {};
 
 
@@ -37,10 +40,16 @@ public:
 		return nullptr;
 	}
 
+	void SetID(int id) {
+		mID = id;
+	}
+	int GetID() { return mID; };
 	TransformComponent* GetTransform() { return GetComponent<TransformComponent>(this); };
 protected:
 	GameObject* mParent;
 	
 	std::vector<Component*> mComponents;
+
+	int mID;
 };
 

@@ -9,9 +9,10 @@
 #include "glm/gtc/type_ptr.hpp"
 #include "Vertex.h"
 #include "Shader.h"
+#include "Registry.h"
 class Component {
 public:
-	Component(class GameObject* parent);
+	Component(int objectID);
 	~Component();
 
 	virtual void Init();
@@ -25,12 +26,12 @@ public:
 	virtual void OnUpdate(float ts);
 
 protected:
-	GameObject* mParent;
+	int mGameObjectID = 0;
 };
 
 class TransformComponent : public Component {
 public:
-	TransformComponent(GameObject* parent) : Component(parent) {};
+	TransformComponent(int objectID) : Component(objectID) {};
 
 	virtual void Init() override {
 		mMatrix = glm::mat4(1.f);
@@ -106,25 +107,24 @@ private:
 
 class MaterialComponent : public Component {
 public:
-	
-	MaterialComponent(GameObject* parent): Component(parent) {};
-	MaterialComponent(GameObject* parent, Shader* shader) : Component(parent) , mShader(shader) {};
-	MaterialComponent(GameObject* parent, Shader* shader, glm::vec4 colour) : Component(parent), mShader(shader), mColour(colour) {};
+	MaterialComponent(int objectID) : Component(objectID) {};
+	MaterialComponent(int objectID, int shaderID) : Component(objectID), mShaderID(shaderID) {};
+	MaterialComponent(int objectID, int shaderID, glm::vec4 colour) : Component(objectID), mShaderID(shaderID), mColour(colour) {};
 
-	Shader* GetShader() { return mShader; };
-	void SetShader(Shader* shader) {
-		mShader = shader;
+	
+	void SetShader(int shaderID) {
+		mShaderID = shaderID;
 	}
 private:
-	Shader* mShader;
+	int mShaderID = 0;
 	glm::vec4 mColour;
 
 };
 
 class MeshComponent : public Component {
 public:
-	MeshComponent(GameObject* parent) : Component(parent) {};
-	MeshComponent(GameObject* parent, std::string filename) : Component(parent) { 
+	MeshComponent(int objectID) : Component(objectID) {};
+	MeshComponent(int objectID, std::string filename) : Component(objectID) {
 		Init(filename);
 	};
 	~MeshComponent(){};
@@ -153,12 +153,13 @@ public:
 
 class CameraComponent : public Component {
 public:
-	CameraComponent(GameObject* parent) :
-		Component(parent), mFOV(200), mAspectRatio(18/9), mNearPlane(0.01f), mFarPlane(1000.f) {};
-	CameraComponent(GameObject* parent, float fov, float aspect, float near, float far) : 
-		Component(parent), mFOV(fov), mAspectRatio(aspect), mNearPlane(near), mFarPlane(far) {};
-	void Init(TransformComponent* transform) {
-		mTransform = transform;
+	CameraComponent(int objectID) :
+		Component(objectID), mFOV(200), mAspectRatio(18/9), mNearPlane(0.01f), mFarPlane(1000.f) {};
+	CameraComponent(int objectID, int transformID) :
+		Component(objectID), mTransformID(transformID), mFOV(200), mAspectRatio(18 / 9), mNearPlane(0.01f), mFarPlane(1000.f) {};
+	CameraComponent(int objectID, float fov, float aspect, float near, float far) :
+		Component(objectID), mFOV(fov), mAspectRatio(aspect), mNearPlane(near), mFarPlane(far) {};
+	void Init() {
 		mUp		= glm::vec3(0,0,1);
 		mRight	= glm::vec3(1,0,0);
 		mForward	= glm::vec3(0,1,0);
@@ -178,14 +179,7 @@ public:
 		mProjectionMatrix = glm::perspective(glm::radians(mFOV), mAspectRatio, mNearPlane, mFarPlane);
 	}
 	void UpdateView() {
-		if (mTransform) {
-			mViewMatrix = glm::lookAt(glm::vec3(0, 0, -5), glm::vec3(0, 0, 0), mUp);
-		}
-		else {
-			std::cout << "CameraComponent : No transform" << std::endl;
-			mViewMatrix = glm::lookAt(mPosition, mPosition + mForward, glm::vec3(0, 1, 0));
-		}
-		
+		mViewMatrix = glm::lookAt(mPosition, mPosition + mForward, glm::vec3(0, 1, 0));
 	}
 
 	//Delete later
@@ -193,7 +187,10 @@ public:
 		mViewMatrix = glm::lookAt(pos, at, glm::vec3(0, 0, 1));
 	};
 
-	glm::mat4 GetViewMatrix() { return glm::lookAt(mTransform->GetPosition(), mTransform->GetPosition() + glm::vec3(0, 0, 1), mUp); };
+	glm::mat4 GetViewMatrix() { 
+		glm::mat4 m = Registry::Instance().GetObject<TransformComponent>(mGameObjectID).GetPosition();
+		glm::vec3 pos = glm::vec3(m[3].x, m[3].y, m[3].z);
+		return glm::lookAt(pos, pos + glm::vec3(0, 0, 1), mUp); };
 	glm::mat4 GetProjectionMatrix() { return mProjectionMatrix; };
 private:
 	glm::mat4x4* mPmatrix{ nullptr };         // denne,
@@ -213,12 +210,13 @@ private:
 	//Incase the camera dosent have a transform component
 	glm::vec3 mPosition{0,0,0};
 	glm::vec3 mTarget{ 0, 1, 0};
-	TransformComponent* mTransform;
+
+	int  mTransformID = 0;
 };
 
 class RenderComponent : public Component {
 public:
-	RenderComponent(GameObject* parent) : Component(parent) {};
+	RenderComponent(int objectID) : Component(objectID) {};
 	
 	void Init(MeshComponent* mesh, TransformComponent* transform, MaterialComponent* material) {
 		mMesh = mesh;
@@ -255,9 +253,10 @@ public:
 	void Render() {
 		std::cout << "RenderComponent : Render!" << std::endl;
 		//use my shader
-		glUseProgram(mMaterial->GetShader()->GetProgram());
+		glUseProgram(Registry::Instance()->GetObject<Shader>(mGameObjectID)->GetProgram());
 		//Send my model matrix
 		
+		Registry::Instance()->GetObject<Shader>(mGameObjectID);
 		mMaterial->GetShader()->SetUniformMatrix4(mTransform->GetTransform(), "mMatrix");
 		//Draw object
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -282,7 +281,7 @@ private:
 
 class ScriptComponent : public Component {
 public:
-	ScriptComponent(GameObject* parent, int id) : Component(parent), mScriptID(id) {};
+	ScriptComponent(int objectID, int id) : Component(objectID), mScriptID(id) {};
 
 	virtual void Init() override;
 

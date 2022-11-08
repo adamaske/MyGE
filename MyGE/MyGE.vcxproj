@@ -156,6 +156,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\..\..\..\sdk\GLAD\src\glad.c" />
+    <ClCompile Include="src\Registry.cpp" />
     <ClCompile Include="src\Script.cpp" />
     <ClCompile Include="src\ScriptingManager.cpp" />
     <ClCompile Include="src\GameObject.cpp" />
@@ -169,6 +170,7 @@
     <ClCompile Include="src\Vertex.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Registry.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="src\Script.h" />
     <ClInclude Include="src\ScriptingManager.h" />

@@ -5,12 +5,14 @@ void Scene::Init(ShaderManager* shaderManager)
 	mShaderManager = shaderManager;
 
 	//Create cube
-	GameObject* cube1 = new GameObject();
+	int cubeID = Registry::Instance().GetObjectID();
+	Registry::Instance().Register(GameObject(cubeID));
 	
-	TransformComponent* transform = new TransformComponent(cube1);
+	
+	Registry::Instance().Register<TransformComponent>(TransformComponent(Registry::Instance().GetObjectID()));
 	transform->SetPosition(glm::vec3(1, 1, 1));
 	//Create material and material component
-	MaterialComponent* material = new MaterialComponent(cube1);
+	MaterialComponent* material = new MaterialComponent();
 	material->SetShader(&mShaderManager->GetShader("PlainShader"));
 	//Plainshader for the material
 
@@ -18,10 +20,10 @@ void Scene::Init(ShaderManager* shaderManager)
 	material->SetShader(&mShaderManager->GetShader("PlainShader"));
 
 	//Mesh component for verts
-	MeshComponent* mesh = new MeshComponent(cube1);
+	MeshComponent* mesh = new MeshComponent(&cube1);
 	mesh->Init("C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGe/MyGe/src/cube.obj");
 
-	RenderComponent* render = new RenderComponent(cube1);
+	RenderComponent* render = new RenderComponent(&cube1);
 	render->Init(mesh, transform, material);
 
 	//Create a camera
@@ -42,10 +44,10 @@ void Scene::Init(ShaderManager* shaderManager)
 	mActiveCamera = camera;
 
 	mObjects["Camera"] = mCamera;
-	mObjects["Cube1"] = cube1;
+	mObjects["Cube1"] = &cube1;
 	
 	mCamera->Init();
-	cube1->Init();
+	cube1.Init();
 	mRenders.push_back(render);
 }
 

@@ -5,7 +5,7 @@
 #include "Components.h"
 #include "GameObject.h"
 #include "ShaderManager.h"
-
+#include "Registry.h"
 class Scene
 {
 public:
