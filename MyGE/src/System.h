@@ -21,10 +21,10 @@ public:
     virtual void Init() {
         std::cout << "ObjMeshSystem : Init started!" << std::endl;
         auto meshes = Registry::Instance().GetComponents<MeshComponent>();
-        std::cout << "ObjMeshSystem : Init got meshes!" << std::endl;
+        std::cout << "ObjMeshSystem : Init got meshes "<< meshes.size() << std::endl;
         for (auto it = meshes.begin(); it != meshes.end(); it++) {
             std::cout << "ObjMeshSystem : Init : Setting up RenderComponent for " << (*it)->mGameObjectID << std::endl;
-            auto render = Registry::Instance().GetComponent<RenderComponent>((*it)->mGameObjectID);
+            auto& render = Registry::Instance().GetComponent<RenderComponent>((*it)->mGameObjectID);
             if (!render.bRender) {
                 std::cout << "ObjMeshSystem : Init : RenderComponent bRender == false!" << std::endl;
             }
@@ -32,12 +32,55 @@ public:
             std::pair<std::vector<Vertex>, std::vector<uint32_t>> couple = LoadMesh((*it)->mObjFilePath);
             (*it)->mVertices = couple.first;
             (*it)->mIndices = couple.second;
+            
+            //Vertex array object-VAO
+            glGenVertexArrays(1, &render.mVAO);
+            glBindVertexArray(render.mVAO);
+
+            //Vertex buffer object to hold vertices - VBO
+            glGenBuffers(1, &render.mVBO);
+            glBindBuffer(GL_ARRAY_BUFFER, render.mVBO);
+
+            glBufferData(GL_ARRAY_BUFFER, mVertices.size() * sizeof(Vertex), &mVertices[0], GL_STATIC_DRAW);
+
+            //Verts
+            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)0);
+            glEnableVertexAttribArray(0);
+            //Colors
+            glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(3 * sizeof(GLfloat)));
+            glEnableVertexAttribArray(1);
+            //uvs
+            glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(6 * sizeof(GLfloat)));
+            glEnableVertexAttribArray(2);
+
+            // Element array buffer - EAB
+            glGenBuffers(1, &render.mEAB);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, render.mEAB);
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER, (*it)->mIndices.size() * sizeof(GLuint), (*it)->mIndices.data(), GL_STATIC_DRAW);
+
+            glBindVertexArray(0);
+
             std::cout << "ObjMeshSystem : Init : Finished !" << std::endl;
         }
     }
 
     virtual void OnUpdate(float deltaTime) {
-        
+        auto meshes = Registry::Instance().GetComponents<MeshComponent>();
+        std::cout << "ObjMeshSystem : OnUpdate got meshes! Found " << meshes.size() << " meshes" << std::endl;
+        for (auto it = meshes.begin(); it != meshes.end(); it++) {
+            std::cout << "ObjMeshSystem : OnUpdate Setting up RenderComponent for " << (*it)->mGameObjectID << std::endl;
+            auto& render = Registry::Instance().GetComponent<RenderComponent>((*it)->mGameObjectID);
+            auto& transform = Registry::Instance().GetComponent<TransformComponent>((*it)->mGameObjectID);
+            auto& shader = *Registry::Instance().GetComponent<ShaderComponent>((*it)->mGameObjectID).mShader;
+            //use my shader
+            glUseProgram(shader.GetProgram());
+            //Send my model matrix
+            shader.SetUniformMatrix4(transform.mMatrix, "mMatrix");
+            //Draw object
+            glBindVertexArray(render.mVAO);
+            glDrawElements(GL_TRIANGLES, (*it)->mIndices.size(), GL_UNSIGNED_INT, nullptr);
+            glBindVertexArray(0);
+        }
     }
 
     std::pair<std::vector<Vertex>, std::vector<uint32_t>>LoadMesh(std::string filePath) {

@@ -14,7 +14,6 @@
 //class TransformComponent : public Component {
 struct TransformComponent {
 	int mGameObjectID = 0;
-	int mComponentID = 0;
 	glm::mat4 mMatrix;
 
 	glm::mat4 mPosition;
@@ -29,14 +28,12 @@ struct TransformComponent {
 
 struct MaterialComponent {
 	int mGameObjectID = 0;
-	int mComponentID = 0;
 	glm::vec4 mColour;
 
 };
 
 struct MeshComponent {
 	int mGameObjectID = 0;
-	int mComponentID = 0;
 	std::vector<Vertex> mVertices;
 	std::vector<GLuint> mIndices;
 	std::string mObjFilePath;
@@ -44,7 +41,6 @@ struct MeshComponent {
 
 struct CameraComponent {
 	int mGameObjectID = 0;
-	int mComponentID = 0;
 	bool bIsMainCamera = 1;
 
 	glm::mat4x4* mPmatrix{ nullptr };         // denne,
@@ -68,7 +64,6 @@ struct CameraComponent {
 
 struct RenderComponent {
 	int mGameObjectID = 0;
-	int mComponentID = 0;
 	GLuint mEAB{ 0 };
 	GLuint mVAO{ 0 };
 	GLuint mVBO{ 0 };
@@ -81,15 +76,15 @@ struct RenderComponent {
 
 struct ScriptComponent {
 	int mGameObjectID = 0;
-	int mComponentID = 0;
 	int mScriptID;
 };
 
 struct ShaderComponent
 {
 	int mGameObjectID = 0;
-	int mComponentID = 0;
 	int mShaderID = 0;
 	GLchar* mVertexPath = 0;
 	GLchar* mFragmentPath = 0;
+
+	class Shader* mShader;
 };

@@ -8,12 +8,20 @@ void Scene::Init()
 	CameraComponent cameraComponent = CameraComponent();
 	cameraComponent.bIsMainCamera = true;
 	TransformComponent	transform = TransformComponent();
+
+	//Create a shader component, should be replaced with material
 	ShaderComponent		shader = ShaderComponent();
+	//Give the shader component the plain shader
+	shader.mShader = &mShaderManager.GetShader("PlainShader");
+	//Createa render component
 	RenderComponent		render = RenderComponent();
+	//Create a mesh component
 	MeshComponent		mesh = MeshComponent();
+	//Gives the mesh the file path to its obj file
 	mesh.mObjFilePath = "C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGE/MyGE/src/cube.obj";
 	//Register new GameObject(newID from register)
 	int cubeID = Registry::Instance().GetNewID();
+	std::cout << "CUBE ID == " << cubeID << std::endl;
 	//Create a struct of gameobject called cube
 	GameObject cube = { cubeID };
 	//Registry Add GameObject to count
@@ -21,20 +29,11 @@ void Scene::Init()
 
 	//Register the components we want to exist
 	Registry::Instance().RegisterComponent<CameraComponent>(cameraComponent, cubeID);
-	Registry::Instance().RegisterComponent<TransformComponent	>(transform, cubeID);
-	Registry::Instance().RegisterComponent<ShaderComponent		>(shader, cubeID);
-	Registry::Instance().RegisterComponent<RenderComponent		>(render, cubeID);
+	Registry::Instance().RegisterComponent<TransformComponent>(transform, cubeID);
+	Registry::Instance().RegisterComponent<ShaderComponent>(shader, cubeID);
+	Registry::Instance().RegisterComponent<RenderComponent>(render, cubeID);
+	Registry::Instance().RegisterComponent<MeshComponent>(mesh, cubeID);
 
-	//Mesh object
-	//Register new GameObject(newID from register)
-	int meshID = Registry::Instance().GetNewID();
-	mesh.mGameObjectID = cubeID;
-	//Create a struct of gameobject called cube
-	GameObject meshGO = { meshID };
-	//Registry Add GameObject to count
-	Registry::Instance().RegisterGameObject(meshGO);
-	Registry::Instance().RegisterComponent<MeshComponent		>(mesh, meshID);
-	Registry::Instance().RegisterComponent<TransformComponent	>(transform, meshID);
 	std::cout << "Scene : Finished Creating Components!" << std::endl;
 
 
