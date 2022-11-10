@@ -9,129 +9,160 @@
 #include "ShaderManager.h"
 #include "Shader.h"
 
+
+void glfw_onError(int error, const char* desc) {
+	std::cout << "GLFW error : " << error << ", " << desc << std::endl;
+}
+
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+	glViewport(0, 0, width, height);
+}
 MyGE::MyGE() {
-    
+ 
 }
 int MyGE::run()
 {
-    //Init gl
-    glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    //Our window into the game world is a RenderWindow
-    mWindow = new RenderWindow();
-    //Init, close if not sucess
-    mWindow->Init(glfwCreateWindow(800, 600, "MyGE", NULL, NULL));
- 
-    glfwSwapInterval(1);
-    //In this demo I will render 1 secen
-    Registry r = Registry();
-    Scene* scene = new Scene(r);
-    //The render window knows what scene to render
-    //mWindow->SetActiveScene(scene);
-    
-    //Creates registry instance
-    Registry::Instance();
+	std::cout << "MyGE : started running" << std::endl;
+	// define the function's prototype
+	//typedef void (*GL_GENBUFFERS) (GLsizei, GLuint*);
+	//// find the function and assign it to a function pointer
+	//GL_GENBUFFERS glGenBuffers = (GL_GENBUFFERS)glfwGetProcAddress("glGenBuffers");
+	//// function can now be called as normal
+	//unsigned int buffer;
+	//glGenBuffers(1, &buffer);
+	//Init gl
+	glfwInit();
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
+	//glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-    //ScriptingManager scripting = ScriptingManager();
-    //mScriptingManager = &scripting;
-    //mScriptingManager->Init();
-    //
-    SceneManager scenemanager = SceneManager();
-    mSceneManager = &scenemanager;
-    mSceneManager->AddScene(*scene);
+	//Our window into the game world is a RenderWindow
+	//mWindow = RenderWindow();
+	//Init, close if not sucess
+	mRenderWindow = glfwCreateWindow(800, 600, "MyGE", NULL, NULL);
 
-    ShaderManager shaderManager = ShaderManager();
-    mShaderManager = &shaderManager;
+	//mWindow.Init(window);
+	if (mRenderWindow == NULL) {
+		std::cout << "MyGE : Failed to create GLFW Window" << std::endl;
+		glfwTerminate();
+		return -1;
+	}
+	glfwMakeContextCurrent(mRenderWindow);
+	glfwSwapInterval(1);
 
-    //Init
-    mSceneManager->GetScene()->Init(mShaderManager);
-    //The render window knows what scene to render
-    //mWindow->SetActiveScene(mSceneManager->GetScene());
-    //Main loop
-    while (!mWindow->ShouldCloseWindow()) {
-        double time = glfwGetTime();
-        //Process input
-        ProcessInput();
-        //Change Game
-        mSceneManager->GetScene()->OnUpdate();
-        
-        //Render
-        mWindow->Render();
-    }
-    
-    glfwDestroyWindow(mRenderWindow);
-    glfwTerminate();
-    return 0;
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+	{
+		std::cout << "Failed to initialize GLAD" << std::endl;
+		return -1;
+	}
+
+	glViewport(0, 0, 800, 600);
+
+	glfwSetFramebufferSizeCallback(mRenderWindow, framebuffer_size_callback);
+
+	//In this demo I will render 1 secen
+	Registry* registry = new Registry();
+	std::cout << "MyGE : " << std::endl;
+	//Scene Manager created
+	mSceneManager = new SceneManager();
+
+	mScriptingManager = new ScriptingManager();
+
+	mShaderManager = new ShaderManager();
+	//Creates registry instance
+	Registry::Instance();
+
+	mScene = new Scene(*mShaderManager);
+	mScene->Init();
+
+	while (!glfwWindowShouldClose(mRenderWindow))
+	{
+		//Process input
+		ProcessInput();
+
+		//Update game
+		mScene->OnUpdate(1.0f/60.f);
+
+		//Rendering
+		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		glfwSwapBuffers(mRenderWindow);
+		glfwPollEvents();
+	}
+
+	glfwTerminate();
+
+	return 0;
 }
+    
 
 void MyGE::ProcessInput()
 {
-    if (glfwGetKey(mWindow->GetWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+    if (glfwGetKey(mRenderWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         std::cout << "Escape Pressed" << std::endl;
-        glfwSetWindowShouldClose(mWindow->GetWindow(), true);
+        glfwSetWindowShouldClose(mRenderWindow, true);
     }
-    if (glfwGetKey(mWindow->GetWindow(), GLFW_KEY_W) == GLFW_PRESS) {
+    if (glfwGetKey(mRenderWindow, GLFW_KEY_W) == GLFW_PRESS) {
         std::cout << "Move forward" << std::endl;
       
     }
-    if (glfwGetKey(mWindow->GetWindow(), GLFW_KEY_N) == GLFW_PRESS) {
+    if (glfwGetKey(mRenderWindow, GLFW_KEY_N) == GLFW_PRESS) {
         std::cout << "Move forward" << std::endl;
         //Launches new scene
-        Scene* s = mSceneManager->GetNextScene(1);
+        Scene* s = &mSceneManager->GetNextScene(1);
         //Init the scene
-        s->Init(mShaderManager);
+        s->Init();
         //The render window knows what scene to render
         //mWindow->SetActiveScene(s);
     }
 
-    // Handles mouse inputs
-	if (glfwGetMouseButton(mRenderWindow, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
-	{
-		// Hides mouse cursor
-		glfwSetInputMode(mRenderWindow, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-
-		// Prevents camera from jumping on the first click
-		if (firstClick)
-		{
-			glfwSetCursorPos(mRenderWindow, (width / 2), (height / 2));
-			firstClick = false;
-		}
-
-		// Stores the coordinates of the cursor
-		double mouseX;
-		double mouseY;
-		// Fetches the coordinates of the cursor
-		glfwGetCursorPos(window, &mouseX, &mouseY);
-
-		// Normalizes and shifts the coordinates of the cursor such that they begin in the middle of the screen
-		// and then "transforms" them into degrees 
-		float rotX = sensitivity * (float)(mouseY - (height / 2)) / height;
-		float rotY = sensitivity * (float)(mouseX - (width / 2)) / width;
-
-		// Calculates upcoming vertical change in the Orientation
-		glm::vec3 newOrientation = glm::rotate(Orientation, glm::radians(-rotX), glm::normalize(glm::cross(Orientation, Up)));
-
-		// Decides whether or not the next vertical Orientation is legal or not
-		if (abs(glm::angle(newOrientation, Up) - glm::radians(90.0f)) <= glm::radians(85.0f))
-		{
-			Orientation = newOrientation;
-		}
-
-		// Rotates the Orientation left and right
-		Orientation = glm::rotate(Orientation, glm::radians(-rotY), Up);
-
-		// Sets mouse cursor to the middle of the screen so that it doesn't end up roaming around
-		glfwSetCursorPos(window, (width / 2), (height / 2));
-	}
-	else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE)
-	{
-		// Unhides cursor since camera is not looking around anymore
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-		// Makes sure the next time the camera looks around it doesn't jump
-		firstClick = true;
-	}
+    //// Handles mouse inputs
+	//if (glfwGetMouseButton(mRenderWindow, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
+	//{
+	//	// Hides mouse cursor
+	//	glfwSetInputMode(mRenderWindow, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+    //
+	//	// Prevents camera from jumping on the first click
+	//	if (firstClick)
+	//	{
+	//		glfwSetCursorPos(mRenderWindow, (width / 2), (height / 2));
+	//		firstClick = false;
+	//	}
+    //
+	//	// Stores the coordinates of the cursor
+	//	double mouseX;
+	//	double mouseY;
+	//	// Fetches the coordinates of the cursor
+	//	glfwGetCursorPos(mRenderWindow, &mouseX, &mouseY);
+    //
+	//	// Normalizes and shifts the coordinates of the cursor such that they begin in the middle of the screen
+	//	// and then "transforms" them into degrees 
+	//	float rotX = sensitivity * (float)(mouseY - (height / 2)) / height;
+	//	float rotY = sensitivity * (float)(mouseX - (width / 2)) / width;
+    //
+	//	// Calculates upcoming vertical change in the Orientation
+	//	glm::vec3 newOrientation = glm::rotate(Orientation, glm::radians(-rotX), glm::normalize(glm::cross(Orientation, Up)));
+    //
+	//	// Decides whether or not the next vertical Orientation is legal or not
+	//	if (abs(glm::angle(newOrientation, Up) - glm::radians(90.0f)) <= glm::radians(85.0f))
+	//	{
+	//		Orientation = newOrientation;
+	//	}
+    //
+	//	// Rotates the Orientation left and right
+	//	Orientation = glm::rotate(Orientation, glm::radians(-rotY), Up);
+    //
+	//	// Sets mouse cursor to the middle of the screen so that it doesn't end up roaming around
+	//	glfwSetCursorPos(window, (width / 2), (height / 2));
+	//}
+	//else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE)
+	//{
+	//	// Unhides cursor since camera is not looking around anymore
+	//	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+	//	// Makes sure the next time the camera looks around it doesn't jump
+	//	firstClick = true;
+	//}
 }
-
-

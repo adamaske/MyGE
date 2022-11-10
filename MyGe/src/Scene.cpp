@@ -1,81 +1,106 @@
 #include "Scene.h"
-
-void Scene::Init(ShaderManager* shaderManager) 
+#include <memory>
+#include "Shader.h"
+#include "System.h"
+void Scene::Init()
 {
-	//Should be removed
-	//mShaderManager = shaderManager;
-	//
-	////Create a registry and set it as the current instance
-	//
-	//mRegistry = Registry::Instance();
-	////Register the components we want to exist
-	//Registry::Instance().RegisterComponent<CameraComponent>();
-	//Registry::Instance().RegisterComponent<TransformComponent>();
-	//Registry::Instance().RegisterComponent<ShaderComponent>();
-	//Registry::Instance().RegisterComponent<RenderComponent>();
-	//
-	////Register new GameObject(newID from register)
-	//int cubeID = Registry::Instance().GetNewID();
-	////Create a struct of gameobject called cube
-	//GameObject cube = { cubeID };
-	////Registry Add GameObject to count
-	//Registry::Instance().RegisterGameObject<GameObject>(cube, cubeID);
-	////Registry::Instance().AddGameObject<GameObject>(cube, cubeID);
-	//
-	//TransformComponent t =  TransformComponent{};
-	//Registry::Instance().AddComponent<TransformComponent>(cubeID, t);
-	////Create material and material component
-	//int a = cubeID;
-	//MaterialComponent material = MaterialComponent{};
-	//Registry::Instance().Register<MaterialComponent>(material);
-	//
-	////Mesh component for verts
-	//MeshComponent mesh = MeshComponent{};
-	////Register meshcomp
-	//Registry::Instance().Register<MeshComponent>(mesh);
-	//
-	////RenderComponent for rendering, register it
-	//RenderComponent render = RenderComponent{};
-	//Registry::Instance().Register<RenderComponent>(render);
-	//
-	////Create a camera
-	//int cameraID = Registry::Instance().GetNewID();
-	//Registry::Instance().Register<GameObject>(GameObject());
-	//
-	////Transform for the camera
-	//TransformComponent cameraTransform = TransformComponent{};
-	//Registry::Instance().Register<TransformComponent>(cameraTransform);
-	//
-	////Give camera a camera component
-	//CameraComponent camera = CameraComponent{};
-	//Registry::Instance().Register<CameraComponent>(camera);
+
+	CameraComponent cameraComponent = CameraComponent();
+	cameraComponent.bIsMainCamera = true;
+	TransformComponent	transform = TransformComponent();
+	ShaderComponent		shader = ShaderComponent();
+	RenderComponent		render = RenderComponent();
+	MeshComponent		mesh = MeshComponent();
+	mesh.mObjFilePath = "C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGE/MyGE/src/cube.obj";
+	//Register new GameObject(newID from register)
+	int cubeID = Registry::Instance().GetNewID();
+	//Create a struct of gameobject called cube
+	GameObject cube = { cubeID };
+	//Registry Add GameObject to count
+	Registry::Instance().RegisterGameObject(cube);
+
+	//Register the components we want to exist
+	Registry::Instance().RegisterComponent<CameraComponent>(cameraComponent, cubeID);
+	Registry::Instance().RegisterComponent<TransformComponent	>(transform, cubeID);
+	Registry::Instance().RegisterComponent<ShaderComponent		>(shader, cubeID);
+	Registry::Instance().RegisterComponent<RenderComponent		>(render, cubeID);
+
+	//Mesh object
+	//Register new GameObject(newID from register)
+	int meshID = Registry::Instance().GetNewID();
+	mesh.mGameObjectID = cubeID;
+	//Create a struct of gameobject called cube
+	GameObject meshGO = { meshID };
+	//Registry Add GameObject to count
+	Registry::Instance().RegisterGameObject(meshGO);
+	Registry::Instance().RegisterComponent<MeshComponent		>(mesh, meshID);
+	Registry::Instance().RegisterComponent<TransformComponent	>(transform, meshID);
+	std::cout << "Scene : Finished Creating Components!" << std::endl;
+
+
+	CameraComponent& camera = Registry::Instance().GetComponent<CameraComponent>(cubeID);
+	std::cout << "Scene : Init : Created CameraComponent" << std::endl;
+	//Creating systems
+	//System for creating mesh from files nad rendering them
+	mObjMeshSystem = new ObjMeshSystem();
+
+	mSystems.insert({ "ObjMeshSystem", mObjMeshSystem });
+	for (auto it = mSystems.begin(); it != mSystems.end(); it++)
+	{
+		std::cout << "Scene : Init : " << (*it).first << std::endl;
+		//Creating systems
+		(*it).second->Init();
+		std::cout << "Scene : Finished Init : " << (*it).first << std::endl;
+	}
+
 }
 
 
-void Scene::OnUpdate() {
+void Scene::OnUpdate(float deltaTime) {
+	std::cout << "Scene : OnUpdate started! " << std::endl;
+	for (auto it = mSystems.begin(); it != mSystems.end(); it++)
+	{
+		std::cout << "Scene : OnUpdate : Systems : " << (*it).first << std::endl;
+		(*it).second->OnUpdate(deltaTime);
+		std::cout << "Scene : OnUpdate : Systems : " << (*it).first << " finished!" << std::endl;
+	}
 
 	////Gets all GameObjects in the registry, a go system
-	//auto gameObjects = Registry::Instance().GetObjects<GameObject>();
-	////Prints all gameobject id's
-	//for (auto it = gameObjects.begin(); it != gameObjects.end(); it++)
-	//{
-	//	std::cout << "Scene : OnUpdate : " << (*it).mID << std::endl;
-	//}
-	//
-	////Go thorugh camera
-	//auto cameras = Registry::Instance().GetObjects<CameraComponent>();
-	//for (auto it = cameras.begin(); it != cameras.end(); it++)
-	//{
-	//	//Check if it is the main camera
-	//	if ((*it).bIsMainCamera) {
-	//
-	//	}
-	//}
+	auto gameObjects = Registry::Instance().GetGameObjects();
+	//Prints all gameobject id's
+	for (auto it = gameObjects.begin(); it != gameObjects.end(); it++)
+	{
+		std::cout << "Scene : OnUpdate : " << (*it).mID << std::endl;
+	}
+
+	//Go thorugh camera
+	auto cameras = Registry::Instance().GetComponents<CameraComponent>();
+	for (auto it = cameras.begin(); it != cameras.end(); it++)
+	{
+		std::cout << "Scene : OnUpdate : CameraComponent OnUpdate!" << std::endl;
+		//Check if it is the main camera
+		if ((*it)->bIsMainCamera) {
+			Shader& s = mShaderManager.GetShader("PlainShader");
+			s.SetUniformMatrix4((*it)->mViewMatrix, "vMatrix");
+			s.SetUniformMatrix4((*it)->mProjectionMatrix, "pMatrix");
+		}
+	}
+	//Go thorugh meshes
+	auto meshes = Registry::Instance().GetComponents<MeshComponent>();
+	for (auto it = meshes.begin(); it != meshes.end(); it++)
+	{
+		std::cout << "Scene : OnUpdate : MeshComponent OnUpdate!" << std::endl;
+		RenderComponent& renderComponent = Registry::Instance().GetComponent<RenderComponent>((*it)->mGameObjectID);
+		glBindVertexArray(renderComponent.mVAO);
+		glDrawElements(GL_TRIANGLES, (*it)->mIndices.size(), GL_UNSIGNED_INT, nullptr);
+		glBindVertexArray(0);
+		std::cout << "RenderComponent : Render End!" << std::endl;
+	}
 	//
 	////Go thrugh renderers
-	//auto renders = Registry::Instance().GetObjects<RenderComponent>();
+	//auto renders = Registry::Instance().GetComponents<RenderComponent>();
 	//for (auto it = renders.begin(); it != renders.end(); it++)
 	//{
-	//
+	//	
 	//}
 }
