@@ -4,13 +4,13 @@ class RenderWindow : public MainWindow
 {
 public:
 	RenderWindow();
-	virtual void Init(struct GLFWwindow* window) override;
-	void Render();
+	//virtual void Init(struct GLFWwindow* window) override;
+	//void Render();
 
 
 private:
-	class Scene* mActiveScene;
+	//class Scene* mActiveScene;
 
-	
+
 };
 

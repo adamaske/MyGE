@@ -1,27 +1,27 @@
 #include "MainWindow.h"
 #include <iostream>
-#include "GLFW/glfw3.h"
 
-MainWindow::MainWindow() : mWindow(nullptr) {
-}
 
-void MainWindow::Init(GLFWwindow* window)
-{
-    mWindow = window;
+//MainWindow::MainWindow() : mWindow(nullptr) {
+//}
 
-    //glViewport(0, 0, 800, 600);
-    //Make context current
-    glfwMakeContextCurrent(mWindow);
+//void MainWindow::Init(GLFWwindow* window)
+//{
+//    mWindow = window;
+//
+//    //glViewport(0, 0, 800, 600);
+//    //Make context current
+//    glfwMakeContextCurrent(mWindow);
+//
+//}
 
-}
+//bool MainWindow::ShouldCloseWindow()
+//{
+//    return(glfwWindowShouldClose(mWindow));
+//}
 
-bool MainWindow::ShouldCloseWindow()
-{
-    return(glfwWindowShouldClose(mWindow));
-}
-
-GLFWwindow* MainWindow::GetWindow()
-{
-    return mWindow;
-}
+//GLFWwindow* MainWindow::GetWindow()
+//{
+//    return mWindow;
+//}
 

@@ -11,8 +11,8 @@ public:
 
 	void Init() {
 		std::string dir = "C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGe/MyGe/Shaders/";
-		Shader shader = Shader(	"C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGe/MyGe/src/Shaders/plainshader.vert", 
-								"C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGe/MyGe/src/Shaders/plainshader.frag");
+		Shader shader = Shader("C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGe/MyGe/src/Shaders/plainshader.vert",
+			"C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGe/MyGe/src/Shaders/plainshader.frag");
 		mShaders["PlainShader"] = &shader;
 
 		shader = Shader("C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGe/MyGe/src/Shaders/lightshader.vert",
@@ -23,7 +23,7 @@ public:
 			"C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGe/MyGe/src/Shaders/textureshader.frag");
 		mShaders["TextureShader"] = &shader;
 
-		
+
 	};
 
 	Shader& GetShader(std::string name) {

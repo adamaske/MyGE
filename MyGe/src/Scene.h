@@ -10,19 +10,17 @@
 class Scene
 {
 public:
-	Scene(Registry& registry) : mRegistry(registry) {
+	Scene(ShaderManager& shader) : mShaderManager(shader) {
 		std::cout << "Scene created!" << std::endl;
 	};
 
-	virtual void Init(class ShaderManager* shaderManager);
+	virtual void Init();
 
 	virtual void OnUpdate();
 
-	
+
 private:
 	//The scene wants to know of all the shaders
-	ShaderManager* mShaderManager;
-
-	Registry& mRegistry;
+	ShaderManager& mShaderManager;
 };
 
