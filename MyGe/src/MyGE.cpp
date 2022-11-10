@@ -67,6 +67,7 @@ int MyGE::run()
 
 	mScriptingManager = new ScriptingManager();
 
+	mShaderManager = new ShaderManager();
 	//Creates registry instance
 	Registry::Instance();
 
@@ -78,6 +79,8 @@ int MyGE::run()
 		//Process input
 		ProcessInput();
 
+		//Update game
+		mScene->OnUpdate();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}

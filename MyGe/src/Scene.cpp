@@ -63,24 +63,25 @@ void Scene::Init()
 
 void Scene::OnUpdate() {
 
-	//////Gets all GameObjects in the registry, a go system
-	//auto gameObjects = Registry::Instance().GetGameObjects();
-	//
-	////Prints all gameobject id's
-	//for (auto it = gameObjects.begin(); it != gameObjects.end(); it++)
-	//{
-	//	std::cout << "Scene : OnUpdate : " << (*it).mID << std::endl;
-	//}
-	//
-	////Go thorugh camera
-	//auto cameras = Registry::Instance().GetComponents<CameraComponent>();
-	//for (auto it = cameras.begin(); it != cameras.end(); it++)
-	//{
-	//	//Check if it is the main camera
-	//	if ((*it).bIsMainCamera) {
-	//
-	//	}
-	//}
+	////Gets all GameObjects in the registry, a go system
+	auto gameObjects = Registry::Instance().GetGameObjects();
+	
+	//Prints all gameobject id's
+	for (auto it = gameObjects.begin(); it != gameObjects.end(); it++)
+	{
+		std::cout << "Scene : OnUpdate : " << (*it).mID << std::endl;
+	}
+	
+	//Go thorugh camera
+	auto cameras = Registry::Instance().GetComponents<CameraComponent>();
+	for (auto it = cameras.begin(); it != cameras.end(); it++)
+	{
+		std::cout << "Scene : OnUpdate : CameraComponent OnUpdate!" << std::endl;
+		////Check if it is the main camera
+		//if ((*it).bIsMainCamera) {
+		//
+		//}
+	}
 	//
 	////Go thrugh renderers
 	//auto renders = Registry::Instance().GetComponents<RenderComponent>();

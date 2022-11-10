@@ -46,13 +46,14 @@ public:
 		return nullptr;
 	}
 
-	std::vector<T&> GetAllUnits() {
-		std::vector<T&> units;
+	std::vector<T*> GetAllUnits() {
+		std::vector<T*> units;
 
 		for (auto it = mUnits.begin(); it != mUnits.end(); it++)
 		{
-			units.push_back((it).second);
+			units.push_back(&it->second);
 		}
+		return units;
 	}
 private:
 	std::unordered_map<int, T> mUnits;
@@ -194,7 +195,7 @@ public:
 	}
 
 	template<typename T>
-	std::vector<T> GetComponents() {
+	std::vector<T*> GetComponents() {
 		const char* typeName = typeid(T).name();
 		//Find if theres is an array of this item
 		if (mComponentsHolder.find(typeName) != mComponentsHolder.end()) {
@@ -202,8 +203,8 @@ public:
 			std::cout << "Registry : GetComponents<T>() returning UnitHolder " << std::endl;
 			return GetUnitHolder<T>()->GetAllUnits();
 		}
-		std::cout << "Registry : GetComponents<T>() return empty vector" << std::endl;
-		std::vector<T> v;
+		////std::cout << "Registry : GetComponents<T>() return empty vector" << std::endl;
+		std::vector<T*> v{};
 		return v;
 	}
 	template<typename T>
