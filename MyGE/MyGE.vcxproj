@@ -184,6 +184,7 @@
     <ClInclude Include="src\MyGE.h" />
     <ClInclude Include="src\MainWindow.h" />
     <ClInclude Include="src\Vertex.h" />
+    <ClInclude Include="Systems.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

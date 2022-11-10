@@ -56,5 +56,7 @@ protected:
 	ShaderManager* mShaderManager;
 
 	Scene* mScene;
+
+	GLFWwindow* mRenderWindow;
 };
 

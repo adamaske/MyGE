@@ -37,14 +37,15 @@ int MyGE::run()
 	//Our window into the game world is a RenderWindow
 	//mWindow = RenderWindow();
 	//Init, close if not sucess
-	GLFWwindow* window = glfwCreateWindow(800, 600, "MyGE", NULL, NULL);
+	mRenderWindow = glfwCreateWindow(800, 600, "MyGE", NULL, NULL);
+	
 	//mWindow.Init(window);
-	if (window == NULL) {
+	if (mRenderWindow == NULL) {
 		std::cout << "MyGE : Failed to create GLFW Window" << std::endl;
 		glfwTerminate();
 		return -1;
 	}
-	glfwMakeContextCurrent(window);
+	glfwMakeContextCurrent(mRenderWindow);
 	glfwSwapInterval(1);
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -55,7 +56,7 @@ int MyGE::run()
 
 	glViewport(0, 0, 800, 600);
 
-	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	glfwSetFramebufferSizeCallback(mRenderWindow, framebuffer_size_callback);
 
 	mWindow = new RenderWindow();
 
@@ -74,14 +75,20 @@ int MyGE::run()
 	mScene = new Scene(*mShaderManager);
 	mScene->Init();
 
- 	while (!glfwWindowShouldClose(window))
+ 	while (!glfwWindowShouldClose(mRenderWindow))
 	{
 		//Process input
 		ProcessInput();
 
+
 		//Update game
 		mScene->OnUpdate();
-		glfwSwapBuffers(window);
+
+		//Rendering
+		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		glfwSwapBuffers(mRenderWindow);
 		glfwPollEvents();
 	}
 
@@ -125,10 +132,10 @@ int MyGE::run()
 
 void MyGE::ProcessInput()
 {
-	//if (glfwGetKey(mWindow.GetWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-	//    std::cout << "Escape Pressed" << std::endl;
-	//    glfwSetWindowShouldClose(mWindow.GetWindow(), true);
-	//}
+	if (glfwGetKey(mRenderWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+		glfwSetWindowShouldClose(mRenderWindow, true);
+	}
+		
 	//if (glfwGetKey(mWindow.GetWindow(), GLFW_KEY_W) == GLFW_PRESS) {
 	//    std::cout << "Move forward" << std::endl;
 	//  
