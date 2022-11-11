@@ -48,7 +48,7 @@ public:
 
 
 protected:
-	RenderWindow* mWindow;
+	RenderWindow* mRenderWindow;
 
 	////Lua scripting
 	ScriptingManager* mScriptingManager;
@@ -58,8 +58,6 @@ protected:
 	ShaderManager* mShaderManager;
 
 	Scene* mScene;
-
-	GLFWwindow* mRenderWindow;
 
 	bool mFirstClick = false;
 	float mWindowHeight = 1200;

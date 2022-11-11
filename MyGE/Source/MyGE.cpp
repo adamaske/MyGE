@@ -18,6 +18,10 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
 	glViewport(0, 0, width, height);
 }
+
+void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
+
+};
 MyGE::MyGE() {
  
 }
@@ -41,7 +45,7 @@ int MyGE::run()
 	//Our window into the game world is a RenderWindow
 	//mWindow = RenderWindow();
 	//Init, close if not sucess
-	mRenderWindow = glfwCreateWindow(800, 600, "MyGE", NULL, NULL);
+	mRenderWindow = new RenderWindow(glfwCreateWindow(800, 600, "MyGE", NULL, NULL));
 
 	//mWindow.Init(window);
 	if (mRenderWindow == NULL) {
@@ -49,7 +53,8 @@ int MyGE::run()
 		glfwTerminate();
 		return -1;
 	}
-	glfwMakeContextCurrent(mRenderWindow);
+	
+	mRenderWindow->Init();
 	glfwSwapInterval(1);
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -57,17 +62,10 @@ int MyGE::run()
 		std::cout << "Failed to initialize GLAD" << std::endl;
 		return -1;
 	}
-	//GLenum err = glewInit();
-	//if (GLEW_OK != err)
-	//{
-	//	/* Problem: glewInit failed, something is seriously wrong. */
-	//	std::cerr << "Error: " << glewGetErrorString(err) << std::endl;
-	//
-	//}
-	//std::cerr << "Status: Using GLEW " << glewGetString(GLEW_VERSION) << std::endl;
+	
 	glViewport(0,0, mWindowHeight, mWindowHeight);
 
-	glfwSetFramebufferSizeCallback(mRenderWindow, framebuffer_size_callback);
+	glfwSetFramebufferSizeCallback(mRenderWindow->GetWindow(), framebuffer_size_callback);
 
 	//In this demo I will render 1 secen
 	Registry* registry = new Registry();
@@ -83,8 +81,9 @@ int MyGE::run()
 
 	mScene = new Scene(*mShaderManager);
 	mScene->Init();
-
-	while (!glfwWindowShouldClose(mRenderWindow))
+	glfwSetInputMode(mRenderWindow->GetWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetCursorPosCallback(mRenderWindow->GetWindow(), mouse_callback);
+	while (!mRenderWindow->ShouldClose())
 	{
 		//Process input
 		ProcessInput();
@@ -98,9 +97,10 @@ int MyGE::run()
 
 		//Update game
 		mScene->OnUpdate(1.0f/60.f);
+		
+		mRenderWindow->Render();
 
-
-		glfwSwapBuffers(mRenderWindow);
+		glfwSwapBuffers(mRenderWindow->GetWindow());
 		glfwPollEvents();
 	}
 
@@ -110,69 +110,75 @@ int MyGE::run()
 }
     
 
+
 void MyGE::ProcessInput()
 {
-    if (glfwGetKey(mRenderWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-        std::cout << "Escape Pressed" << std::endl;
-        glfwSetWindowShouldClose(mRenderWindow, true);
-    }
-    if (glfwGetKey(mRenderWindow, GLFW_KEY_W) == GLFW_PRESS) {
-        std::cout << "Move forward" << std::endl;
-      
-    }
-    if (glfwGetKey(mRenderWindow, GLFW_KEY_N) == GLFW_PRESS) {
-        std::cout << "Move forward" << std::endl;
-        //Launches new scene
-        Scene* s = &mSceneManager->GetNextScene(1);
-        //Init the scene
-        s->Init();
-        //The render window knows what scene to render
-        //mWindow->SetActiveScene(s);
-    }
-
-    // Handles mouse inputs
-	if (glfwGetMouseButton(mRenderWindow, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
+	if (glfwGetKey(mRenderWindow->GetWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+		std::cout << "Escape Pressed" << std::endl;
+		mRenderWindow->Close();
+	}
+	//if (glfwGetKey(mWindow, GLFW_KEY_W) == GLFW_PRESS) {
+	//	std::cout << "Move forward" << std::endl;
+	//
+	//}
+	//if (glfwGetKey(mWindow, GLFW_KEY_N) == GLFW_PRESS) {
+	//	std::cout << "Move forward" << std::endl;
+	//	//Launches new scene
+	//	
+	//	//Init the scene
+	//	//The render window knows what scene to render
+	//	//mWindow->SetActiveScene(s);
+	//}
+	//
+	// Handles mouse inputs
+	if (glfwGetMouseButton(mRenderWindow->GetWindow(), GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
 	{
 		// Hides mouse cursor
-		glfwSetInputMode(mRenderWindow, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-    
+		glfwSetInputMode(mRenderWindow->GetWindow(), GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+	
 		// Prevents camera from jumping on the first click
 		if (mFirstClick)
 		{
-			glfwSetCursorPos(mRenderWindow, (mWindowWidth / 2), (mWindowHeight / 2));
+			glfwSetCursorPos(mRenderWindow->GetWindow(), (mWindowWidth / 2), (mWindowHeight / 2));
 			mFirstClick = false;
 		}
-    
+	
 		// Stores the coordinates of the cursor
 		double mouseX;
 		double mouseY;
 		// Fetches the coordinates of the cursor
-		glfwGetCursorPos(mRenderWindow, &mouseX, &mouseY);
-    
+		glfwGetCursorPos(mRenderWindow->GetWindow(), &mouseX, &mouseY);
+	
 		// Normalizes and shifts the coordinates of the cursor such that they begin in the middle of the screen
 		// and then "transforms" them into degrees 
 		float rotX = mMouseSensitivity * (float)(mouseY - (mWindowHeight / 2)) / mWindowHeight;
 		float rotY = mMouseSensitivity * (float)(mouseX - (mWindowWidth / 2)) / mWindowWidth;
-    
+
+		auto camera= Registry::Instance().GetComponent<CameraComponent>(2);
+		auto transform = Registry::Instance().GetComponent<TransformComponent>(2);
+		
+		camera.mPitch += rotY;
+		camera.mYaw += rotX;
+		//
 		//// Calculates upcoming vertical change in the Orientation
 		//glm::vec3 newOrientation = glm::rotate(mOrientation, glm::radians(-rotX), glm::normalize(glm::cross(mOrientation, glm::quat(1))));
-    	//
+		//
 		//// Decides whether or not the next vertical Orientation is legal or not
 		//if (abs(glm::angle(newOrientation, Up) - glm::radians(90.0f)) <= glm::radians(85.0f))
 		//{
 		//	Orientation = newOrientation;
 		//}
-		// Rotates the Orientation left and right
-		mOrientation = glm::rotate(mOrientation, glm::radians(-rotY), glm::vec3(0,1,0));
+		//// Rotates the Orientation left and right
+		//mOrientation = glm::rotate(mOrientation, glm::radians(-rotY), glm::vec3(0, 1, 0));
 	
-		
+	
 		// Sets mouse cursor to the middle of the screen so that it doesn't end up roaming around
-		glfwSetCursorPos(mRenderWindow, (mWindowWidth / 2), (mWindowHeight / 2));
+		glfwSetCursorPos(mRenderWindow->GetWindow(), (mWindowWidth / 2), (mWindowHeight / 2));
 	}
-	else if (glfwGetMouseButton(mRenderWindow, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE)
+	else if (glfwGetMouseButton(mRenderWindow->GetWindow(), GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE)
 	{
 		// Unhides cursor since camera is not looking around anymore
-		glfwSetInputMode(mRenderWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		glfwSetInputMode(mRenderWindow->GetWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 		// Makes sure the next time the camera looks around it doesn't jump
 		mFirstClick = true;
 	}

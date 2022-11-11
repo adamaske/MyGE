@@ -2,6 +2,9 @@
 #include <memory>
 #include "Shader.h"
 #include "Systems/System.h"
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/type_ptr.hpp"
 void Scene::Init()
 {
 	CameraComponent cameraComponent = CameraComponent();
@@ -19,7 +22,7 @@ void Scene::Init()
 	mesh.bHasBeenModified = true;
 	mesh.mGameObjectID = 1;
 	//Gives the mesh the file path to its obj file
-	mesh.mObjFilePath = "C:/Users/adama/Documents/GitHub/MyGE/Resources/Meshes/cube.obj";
+	mesh.mObjFilePath = "C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGE/Resources/Meshes/cube.obj";
 	//Register new GameObject(newID from register)
 	int cubeID = Registry::Instance().GetNewID();
 	std::cout << "CUBE ID == " << cubeID << std::endl;
@@ -27,7 +30,9 @@ void Scene::Init()
 	GameObject cube = { cubeID };
 	//Registry Add GameObject to count
 	Registry::Instance().RegisterGameObject(cube);
-
+	mCameraID = Registry::Instance().GetNewID();
+	GameObject cameraGO = { mCameraID };
+	Registry::Instance().RegisterGameObject(cameraGO);
 	//Register the components we want to exist
 	Registry::Instance().RegisterComponent<CameraComponent>(cameraComponent, cubeID);
 	Registry::Instance().RegisterComponent<TransformComponent>(transform, cubeID);
@@ -95,9 +100,20 @@ void Scene::OnUpdate(float deltaTime) {
 			}
 			//Use this shader
 			glUseProgram(shader->GetProgram());
+			glm::vec3 direction;
+			direction.x = cos(glm::radians(cameras[i]->mYaw)) * cos(glm::radians(cameras[i]->mPitch));
+			direction.y = sin(glm::radians(cameras[i]->mPitch));
+			direction.z = sin(glm::radians(cameras[i]->mYaw)) * cos(glm::radians(cameras[i]->mPitch));
+
+			cameras[i]->mForward = direction;
+			cameras[i]->mPosition = glm::vec3(transform.mMatrix[3].x, transform.mMatrix[3].y, transform.mMatrix[3].z);
+			cameras[i]->mForward = glm::normalize(glm::vec3(cameras[i]->mTarget - cameras[i]->mPosition));
+			glm::vec3 up{ 0.f, 1.f, 0.f };
+			cameras[i]->mRight = glm::normalize(glm::cross(cameras[i]->mForward, up));
+			cameras[i]->mUp = glm::normalize(glm::cross(cameras[i]->mForward, -cameras[i]->mRight));
 			//Update matrices 
-			cameras[i]->mProjectionMatrix = glm::perspective(120.f, 800.f/600.f, 0.1f, 1000.f);
-			cameras[i]->mViewMatrix = glm::lookAt(glm::vec3(0, 0, 0), glm::vec3(0,0,1), glm::vec3(0, 1, 0));
+			cameras[i]->mProjectionMatrix = glm::perspective(90.f, 16.f / 9.f, 0.1f, 1000.f);
+			cameras[i]->mViewMatrix = glm::lookAt(cameras[i]->mPosition, cameras[i]->mPosition + cameras[i]->mForward, glm::vec3(0, 1, 0));
 			//Set the variables in the PlainShader
 			shader->SetUniformMatrix4(cameras[i]->mViewMatrix, "vMatrix");
 			shader->SetUniformMatrix4(cameras[i]->mProjectionMatrix, "pMatrix");
@@ -105,47 +121,15 @@ void Scene::OnUpdate(float deltaTime) {
 	}
 
 
-	auto meshes = Registry::Instance().GetComponents<MeshComponent>();
-	for (int i = 0; i < meshes.size(); i++)
-	{
-
-		std::cout << "Scene : OnUpdate : MeshComponent OnUpdate!" << std::endl;
-		//Get a render component from this meshcomponent
-		auto renderComponent = Registry::Instance().GetComponent<RenderComponent>(meshes[i]->mGameObjectID);
-		//Get a shader component from this mesh component
-		auto shader = mShaderManager.GetShader("PlainShader");
-		//If we found th ehsdaer "Plainshader
-		if (!shader) {
-			std::cout << "Did not find shader, returning" << std::endl;
-			return;
-		}
-
-		//Use the shader
-
-		glm::mat4 mPos = glm::translate(glm::mat4(1), glm::vec3(0,0,1));
-		glm::mat4 mRot = glm::mat4(1);
-		glm::mat4 mScale = glm::mat4(1);
-		glm::mat4 matrix = mPos * mRot * mScale;;
-		if (!Registry::Instance().Has<TransformComponent>(meshes[i]->mGameObjectID)) {
-			//There is no transform connected with this scene
-		}
-		auto transfrom = Registry::Instance().GetComponent<TransformComponent>(meshes[i]->mGameObjectID);
 	
-		shader->SetUniformMatrix4(matrix, "mMatrix");
-		
-		glBindVertexArray(renderComponent.mVAO);
-
-		glDrawElements(GL_TRIANGLES, meshes[i]->mIndices.size(), GL_UNSIGNED_INT, nullptr);
-		glBindVertexArray(0);
-		std::cout << "RenderComponent : Render End!" << std::endl;
+	std::cout << "Scene : OnUpdate started! " << std::endl;
+	for (auto it = mSystems.begin(); it != mSystems.end(); it++)
+	{
+		std::cout << "Scene : OnUpdate : Systems : " << (*it).first << std::endl;
+		(*it).second->OnUpdate(deltaTime);
+		std::cout << "Scene : OnUpdate : Systems : " << (*it).first << " finished!" << std::endl;
 	}
-	//std::cout << "Scene : OnUpdate started! " << std::endl;
-	//for (auto it = mSystems.begin(); it != mSystems.end(); it++)
-	//{
-	//	std::cout << "Scene : OnUpdate : Systems : " << (*it).first << std::endl;
-	//	(*it).second->OnUpdate(deltaTime);
-	//	std::cout << "Scene : OnUpdate : Systems : " << (*it).first << " finished!" << std::endl;
-	//}
+
 	////Go thorugh meshes
 	//std::cout << "Scene : OnUpdate : Starting to fetch Mesh Componenets!" << std::endl;
 	//if (!Registry::Instance().Has<MeshComponent>()) {

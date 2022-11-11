@@ -19,7 +19,7 @@ struct TransformComponent {
 	glm::mat4 mPosition;
 	glm::mat4 mRotation;
 	glm::mat4 mScale;
-
+	
 	// Legger til rette for simulering
 	glm::vec3 mVelocity;
 	//Kollisjoner
@@ -45,11 +45,11 @@ struct CameraComponent {
 	int mGameObjectID = 1;
 	bool bIsMainCamera = 1;
 
-	glm::mat4x4* mPmatrix{ nullptr };         // denne,
-	glm::mat4x4* mVmatrix{ nullptr };         // og denne, skal legges inn i kameraklasse
 	glm::mat4 mViewMatrix;
 	glm::mat4 mProjectionMatrix;
 
+	glm::vec3 mTarget;
+	glm::vec3 mPosition;
 	glm::vec3 mUp;
 	glm::vec3 mRight;
 	glm::vec3 mForward;
@@ -58,10 +58,10 @@ struct CameraComponent {
 	float mAspectRatio;
 	float mNearPlane;
 	float mFarPlane;
-
-	//Incase the camera dosent have a transform component
-	glm::vec3 mPosition{ 0,0,0 };
-	glm::vec3 mTarget{ 0, 1, 0 };
+	
+	float mYaw = 0;
+	float mPitch = 0;
+	float mRoll = 0;
 };
 
 struct RenderComponent {

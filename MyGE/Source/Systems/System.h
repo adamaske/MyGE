@@ -85,7 +85,7 @@ public:// Set up vertex data (and buffer(s)) and attribute pointers
     }
 
     virtual void OnUpdate(float deltaTime) override{
-        return;
+        //Rotate cube
         std::cout << std::endl << "ObjMeshSystem : OnUpdate" << std::endl;
         if (!Registry::Instance().Has<MeshComponent>()) {
             std::cout << "ObjMeshSystem : Exit update because no MeshComponents in Registry" << std::endl;
@@ -102,38 +102,40 @@ public:// Set up vertex data (and buffer(s)) and attribute pointers
         std::cout << "ObjMeshSystem : OnUpdate cleared checks!" << std::endl;
       
         auto meshes = Registry::Instance().GetComponents<MeshComponent>();
-        std::cout << "ObjMeshSystem : Init got meshes " << meshes.size() << std::endl;
-        for (auto it = meshes.begin(); it != meshes.end(); it++) {
-            std::cout << "ObjMeshSystem : OnUpdate Setting up RenderComponent for " << (*it)->mGameObjectID << std::endl;
-            if (!Registry::Instance().Has<RenderComponent>((*it)->mGameObjectID)) {
-                //This gameobject has a renderer
-                std::cout << "ObjMeshSystem : The object dosent have a RenderComponent, gameObject " << (*it)->mGameObjectID << std::endl;
+        for (int i = 0; i < meshes.size(); i++)
+        {
+            if (!Registry::Instance().Has<RenderComponent>(meshes[i]->mGameObjectID)) {
+                std::cout << "ObjMeshSystem : Exit update because mesh has no RenderComponents in Registry" << std::endl;
                 return;
-            };
-            auto& render = Registry::Instance().GetComponent<RenderComponent>((*it)->mGameObjectID);
-            if (!Registry::Instance().Has<TransformComponent>((*it)->mGameObjectID)) {
-                //This gameobject has a renderer
-                std::cout << "ObjMeshSystem : The object dosent have a TransformComponent, gameObject " << (*it)->mGameObjectID << std::endl;
+            }
+            if (!Registry::Instance().Has<ShaderComponent>(meshes[i]->mGameObjectID)) {
+                std::cout << "ObjMeshSystem : Exit update because mesh has no ShaderComponents in Registry" << std::endl;
                 return;
-            };
-            auto& transform = Registry::Instance().GetComponent<TransformComponent>((*it)->mGameObjectID);
-            if (!Registry::Instance().Has<ShaderComponent>((*it)->mGameObjectID)) {
-                //This gameobject has a renderer
-                std::cout << "ObjMeshSystem : The object dosent have a ShaderComponent, gameObject " << (*it)->mGameObjectID << std::endl;
-                return;
-            };
-            auto& shader = *Registry::Instance().GetComponent<ShaderComponent>((*it)->mGameObjectID).mShader;
-            //Print some info about the renderer
-            std::cout << "Render verts " << (*it)->mVertices.size() << std::endl;
-            //use my shader
-            std::cout << "Setting shader " << shader.GetProgram() << std::endl;
-            glUseProgram(shader.GetProgram());
-            //Send my model matrix
-            shader.SetUniformMatrix4(glm::translate(glm::mat4(1.f), glm::vec3(0,0,-10)), "mMatrix");
-            //Draw object
-            glBindVertexArray(render.mVAO);
-            glDrawElements(GL_TRIANGLES, (*it)->mIndices.size(), GL_UNSIGNED_INT, nullptr);
+            }
+            std::cout << "ObjeMeshSystem : MeshComponent OnUpdate!" << std::endl;
+            //Get a render component from this meshcomponent
+            auto renderComponent = Registry::Instance().GetComponent<RenderComponent>(meshes[i]->mGameObjectID);
+            //Get a shader component from this mesh component
+            auto shader = Registry::Instance().GetComponent<ShaderComponent>(meshes[i]->mGameObjectID);
+            //If we found th ehsdaer "Plainshader
+            
+            if (!renderComponent.bRender) {
+                break;
+            }
+            //Use the shader
+
+            if (!Registry::Instance().Has<TransformComponent>(meshes[i]->mGameObjectID)) {
+                //There is no transform connected with this scene
+            }
+            auto transfrom = Registry::Instance().GetComponent<TransformComponent>(meshes[i]->mGameObjectID);
+
+            shader.mShader->SetUniformMatrix4(transfrom.mMatrix, "mMatrix");
+
+            glBindVertexArray(renderComponent.mVAO);
+
+            glDrawElements(GL_TRIANGLES, meshes[i]->mIndices.size(), GL_UNSIGNED_INT, nullptr);
             glBindVertexArray(0);
+            std::cout << "ObjMeshSystem : RenderComponent : Render End!" << std::endl;
         }
         std::cout << std::endl << "ObjMeshSystem : OnUpdate Finished!" << std::endl << std::endl;;
     }
@@ -143,7 +145,7 @@ std::pair<std::vector<Vertex>, std::vector<GLuint>>LoadMesh(std::string filePath
         std::ifstream file;
         file.open(filePath, std::ifstream::in);
         if (!file.is_open()) {
-            std::cout  << "ObjMeshSystem : LoadMesh : Could not open file " << filePath << std::endl;
+            std::cout  << "ObjMeshSystem : LoadMesh : Could not open file , here is the filePath : " << filePath << std::endl;
          
         }
 

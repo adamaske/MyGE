@@ -24,5 +24,7 @@ private:
 	ShaderManager& mShaderManager;
 	class ObjMeshSystem* mObjMeshSystem;
 	std::unordered_map<const char*, class System*> mSystems;
+	//TEMPORARY
+	int mCameraID = 0;
 
 };
