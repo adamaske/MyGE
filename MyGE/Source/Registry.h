@@ -167,13 +167,6 @@ public:
 
 	template<typename T>
 	T& GetComponent(int objectID){ 
-		//This has not been checked
-		if (GetUnitHolder<T>()->Contains(objectID)) {
-			std::cout << "The UnitHolder for this component has a object id key" << std::endl;
-		}
-		else {
-			std::cout << "The UnitHolder for this component has a object id key" << std::endl;
-		}
 		//Has has been called on this so we know we can return the unit holder
 		return GetUnitHolder<T>()->GetUnit(objectID);
 	}
@@ -278,7 +271,6 @@ private:
 			//No component of this type found 
 			//return std::static_pointer_cast<UnitHolder<T>>(mComponents[typeName]);
 			std::cout << "Registry : GetUnitHolder<" << typeName << "> does not have an array! Returning from here!" << std::endl;
-
 			return nullptr;
 		}
 		//This returns correct array of components for the type

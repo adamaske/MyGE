@@ -20,7 +20,7 @@ void ScriptingManager::Init()
     lua_State* L = luaL_newstate();
     luaL_openlibs(L);
     //CheckLua checks for "syntax" errors
-    if (CheckLua(L, luaL_dofile(L, "C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGe/MyGe/src/Scripts/LuaExample.lua"))) {
+    if (CheckLua(L, luaL_dofile(L, "C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGe/MyGe/src//LuaExample.lua"))) {
         //Try to find a AddStuff thing, if its found puts it on top of the stack
         lua_getglobal(L, "AddStuff");
         //Chcecks if the top of the stacks is a function

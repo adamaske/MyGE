@@ -13,23 +13,30 @@ public:
 		std::string dir = "C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGe/MyGe/Shaders/";
 		Shader shader = Shader(	"C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGe/MyGe/src/Shaders/plainshader.vert", 
 								"C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGe/MyGe/src/Shaders/plainshader.frag");
-		mShaders["PlainShader"] = &shader;
+		InsertShader("PlainShader", shader);
 
 		shader = Shader("C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGe/MyGe/src/Shaders/lightshader.vert",
 			"C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGe/MyGe/src/Shaders/lightshader.frag");
-		mShaders["PhongShader"] = &shader;
+		InsertShader("PhongShader", shader);
 
 		shader = Shader("C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGe/MyGe/src/Shaders/textureshader.vert",
 			"C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGe/MyGe/src/Shaders/textureshader.frag");
-		mShaders["TextureShader"] = &shader;
+		InsertShader("TextureShader", shader);
 
 		
 	};
 
 	Shader& GetShader(std::string name) {
-		return *mShaders["PlainShader"];
+		return *mShaders[name];
 	}
 
+	Shader& GetShader(int shaderID) {
+		for (auto it = mShaders.begin(); it != mShaders.end(); it++)
+		{
+			Shader* s = new Shader("s,","m");
+			return *s;
+		}
+	}
 	void InsertShader(std::string shaderName, Shader& shader) {
 		mShaders[shaderName] = &shader;
 		auto a = mShaders.begin();

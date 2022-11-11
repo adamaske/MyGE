@@ -1,7 +1,7 @@
 #include "Scene.h"
 #include <memory>
 #include "Shader.h"
-#include "System.h"
+#include "Systems/System.h"
 void Scene::Init()
 {
 	Registry::Instance().mName = "BOb";
@@ -21,7 +21,7 @@ void Scene::Init()
 	mesh.bHasBeenModified = true;
 	mesh.mGameObjectID = 1;
 	//Gives the mesh the file path to its obj file
-	mesh.mObjFilePath = "C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGE/MyGE/src/cube.obj";
+	mesh.mObjFilePath = "C:/Users/adama/Documents/GitHub/MyGE/Resources/Meshes/cube.obj";
 	//Register new GameObject(newID from register)
 	int cubeID = Registry::Instance().GetNewID();
 	std::cout << "CUBE ID == " << cubeID << std::endl;
@@ -81,11 +81,17 @@ void Scene::OnUpdate(float deltaTime) {
 			glm::mat4 transform = glm::mat4(1);
 			Shader& s = mShaderManager.GetShader("PlainShader");
 			s.Use();
-			//Set 
+			//Update matrices 
 			cameras[i]->mProjectionMatrix = glm::perspective(90.f, 16/9.f, 0.1f, 1000.f);
-			cameras[i]->mViewMatrix = glm::lookAt(glm::vec3(0, 0, -5), glm::vec3(0, 0, 0), glm::vec3(0, 0, 1));
-			s.SetUniformMatrix4(transform, "vMatrix");
-			s.SetUniformMatrix4(cameras[i]->mViewMatrix, "pMatrix");
+			cameras[i]->mProjectionMatrix = glm::lookAt(glm::vec3(0, 0, -5), glm::vec3(0, 0, 0), glm::vec3(0, 0, 1));
+			//Set the variables in the PlainShader
+			s.SetUniformMatrix4(cameras[i]->mProjectionMatrix, "vMatrix");
+			s.SetUniformMatrix4(cameras[i]->mProjectionMatrix, "pMatrix");
+
+			std::cout << transform[0].x << transform[0].y << transform[0].z << transform[0].w << std::endl;
+			std::cout << transform[1].x << transform[1].y << transform[1].z << transform[1].w << std::endl;
+			std::cout << transform[2].x << transform[2].y << transform[2].z << transform[2].w << std::endl;
+			std::cout << transform[3].x << transform[3].y << transform[3].z << transform[3].w << std::endl;
 		}
 	}
 	std::cout << "Scene : OnUpdate started! " << std::endl;
@@ -95,7 +101,6 @@ void Scene::OnUpdate(float deltaTime) {
 		(*it).second->OnUpdate(deltaTime);
 		std::cout << "Scene : OnUpdate : Systems : " << (*it).first << " finished!" << std::endl;
 	}
-	return;
 	//Go thorugh meshes
 	std::cout << "Scene : OnUpdate : Starting to fetch Mesh Componenets!" << std::endl;
 	if (!Registry::Instance().Has<MeshComponent>()) {
@@ -106,15 +111,16 @@ void Scene::OnUpdate(float deltaTime) {
 	auto meshes = Registry::Instance().GetComponents<MeshComponent>();
 	for (int i = 0; i < meshes.size() ; i++)
 	{
-		if (!meshes[i]->bHasBeenModified) {
-			std::cout << " THE MESH COMPONENT IS NOT THE SAME AS THE ONE THAT WAS SPAWNED!" << std::endl;
-			return;
-		}
-		else {
-			std::cout << " THE MESH COMPONENT HAS BEEN MODIFIED! THIS PRO " << meshes[i]->mGameObjectID<<  std::endl;
-		}
+		//if (!meshes[i]->bHasBeenModified) {
+		//	std::cout << " THE MESH COMPONENT IS NOT THE SAME AS THE ONE THAT WAS SPAWNED!" << std::endl;
+		//	return;
+		//}
+		//else {
+		//	std::cout << " THE MESH COMPONENT HAS BEEN MODIFIED! THIS PRO " << meshes[i]->mGameObjectID<<  std::endl;
+		//}
 		std::cout << "Scene : OnUpdate : MeshComponent OnUpdate!" << std::endl;
 		auto renderComponent = Registry::Instance().GetComponent<RenderComponent>(meshes[i]->mGameObjectID);
+		mShaderManager.GetShader("PlainShader").SetUniformMatrix4(glm::mat4(1), "mMatrix");
 		glBindVertexArray(renderComponent.mVAO);
 		glDrawElements(GL_TRIANGLES, meshes[i]->mIndices.size(), GL_UNSIGNED_INT, nullptr);
 		glBindVertexArray(0);

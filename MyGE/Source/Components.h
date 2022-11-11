@@ -79,7 +79,10 @@ struct RenderComponent {
 
 struct ScriptComponent {
 	int mGameObjectID =1;
-	int mScriptID;
+	int mScriptID = 0;
+
+	const GLchar* mVertexPath;
+	const GLchar* mFragmentPath;
 };
 
 struct ShaderComponent
