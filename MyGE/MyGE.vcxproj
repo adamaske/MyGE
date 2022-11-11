@@ -132,7 +132,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>${SolutionDir}GLEW\lib\Release\x64;${SolutionDir}GLAD\src\";${SolutionDir}GLFW\lib-vc2022"</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32.lib;glfw3.lib;glfw3dll.lib;opengl32.lib;user32.lib;gdi32.lib;shell32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32s.lib;glfw3.lib;glfw3dll.lib;opengl32.lib;user32.lib;gdi32.lib;shell32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -156,34 +156,34 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\GLAD\src\glad.c" />
-    <ClCompile Include="src\Registry.cpp" />
-    <ClCompile Include="src\Script.cpp" />
-    <ClCompile Include="src\ScriptingManager.cpp" />
-    <ClCompile Include="src\GameObject.cpp" />
-    <ClCompile Include="src\Components.cpp" />
-    <ClCompile Include="src\Shader.cpp" />
-    <ClCompile Include="src\RenderWindow.cpp" />
-    <ClCompile Include="src\Scene.cpp" />
-    <ClCompile Include="src\MyGE.cpp" />
-    <ClCompile Include="src\MainWindow.cpp" />
-    <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Vertex.cpp" />
+    <ClCompile Include="Source\Registry.cpp" />
+    <ClCompile Include="Source\Script.cpp" />
+    <ClCompile Include="Source\ScriptingManager.cpp" />
+    <ClCompile Include="Source\GameObject.cpp" />
+    <ClCompile Include="Source\Components.cpp" />
+    <ClCompile Include="Source\Shader.cpp" />
+    <ClCompile Include="Source\RenderWindow.cpp" />
+    <ClCompile Include="Source\Scene.cpp" />
+    <ClCompile Include="Source\MyGE.cpp" />
+    <ClCompile Include="Source\MainWindow.cpp" />
+    <ClCompile Include="Source\main.cpp" />
+    <ClCompile Include="Source\Vertex.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Registry.h" />
+    <ClInclude Include="Source\Registry.h" />
     <ClInclude Include="SceneManager.h" />
-    <ClInclude Include="src\Script.h" />
-    <ClInclude Include="src\ScriptingManager.h" />
-    <ClInclude Include="src\ScriptManager.h" />
-    <ClInclude Include="src\ShaderManager.h" />
-    <ClInclude Include="src\GameObject.h" />
-    <ClInclude Include="src\Shader.h" />
-    <ClInclude Include="src\Components.h" />
-    <ClInclude Include="src\RenderWindow.h" />
-    <ClInclude Include="src\Scene.h" />
-    <ClInclude Include="src\MyGE.h" />
-    <ClInclude Include="src\MainWindow.h" />
-    <ClInclude Include="src\Vertex.h" />
+    <ClInclude Include="Source\Script.h" />
+    <ClInclude Include="Source\ScriptingManager.h" />
+    <ClInclude Include="Source\ScriptManager.h" />
+    <ClInclude Include="Source\ShaderManager.h" />
+    <ClInclude Include="Source\GameObject.h" />
+    <ClInclude Include="Source\Shader.h" />
+    <ClInclude Include="Source\Components.h" />
+    <ClInclude Include="Source\RenderWindow.h" />
+    <ClInclude Include="Source\Scene.h" />
+    <ClInclude Include="Source\MyGE.h" />
+    <ClInclude Include="Source\MainWindow.h" />
+    <ClInclude Include="Source\Vertex.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
