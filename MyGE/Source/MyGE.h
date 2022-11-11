@@ -5,6 +5,7 @@
 #include "ScriptingManager.h"
 #include "ShaderManager.h"
 #include "RenderWindow.h"
+
 class SceneManager {
 public:
 	SceneManager() {
@@ -59,4 +60,10 @@ protected:
 	Scene* mScene;
 
 	GLFWwindow* mRenderWindow;
+
+	bool mFirstClick = false;
+	float mWindowHeight = 1200;
+	float mWindowWidth = 900;
+	float mMouseSensitivity = 0.1f;
+	glm::quat mOrientation;
 };

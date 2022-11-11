@@ -242,7 +242,6 @@ public:
 		}
 	}
 
-	std::string mName = " Roger";
 private:
 	//We want a unorerd map which holds the string for which type has come in
 	// when that type is stored, 

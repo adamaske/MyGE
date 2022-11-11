@@ -4,8 +4,6 @@
 #include "Systems/System.h"
 void Scene::Init()
 {
-	Registry::Instance().mName = "BOb";
-	std::cout << "REGISTRY NAME  " << Registry::Instance().mName << std::endl;;
 	CameraComponent cameraComponent = CameraComponent();
 	cameraComponent.bIsMainCamera = true;
 	TransformComponent	transform = TransformComponent();
@@ -77,20 +75,29 @@ void Scene::OnUpdate(float deltaTime) {
 	
 		//Check if it is the main camera
 		if (cameras[i]->bIsMainCamera) {
+			if (!Registry::Instance().Has<TransformComponent>(cameras[i]->mGameObjectID)) {
+				//Camera dosent have a transform
+				std::cout << "NO TRANFORM ON CAMERA; RETURNING" << std::endl;
+				return;
+			}
+			else {
+
+			}
+			auto transform = Registry::Instance().GetComponent<TransformComponent>(cameras[i]->mGameObjectID);
 			std::cout << "There is a Main Camera" << std::endl;
-			glm::mat4 transform = glm::translate(glm::mat4(1), glm::vec3(0, 0, 5));
 			auto shader = mShaderManager.GetShader("PlainShader");
 			if (shader) {
 				std::cout << std::endl << "Scene : OnUpdate : Has a PlainShader : " << shader->mName << std::endl<< std::endl;
 			}
 			else {
-				std::cout << "Could not find shader PlainShader" << std::endl;
-				break;
+				std::cout << "FOUND NO PLAIN SHADER RETURNING" << std::endl;
+				return;
 			}
+			//Use this shader
 			glUseProgram(shader->GetProgram());
 			//Update matrices 
-			cameras[i]->mProjectionMatrix = glm::perspective(90.f, 16/9.f, 0.1f, 1000.f);
-			cameras[i]->mViewMatrix = glm::lookAt(glm::vec3(0, 10, 0), glm::vec3(0,0,0), glm::vec3(0, 1, 0));
+			cameras[i]->mProjectionMatrix = glm::perspective(120.f, 800.f/600.f, 0.1f, 1000.f);
+			cameras[i]->mViewMatrix = glm::lookAt(glm::vec3(0, 0, 0), glm::vec3(0,0,1), glm::vec3(0, 1, 0));
 			//Set the variables in the PlainShader
 			shader->SetUniformMatrix4(cameras[i]->mViewMatrix, "vMatrix");
 			shader->SetUniformMatrix4(cameras[i]->mProjectionMatrix, "pMatrix");
@@ -115,7 +122,7 @@ void Scene::OnUpdate(float deltaTime) {
 
 		//Use the shader
 
-		glm::mat4 mPos = glm::translate(glm::mat4(1), glm::vec3(0.2, 0.2, 0.2));
+		glm::mat4 mPos = glm::translate(glm::mat4(1), glm::vec3(0,0,1));
 		glm::mat4 mRot = glm::mat4(1);
 		glm::mat4 mScale = glm::mat4(1);
 		glm::mat4 matrix = mPos * mRot * mScale;;

@@ -1,13 +1,14 @@
 #include "MyGE.h"
-#include <iostream>
-
-#include "glad/glad.h"
-#include "GLFW/glfw3.h"
 #include "MainWindow.h"
 #include "RenderWindow.h"
 #include "Scene.h"
 #include "Shader.h"
 
+#include <iostream>
+#include "glad/glad.h"
+#include "GLFW/glfw3.h"
+#include "glm/glm.hpp"
+#include "glm/gtx/quaternion.hpp"
 
 void glfw_onError(int error, const char* desc) {
 	std::cout << "GLFW error : " << error << ", " << desc << std::endl;
@@ -64,7 +65,7 @@ int MyGE::run()
 	//
 	//}
 	//std::cerr << "Status: Using GLEW " << glewGetString(GLEW_VERSION) << std::endl;
-	glViewport(0, 0, 800, 600);
+	glViewport(0,0, mWindowHeight, mWindowHeight);
 
 	glfwSetFramebufferSizeCallback(mRenderWindow, framebuffer_size_callback);
 
@@ -129,50 +130,50 @@ void MyGE::ProcessInput()
         //mWindow->SetActiveScene(s);
     }
 
-    //// Handles mouse inputs
-	//if (glfwGetMouseButton(mRenderWindow, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
-	//{
-	//	// Hides mouse cursor
-	//	glfwSetInputMode(mRenderWindow, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-    //
-	//	// Prevents camera from jumping on the first click
-	//	if (firstClick)
-	//	{
-	//		glfwSetCursorPos(mRenderWindow, (width / 2), (height / 2));
-	//		firstClick = false;
-	//	}
-    //
-	//	// Stores the coordinates of the cursor
-	//	double mouseX;
-	//	double mouseY;
-	//	// Fetches the coordinates of the cursor
-	//	glfwGetCursorPos(mRenderWindow, &mouseX, &mouseY);
-    //
-	//	// Normalizes and shifts the coordinates of the cursor such that they begin in the middle of the screen
-	//	// and then "transforms" them into degrees 
-	//	float rotX = sensitivity * (float)(mouseY - (height / 2)) / height;
-	//	float rotY = sensitivity * (float)(mouseX - (width / 2)) / width;
-    //
-	//	// Calculates upcoming vertical change in the Orientation
-	//	glm::vec3 newOrientation = glm::rotate(Orientation, glm::radians(-rotX), glm::normalize(glm::cross(Orientation, Up)));
-    //
-	//	// Decides whether or not the next vertical Orientation is legal or not
-	//	if (abs(glm::angle(newOrientation, Up) - glm::radians(90.0f)) <= glm::radians(85.0f))
-	//	{
-	//		Orientation = newOrientation;
-	//	}
-    //
-	//	// Rotates the Orientation left and right
-	//	Orientation = glm::rotate(Orientation, glm::radians(-rotY), Up);
-    //
-	//	// Sets mouse cursor to the middle of the screen so that it doesn't end up roaming around
-	//	glfwSetCursorPos(window, (width / 2), (height / 2));
-	//}
-	//else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE)
-	//{
-	//	// Unhides cursor since camera is not looking around anymore
-	//	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-	//	// Makes sure the next time the camera looks around it doesn't jump
-	//	firstClick = true;
-	//}
+    // Handles mouse inputs
+	if (glfwGetMouseButton(mRenderWindow, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
+	{
+		// Hides mouse cursor
+		glfwSetInputMode(mRenderWindow, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+    
+		// Prevents camera from jumping on the first click
+		if (mFirstClick)
+		{
+			glfwSetCursorPos(mRenderWindow, (mWindowWidth / 2), (mWindowHeight / 2));
+			mFirstClick = false;
+		}
+    
+		// Stores the coordinates of the cursor
+		double mouseX;
+		double mouseY;
+		// Fetches the coordinates of the cursor
+		glfwGetCursorPos(mRenderWindow, &mouseX, &mouseY);
+    
+		// Normalizes and shifts the coordinates of the cursor such that they begin in the middle of the screen
+		// and then "transforms" them into degrees 
+		float rotX = mMouseSensitivity * (float)(mouseY - (mWindowHeight / 2)) / mWindowHeight;
+		float rotY = mMouseSensitivity * (float)(mouseX - (mWindowWidth / 2)) / mWindowWidth;
+    
+		//// Calculates upcoming vertical change in the Orientation
+		//glm::vec3 newOrientation = glm::rotate(mOrientation, glm::radians(-rotX), glm::normalize(glm::cross(mOrientation, glm::quat(1))));
+    	//
+		//// Decides whether or not the next vertical Orientation is legal or not
+		//if (abs(glm::angle(newOrientation, Up) - glm::radians(90.0f)) <= glm::radians(85.0f))
+		//{
+		//	Orientation = newOrientation;
+		//}
+		// Rotates the Orientation left and right
+		mOrientation = glm::rotate(mOrientation, glm::radians(-rotY), glm::vec3(0,1,0));
+	
+		
+		// Sets mouse cursor to the middle of the screen so that it doesn't end up roaming around
+		glfwSetCursorPos(mRenderWindow, (mWindowWidth / 2), (mWindowHeight / 2));
+	}
+	else if (glfwGetMouseButton(mRenderWindow, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE)
+	{
+		// Unhides cursor since camera is not looking around anymore
+		glfwSetInputMode(mRenderWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		// Makes sure the next time the camera looks around it doesn't jump
+		mFirstClick = true;
+	}
 }
