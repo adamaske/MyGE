@@ -126,7 +126,11 @@ void Scene::OnUpdate(float deltaTime) {
 		glm::mat4 mRot = glm::mat4(1);
 		glm::mat4 mScale = glm::mat4(1);
 		glm::mat4 matrix = mPos * mRot * mScale;;
-		
+		if (!Registry::Instance().Has<TransformComponent>(meshes[i]->mGameObjectID)) {
+			//There is no transform connected with this scene
+		}
+		auto transfrom = Registry::Instance().GetComponent<TransformComponent>(meshes[i]->mGameObjectID);
+	
 		shader->SetUniformMatrix4(matrix, "mMatrix");
 		
 		glBindVertexArray(renderComponent.mVAO);
