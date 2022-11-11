@@ -10,46 +10,49 @@ public:
 	};
 
 	void Init() {
-		std::string dir = "C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGe/MyGe/Shaders/";
-		Shader shader = Shader(	"C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGe/MyGe/src/Shaders/plainshader.vert", 
-								"C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGe/MyGe/src/Shaders/plainshader.frag");
-		InsertShader("PlainShader", shader);
+		mShaders.insert({ "PlainShader", new Shader("C:/Users/adama/Documents/GitHub/MyGE/Resources/Shaders/plainshader.vert",
+								"C:/Users/adama/Documents/GitHub/MyGE/Resources/Shaders/plainshader.frag", "PlainShader") });
+		mShaders.insert({ "PhongShader", new Shader("C:/Users/adama/Documents/GitHub/MyGE/Resources/Shaders/lightshader.vert",
+								"C:/Users/adama/Documents/GitHub/MyGE/Resources/Shaders/lightshader.frag", "PhongShader") });
+		mShaders.insert({ "TextureShader", new Shader("C:/Users/adama/Documents/GitHub/MyGE/Resources/Shaders/plainshader.vert",
+								"C:/Users/adama/Documents/GitHub/MyGE/Resources/Shaders/plainshader.frag", "TextureShader") });
 
-		shader = Shader("C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGe/MyGe/src/Shaders/lightshader.vert",
-			"C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGe/MyGe/src/Shaders/lightshader.frag");
-		InsertShader("PhongShader", shader);
-
-		shader = Shader("C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGe/MyGe/src/Shaders/textureshader.vert",
-			"C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGe/MyGe/src/Shaders/textureshader.frag");
-		InsertShader("TextureShader", shader);
-
-		
+		Shader* mShader = GetShader("PlainShader");
+		if (mShader) {
+			std::cout << "Got shader from GetShader : " << mShader->mName << std::endl;
+		}
+		mShader = GetShader("PhongShader");
+		if (mShader) {
+			std::cout << "Got shader from GetShader : " << mShader->mName << std::endl;
+		}
+		mShader = GetShader("TextureShader");
+		if (mShader) {
+			std::cout << "Got shader from GetShader : " << mShader->mName << std::endl;
+		}
 	};
 
-	Shader& GetShader(std::string name) {
-		return *mShaders[name];
+	Shader* GetShader(std::string name) {
+		if (mShaders.find(name.c_str()) != mShaders.end()) {
+
+			return mShaders[name.c_str()];
+		}
+		return nullptr;
 	}
 
-	Shader& GetShader(int shaderID) {
-		for (auto it = mShaders.begin(); it != mShaders.end(); it++)
-		{
-			Shader* s = new Shader("s,","m");
-			return *s;
-		}
-	}
-	void InsertShader(std::string shaderName, Shader& shader) {
-		mShaders[shaderName] = &shader;
-		auto a = mShaders.begin();
+	void InsertShader(std::string shaderName, Shader* shader) {
+
+		//Insert the pointer into the map
+		mShaders.insert({ shaderName.c_str(), shader});
 	}
 
 	void GetCamera(glm::mat4 v, glm::mat4 p) {
 		for (auto it = mShaders.begin(); it != mShaders.end(); it++)
 		{
-			(*it).second->SetUniformMatrix4(v, "mVmatrix");
-
-			(*it).second->SetUniformMatrix4(p, "mPmatrix");
+			it->second->SetUniformMatrix4(v, "mVmatrix");
+			
+			it->second->SetUniformMatrix4(p, "mPmatrix");
 		}
 	}
 private:
-	std::unordered_map<std::string, class Shader*> mShaders;
+	std::unordered_map<std::string, Shader*> mShaders;
 };

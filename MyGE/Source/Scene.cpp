@@ -13,7 +13,7 @@ void Scene::Init()
 	//Create a shader component, should be replaced with material
 	ShaderComponent		shader = ShaderComponent();
 	//Give the shader component the plain shader
-	shader.mShader = &mShaderManager.GetShader("PlainShader");
+	shader.mShader = mShaderManager.GetShader("PlainShader");
 	//Createa render component
 	RenderComponent		render = RenderComponent();
 	//Create a mesh component
@@ -60,7 +60,7 @@ void Scene::Init()
 
 void Scene::OnUpdate(float deltaTime) {
 	
-
+	
 	////Gets all GameObjects in the registry, a go system
 	auto gameObjects = Registry::Instance().GetGameObjects();
 	//Prints all gameobject id's
@@ -78,54 +78,70 @@ void Scene::OnUpdate(float deltaTime) {
 		//Check if it is the main camera
 		if (cameras[i]->bIsMainCamera) {
 			std::cout << "There is a Main Camera" << std::endl;
-			glm::mat4 transform = glm::mat4(1);
-			Shader& s = mShaderManager.GetShader("PlainShader");
-			s.Use();
+			glm::mat4 transform = glm::translate(glm::mat4(1), glm::vec3(0, 0, 5));
+			auto shader = mShaderManager.GetShader("PlainShader");
+			if (shader) {
+				std::cout << std::endl << "Scene : OnUpdate : Has a PlainShader : " << shader->mName << std::endl<< std::endl;
+			}
+			else {
+				std::cout << "Could not find shader PlainShader" << std::endl;
+				break;
+			}
+			glUseProgram(shader->GetProgram());
 			//Update matrices 
 			cameras[i]->mProjectionMatrix = glm::perspective(90.f, 16/9.f, 0.1f, 1000.f);
-			cameras[i]->mProjectionMatrix = glm::lookAt(glm::vec3(0, 0, -5), glm::vec3(0, 0, 0), glm::vec3(0, 0, 1));
+			cameras[i]->mViewMatrix = glm::lookAt(glm::vec3(0, 10, 0), glm::vec3(0,0,0), glm::vec3(0, 1, 0));
 			//Set the variables in the PlainShader
-			s.SetUniformMatrix4(cameras[i]->mProjectionMatrix, "vMatrix");
-			s.SetUniformMatrix4(cameras[i]->mProjectionMatrix, "pMatrix");
-
-			std::cout << transform[0].x << transform[0].y << transform[0].z << transform[0].w << std::endl;
-			std::cout << transform[1].x << transform[1].y << transform[1].z << transform[1].w << std::endl;
-			std::cout << transform[2].x << transform[2].y << transform[2].z << transform[2].w << std::endl;
-			std::cout << transform[3].x << transform[3].y << transform[3].z << transform[3].w << std::endl;
+			shader->SetUniformMatrix4(cameras[i]->mViewMatrix, "vMatrix");
+			shader->SetUniformMatrix4(cameras[i]->mProjectionMatrix, "pMatrix");
 		}
 	}
-	std::cout << "Scene : OnUpdate started! " << std::endl;
-	for (auto it = mSystems.begin(); it != mSystems.end(); it++)
-	{
-		std::cout << "Scene : OnUpdate : Systems : " << (*it).first << std::endl;
-		(*it).second->OnUpdate(deltaTime);
-		std::cout << "Scene : OnUpdate : Systems : " << (*it).first << " finished!" << std::endl;
-	}
-	//Go thorugh meshes
-	std::cout << "Scene : OnUpdate : Starting to fetch Mesh Componenets!" << std::endl;
-	if (!Registry::Instance().Has<MeshComponent>()) {
-		std::cout << "Scene : OnUpdate : Registry dosent have a mesh component!";
-		return;
-	}
+
 
 	auto meshes = Registry::Instance().GetComponents<MeshComponent>();
-	for (int i = 0; i < meshes.size() ; i++)
+	for (int i = 0; i < meshes.size(); i++)
 	{
-		//if (!meshes[i]->bHasBeenModified) {
-		//	std::cout << " THE MESH COMPONENT IS NOT THE SAME AS THE ONE THAT WAS SPAWNED!" << std::endl;
-		//	return;
-		//}
-		//else {
-		//	std::cout << " THE MESH COMPONENT HAS BEEN MODIFIED! THIS PRO " << meshes[i]->mGameObjectID<<  std::endl;
-		//}
+
 		std::cout << "Scene : OnUpdate : MeshComponent OnUpdate!" << std::endl;
+		//Get a render component from this meshcomponent
 		auto renderComponent = Registry::Instance().GetComponent<RenderComponent>(meshes[i]->mGameObjectID);
-		mShaderManager.GetShader("PlainShader").SetUniformMatrix4(glm::mat4(1), "mMatrix");
+		//Get a shader component from this mesh component
+		auto shader = mShaderManager.GetShader("PlainShader");
+		//If we found th ehsdaer "Plainshader
+		if (!shader) {
+			std::cout << "Did not find shader, returning" << std::endl;
+			return;
+		}
+
+		//Use the shader
+
+		glm::mat4 mPos = glm::translate(glm::mat4(1), glm::vec3(0.2, 0.2, 0.2));
+		glm::mat4 mRot = glm::mat4(1);
+		glm::mat4 mScale = glm::mat4(1);
+		glm::mat4 matrix = mPos * mRot * mScale;;
+		
+		shader->SetUniformMatrix4(matrix, "mMatrix");
+		
 		glBindVertexArray(renderComponent.mVAO);
+
 		glDrawElements(GL_TRIANGLES, meshes[i]->mIndices.size(), GL_UNSIGNED_INT, nullptr);
 		glBindVertexArray(0);
 		std::cout << "RenderComponent : Render End!" << std::endl;
 	}
+	//std::cout << "Scene : OnUpdate started! " << std::endl;
+	//for (auto it = mSystems.begin(); it != mSystems.end(); it++)
+	//{
+	//	std::cout << "Scene : OnUpdate : Systems : " << (*it).first << std::endl;
+	//	(*it).second->OnUpdate(deltaTime);
+	//	std::cout << "Scene : OnUpdate : Systems : " << (*it).first << " finished!" << std::endl;
+	//}
+	////Go thorugh meshes
+	//std::cout << "Scene : OnUpdate : Starting to fetch Mesh Componenets!" << std::endl;
+	//if (!Registry::Instance().Has<MeshComponent>()) {
+	//	std::cout << "Scene : OnUpdate : Registry dosent have a mesh component!";
+	//	return;
+	//}
+
 	//
 	////Go thrugh renderers
 	//auto renders = Registry::Instance().GetComponents<RenderComponent>();

@@ -9,7 +9,7 @@
 class Shader
 {
 public:
-	Shader(const GLchar* vertexPath, const GLchar* fragmentPath);
+	Shader(const GLchar* vertexPath, const GLchar* fragmentPath, const char* name);
 
 	void Use();
 
@@ -20,9 +20,10 @@ public:
 	void SetUniformVec3(glm::vec3 v1, std::string name);
 	void SetUniform1f(float v1, std::string name);
 	void SetUniform1i(int v1, std::string name);
-
+	const char* mName;
 private:
 	//Opengl refrence to this entity
 	GLuint mProgram;
+	
 };
 

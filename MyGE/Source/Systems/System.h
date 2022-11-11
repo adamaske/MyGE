@@ -2,6 +2,8 @@
 
 #include <iostream>
 #include <fstream>
+#include "glad/glad.h"
+#include "GLFW/glfw3.h"
 #include "glm/glm.hpp"
 #include "Components.h"
 #include "Registry.h"
@@ -9,6 +11,65 @@
 #include <stdio.h>
 #include <fstream>
 #include <sstream>
+GLfloat vertices[] = {
+
+    //position              //color                 //texture coord   //Normals
+    -1.01f, -1.01f, -1.01f, 1.0f, 0.0f, 0.0f,       0.0f, 1.0f,
+    -1.01f, 1.01f, -1.01f,      0.0f, 1.0f, -0.0f,      0.0f, 0.0f,
+    1.01f, 1.01f, -1.01f,       1.0f, 0.0f, -0.0f,      1.0f, 0.0f,
+    1.01f, -1.01f, -1.01f,      0.0f, 1.0f,  1.0f,      1.0f, 1.0f,
+
+    // Fill in the back face vertex data.
+    -1.01f, -1.01f, 1.01f,      0.0f, 1.0f, 1.0f,       1.0f, 1.0f,
+    1.01f, -1.01f, 1.01f,       1.0f, 0.0f, 1.0f,       0.0f, 1.0f,
+    1.01f, 1.01f, 1.01f,        1.0f, 0.0f, 1.0f,       0.0f, 0.0f,
+    -1.01f, 1.01f, 1.01f,       1.0f, 1.0f, 0.0f,       1.0f, 0.0f,
+
+    // Fill in the top face vertex data.
+    -1.01f, 1.01f, -1.01f,      0.0f, 1.0f, 0.0f,       0.0f, 1.0f,
+    -1.01f, 1.01f, 1.01f,       1.0f, 0.0f, 1.0f,       0.0f, 0.0f,
+    1.01f, 1.01f, 1.01f,        0.0f, 1.0f, 1.0f,       1.0f, 0.0f,
+    1.01f, 1.01f, -1.01f,       1.0f, 1.0f, 0.0f,       1.0f, 1.0f,
+
+    // Fill in the bottom face vertex data.
+    -1.01f, -1.01f, -1.01f, 1.0f,  1.0f, 0.0f,      1.0f, 1.0f,
+    1.01f, -1.01f, -1.01f,      0.0f,  1.0f, 1.0f,      0.0f, 1.0f,
+    1.01f, -1.01f, 1.01f,       0.0f,  1.0f, 0.0f,      0.0f, 0.0f,
+    -1.01f, -1.01f, 1.01f,      1.0f,  1.0f, 0.0f,      1.0f, 0.0f,
+
+    // Fill in the left face vertex data.
+    -1.01f, -1.01f, 1.01f,       1.0f, 1.0f, 0.0f,      0.0f, 1.0f,
+    -1.01f, 1.01f, 1.01f,        1.0f, 0.0f, 1.0f,      0.0f, 0.0f,
+    -1.01f, 1.01f, -1.01f,       1.0f, 0.0f, 1.0f,      1.0f, 0.0f,
+    -1.01f, -1.01f, -1.01f,  1.0f, 1.0f, 0.0f,      1.0f, 1.0f,
+
+    // Fill in the right face vertex data.
+    1.01f, -1.01f, -1.01f,      1.0f, 1.0f, 0.0f,       0.0f, 1.0f,
+    1.01f, 1.01f, -1.01f,       0.0f, 1.0f, 1.0f,       0.0f, 0.0f,
+    1.01f, 1.01f, 1.01f,        1.0f, 0.0f, 1.0f,       1.0f, 0.0f,
+    1.01f, -1.01f, 1.01f,       0.0f, 1.0f, 1.0f,       1.0f, 1.0f,
+};
+
+GLuint indices[] = {
+    // front
+    0, 1, 2,
+    0, 2, 3,
+    // top
+    4, 5, 6,
+    4, 6, 7,
+    // back
+    8, 9, 10,
+    8, 10, 11,
+    // bottom
+    12, 13, 14,
+    12, 14, 15,
+    // left
+    16, 17, 18,
+    16, 18, 19,
+    // right
+    20, 21, 22,
+    20, 22, 23,
+};
 class System {
 public:
     virtual void Init() {
@@ -21,7 +82,8 @@ public:
 };
 
 class ObjMeshSystem : public System {
-public:
+public:// Set up vertex data (and buffer(s)) and attribute pointers
+   
     virtual void Init() override{
         std::cout << "ObjMeshSystem : Init started!" << std::endl;
         if (!Registry::Instance().Has<MeshComponent>()) {
@@ -56,8 +118,12 @@ public:
         //Vertex buffer object to hold vertices - VBO
         glGenBuffers(1, &render.mVBO);
         glBindBuffer(GL_ARRAY_BUFFER, render.mVBO);
+        glBufferData(GL_ARRAY_BUFFER, (*it)->mVertices.size() * sizeof(Vertex), (*it)->mVertices.data(), GL_STATIC_DRAW);
 
-        glBufferData(GL_ARRAY_BUFFER, mVertices.size() * sizeof(Vertex), &mVertices[0], GL_STATIC_DRAW);
+        // Element array buffer - EAB
+        glGenBuffers(1, &render.mEAB);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, render.mEAB);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, (*it)->mIndices.size() * sizeof(uint32_t), (*it)->mIndices.data(), GL_STATIC_DRAW);
 
         //Verts
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)0);
@@ -69,18 +135,14 @@ public:
         glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(6 * sizeof(GLfloat)));
         glEnableVertexAttribArray(2);
 
-        // Element array buffer - EAB
-        glGenBuffers(1, &render.mEAB);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, render.mEAB);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, (*it)->mIndices.size() * sizeof(GLuint), (*it)->mIndices.data(), GL_STATIC_DRAW);
-
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
-
         std::cout << "ObjMeshSystem : Init : Finished !" << std::endl;
         }
     }
 
     virtual void OnUpdate(float deltaTime) override{
+        return;
         std::cout << std::endl << "ObjMeshSystem : OnUpdate" << std::endl;
         if (!Registry::Instance().Has<MeshComponent>()) {
             std::cout << "ObjMeshSystem : Exit update because no MeshComponents in Registry" << std::endl;
@@ -118,12 +180,14 @@ public:
                 return;
             };
             auto& shader = *Registry::Instance().GetComponent<ShaderComponent>((*it)->mGameObjectID).mShader;
+            //Print some info about the renderer
+            std::cout << "Render verts " << (*it)->mVertices.size() << std::endl;
             //use my shader
+            std::cout << "Setting shader " << shader.GetProgram() << std::endl;
             glUseProgram(shader.GetProgram());
             //Send my model matrix
-            shader.SetUniformMatrix4(glm::translate(glm::mat4(1.f), glm::vec3(0,0,5)), "mMatrix");
+            shader.SetUniformMatrix4(glm::translate(glm::mat4(1.f), glm::vec3(0,0,-10)), "mMatrix");
             //Draw object
-            std::cout << render.mVAO << std::endl;
             glBindVertexArray(render.mVAO);
             glDrawElements(GL_TRIANGLES, (*it)->mIndices.size(), GL_UNSIGNED_INT, nullptr);
             glBindVertexArray(0);
@@ -135,13 +199,11 @@ std::pair<std::vector<Vertex>, std::vector<GLuint>>LoadMesh(std::string filePath
         //Kopier obj mesh kode her
         std::ifstream file;
         file.open(filePath, std::ifstream::in);
-        if (!file) {
-            std::cout  << "ObjMeshSystem : LoadMesh : Didnt open file" << filePath << std::endl;
+        if (!file.is_open()) {
+            std::cout  << "ObjMeshSystem : LoadMesh : Could not open file " << filePath << std::endl;
+         
+        }
 
-        }
-        else {
-            std::cout << "Did open file" << filePath << std::endl;
-        }
         ////check if obj file
         std::string copypath = filePath;
         if (copypath.substr(copypath.size() - 4, 4) != ".obj") {

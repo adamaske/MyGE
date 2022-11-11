@@ -4,9 +4,9 @@
 #include <sstream>
 
 
-Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
+Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath, const char* name)
 {
-
+    mName = name;
     std::string vertexCode;
     std::string fragmentCode;
     std::ifstream vShaderFile;
@@ -75,16 +75,16 @@ Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
         std::cout << "No fragment sucsess!" << std::endl;
     }
     // Shader Program linking
-    this->mProgram = glCreateProgram();
-    glAttachShader(this->mProgram, vertex);
-    glAttachShader(this->mProgram, fragment);
-    glLinkProgram(this->mProgram);
+    mProgram = glCreateProgram();
+    glAttachShader(mProgram, vertex);
+    glAttachShader(mProgram, fragment);
+    glLinkProgram(mProgram);
     // Print linking errors if any
-    glGetProgramiv(this->mProgram, GL_LINK_STATUS, &success);
+    glGetProgramiv(mProgram, GL_LINK_STATUS, &success);
 
     //making nice output name for printing:
     std::string shadername{ vertexPath };
-    shadername.resize(shadername.size() - 5); //deleting ".vert"
+    shadername = shadername.substr(shadername.size()-5, shadername.size()); //deleting ".vert"
 
     if (!success)
     {
@@ -94,11 +94,15 @@ Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
     else
     {
         std::cout << "Shader succsess!" << std::endl;
+        std::cout << "Create shader " << shadername << " with programID = " << GetProgram() << std::endl;
+       // mName = shadername.c_str();
     }
     // Delete the shaders as they're linked into our program now and no longer needed
     // The shader program is now on the GPU and we reference it by using the mProgram variable
     glDeleteShader(vertex);
     glDeleteShader(fragment);
+
+   
 
 };
 

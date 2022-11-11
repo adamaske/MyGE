@@ -88,9 +88,13 @@ int MyGE::run()
 		//Process input
 		ProcessInput();
 
-		//Rendering
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		// Draw our first triangle
+		glUseProgram(mShaderManager->GetShader("PlainShader")->GetProgram());
+		//Rendering
+
 		//Update game
 		mScene->OnUpdate(1.0f/60.f);
 

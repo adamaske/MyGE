@@ -35,7 +35,7 @@ struct MaterialComponent {
 struct MeshComponent {
 	int mGameObjectID = 1;
 	std::vector<Vertex> mVertices;
-	std::vector<GLuint> mIndices;
+	std::vector<uint32_t> mIndices;
 	std::string mObjFilePath = "";
 
 	bool bHasBeenModified = false;
@@ -66,9 +66,9 @@ struct CameraComponent {
 
 struct RenderComponent {
 	int mGameObjectID = 1;
-	GLuint mEAB{ 0 };
-	GLuint mVAO{ 0 };
-	GLuint mVBO{ 0 };
+	GLuint mEAB;
+	GLuint mVAO;
+	GLuint mVBO;
 
 	GLint mTextureUniform{ 0 };
 	GLint mMatrixUniform{ 0 };
