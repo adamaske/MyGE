@@ -11,25 +11,41 @@
 #include <sstream>
 class System {
 public:
-	virtual void Init();
+    virtual void Init() {
 
-	virtual void OnUpdate(float deltaTime);
+    };
+
+    virtual void OnUpdate(float deltaTime) {
+        std::cout << "System : OnUpdate" << std::endl;
+    };
 };
 
 class ObjMeshSystem : public System {
 public:
-    virtual void Init() {
+    virtual void Init() override{
         std::cout << "ObjMeshSystem : Init started!" << std::endl;
+        if (!Registry::Instance().Has<MeshComponent>()) {
+            std::cout << "The registry does not have a MeshComponent array" << std::endl;
+            return;
+        }
+        else {
+            std::cout << "The registry has a MeshComponent array" << std::endl;
+        }
         auto meshes = Registry::Instance().GetComponents<MeshComponent>();
         std::cout << "ObjMeshSystem : Init got meshes "<< meshes.size() << std::endl;
         for (auto it = meshes.begin(); it != meshes.end(); it++) {
             std::cout << "ObjMeshSystem : Init : Setting up RenderComponent for " << (*it)->mGameObjectID << std::endl;
+            if (!Registry::Instance().Has<RenderComponent>((*it)->mGameObjectID)) {
+                //The game object of this NeshComponet has no render component
+                std::cout << "ObjMeshSystem : Init : The game object of this MeshComponent has no RenderComponent" << std::endl;
+                break;
+            }
             auto& render = Registry::Instance().GetComponent<RenderComponent>((*it)->mGameObjectID);
             if (!render.bRender) {
                 std::cout << "ObjMeshSystem : Init : RenderComponent bRender == false!" << std::endl;
             }
             //We want vertices and indicies from the mesh
-            std::pair<std::vector<Vertex>, std::vector<uint32_t>> couple = LoadMesh((*it)->mObjFilePath);
+            std::pair<std::vector<Vertex>, std::vector<GLuint>> couple = LoadMesh((*it)->mObjFilePath);
             (*it)->mVertices = couple.first;
             (*it)->mIndices = couple.second;
             
@@ -64,9 +80,24 @@ public:
         }
     }
 
-    virtual void OnUpdate(float deltaTime) {
+    virtual void OnUpdate(float deltaTime) override{
+        std::cout << "ObjMeshSystem : OnUpdate" << std::endl;
+        if (!Registry::Instance().Has<MeshComponent>()) {
+            std::cout << "ObjMeshSystem : Exit update because no MeshComponents in Registry" << std::endl;
+            return;
+        }
+        if (!Registry::Instance().Has<RenderComponent>()) {
+            std::cout << "ObjMeshSystem : Exit update because no RenderComponents in Registry" << std::endl;
+            return;
+        }
+        if (!Registry::Instance().Has<ShaderComponent>()) {
+            std::cout << "ObjMeshSystem : Exit update because no ShaderComponents in Registry" << std::endl;
+            return;
+        }
+        std::cout << "ObjMeshSystem : OnUpdate cleared checks!" << std::endl;
+        return;
         auto meshes = Registry::Instance().GetComponents<MeshComponent>();
-        std::cout << "ObjMeshSystem : OnUpdate got meshes! Found " << meshes.size() << " meshes" << std::endl;
+        std::cout << "ObjMeshSystem : Init got meshes " << meshes.size() << std::endl;
         for (auto it = meshes.begin(); it != meshes.end(); it++) {
             std::cout << "ObjMeshSystem : OnUpdate Setting up RenderComponent for " << (*it)->mGameObjectID << std::endl;
             auto& render = Registry::Instance().GetComponent<RenderComponent>((*it)->mGameObjectID);
@@ -75,15 +106,16 @@ public:
             //use my shader
             glUseProgram(shader.GetProgram());
             //Send my model matrix
-            shader.SetUniformMatrix4(transform.mMatrix, "mMatrix");
+            shader.SetUniformMatrix4(glm::translate(glm::mat4(1.f), glm::vec3(0,0,5)), "mMatrix");
             //Draw object
             glBindVertexArray(render.mVAO);
             glDrawElements(GL_TRIANGLES, (*it)->mIndices.size(), GL_UNSIGNED_INT, nullptr);
             glBindVertexArray(0);
         }
+        
     }
 
-    std::pair<std::vector<Vertex>, std::vector<uint32_t>>LoadMesh(std::string filePath) {
+    std::pair<std::vector<Vertex>, std::vector<GLuint>>LoadMesh(std::string filePath) {
         //Kopier obj mesh kode her
         std::ifstream file;
         file.open(filePath, std::ifstream::in);
@@ -229,7 +261,7 @@ public:
         std::cout << "ObjMeshSystem : LoadMesh : Finished reading file" << filePath << std::endl;
         file.close();
         writeFile(copypath + ".txt");
-        return std::pair<std::vector<Vertex>, std::vector<uint32_t>>({ mVertices, mIndices });
+        return std::pair<std::vector<Vertex>, std::vector<GLuint>>({ mVertices, mIndices });
     }
 
     void writeFile(std::string filePath) {
@@ -252,5 +284,5 @@ public:
 private:
     std::vector<MeshComponent> mMeshes;
     std::vector<Vertex> mVertices;
-    std::vector<int> mIndicies;
+    std::vector<GLuint> mIndicies;
 };

@@ -1,6 +1,7 @@
 #pragma once
 //#include "glew.h"
 #include <vector>
+
 #include "ScriptingManager.h"
 #include "ShaderManager.h"
 #include "RenderWindow.h"

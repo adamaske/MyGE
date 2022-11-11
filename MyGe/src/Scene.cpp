@@ -4,7 +4,8 @@
 #include "System.h"
 void Scene::Init()
 {
-
+	Registry::Instance().mName = "BOb";
+	std::cout << "REGISTRY NAME  " << Registry::Instance().mName << std::endl;;
 	CameraComponent cameraComponent = CameraComponent();
 	cameraComponent.bIsMainCamera = true;
 	TransformComponent	transform = TransformComponent();
@@ -17,6 +18,8 @@ void Scene::Init()
 	RenderComponent		render = RenderComponent();
 	//Create a mesh component
 	MeshComponent		mesh = MeshComponent();
+	mesh.bHasBeenModified = true;
+	mesh.mGameObjectID = 1;
 	//Gives the mesh the file path to its obj file
 	mesh.mObjFilePath = "C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGE/MyGE/src/cube.obj";
 	//Register new GameObject(newID from register)
@@ -56,13 +59,7 @@ void Scene::Init()
 
 
 void Scene::OnUpdate(float deltaTime) {
-	std::cout << "Scene : OnUpdate started! " << std::endl;
-	for (auto it = mSystems.begin(); it != mSystems.end(); it++)
-	{
-		std::cout << "Scene : OnUpdate : Systems : " << (*it).first << std::endl;
-		(*it).second->OnUpdate(deltaTime);
-		std::cout << "Scene : OnUpdate : Systems : " << (*it).first << " finished!" << std::endl;
-	}
+	
 
 	////Gets all GameObjects in the registry, a go system
 	auto gameObjects = Registry::Instance().GetGameObjects();
@@ -74,24 +71,52 @@ void Scene::OnUpdate(float deltaTime) {
 
 	//Go thorugh camera
 	auto cameras = Registry::Instance().GetComponents<CameraComponent>();
-	for (auto it = cameras.begin(); it != cameras.end(); it++)
+	for (int i = 0; i < cameras.size(); i++)
 	{
 		std::cout << "Scene : OnUpdate : CameraComponent OnUpdate!" << std::endl;
+	
 		//Check if it is the main camera
-		if ((*it)->bIsMainCamera) {
+		if (cameras[i]->bIsMainCamera) {
+			std::cout << "There is a Main Camera" << std::endl;
+			glm::mat4 transform = glm::mat4(1);
 			Shader& s = mShaderManager.GetShader("PlainShader");
-			s.SetUniformMatrix4((*it)->mViewMatrix, "vMatrix");
-			s.SetUniformMatrix4((*it)->mProjectionMatrix, "pMatrix");
+			s.Use();
+			//Set 
+			cameras[i]->mProjectionMatrix = glm::perspective(90.f, 16/9.f, 0.1f, 1000.f);
+			cameras[i]->mViewMatrix = glm::lookAt(glm::vec3(0, 0, -5), glm::vec3(0, 0, 0), glm::vec3(0, 0, 1));
+			s.SetUniformMatrix4(transform, "vMatrix");
+			s.SetUniformMatrix4(cameras[i]->mViewMatrix, "pMatrix");
 		}
 	}
-	//Go thorugh meshes
-	auto meshes = Registry::Instance().GetComponents<MeshComponent>();
-	for (auto it = meshes.begin(); it != meshes.end(); it++)
+	std::cout << "Scene : OnUpdate started! " << std::endl;
+	for (auto it = mSystems.begin(); it != mSystems.end(); it++)
 	{
+		std::cout << "Scene : OnUpdate : Systems : " << (*it).first << std::endl;
+		(*it).second->OnUpdate(deltaTime);
+		std::cout << "Scene : OnUpdate : Systems : " << (*it).first << " finished!" << std::endl;
+	}
+	return;
+	//Go thorugh meshes
+	std::cout << "Scene : OnUpdate : Starting to fetch Mesh Componenets!" << std::endl;
+	if (!Registry::Instance().Has<MeshComponent>()) {
+		std::cout << "Scene : OnUpdate : Registry dosent have a mesh component!";
+		return;
+	}
+
+	auto meshes = Registry::Instance().GetComponents<MeshComponent>();
+	for (int i = 0; i < meshes.size() ; i++)
+	{
+		if (!meshes[i]->bHasBeenModified) {
+			std::cout << " THE MESH COMPONENT IS NOT THE SAME AS THE ONE THAT WAS SPAWNED!" << std::endl;
+			return;
+		}
+		else {
+			std::cout << " THE MESH COMPONENT HAS BEEN MODIFIED! THIS PRO " << meshes[i]->mGameObjectID<<  std::endl;
+		}
 		std::cout << "Scene : OnUpdate : MeshComponent OnUpdate!" << std::endl;
-		RenderComponent& renderComponent = Registry::Instance().GetComponent<RenderComponent>((*it)->mGameObjectID);
+		auto renderComponent = Registry::Instance().GetComponent<RenderComponent>(meshes[i]->mGameObjectID);
 		glBindVertexArray(renderComponent.mVAO);
-		glDrawElements(GL_TRIANGLES, (*it)->mIndices.size(), GL_UNSIGNED_INT, nullptr);
+		glDrawElements(GL_TRIANGLES, meshes[i]->mIndices.size(), GL_UNSIGNED_INT, nullptr);
 		glBindVertexArray(0);
 		std::cout << "RenderComponent : Render End!" << std::endl;
 	}

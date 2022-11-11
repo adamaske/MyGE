@@ -1,12 +1,11 @@
 #include "MyGE.h"
 #include <iostream>
+
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 #include "MainWindow.h"
 #include "RenderWindow.h"
 #include "Scene.h"
-#include "ScriptingManager.h"
-#include "ShaderManager.h"
 #include "Shader.h"
 
 
@@ -57,7 +56,14 @@ int MyGE::run()
 		std::cout << "Failed to initialize GLAD" << std::endl;
 		return -1;
 	}
-
+	//GLenum err = glewInit();
+	//if (GLEW_OK != err)
+	//{
+	//	/* Problem: glewInit failed, something is seriously wrong. */
+	//	std::cerr << "Error: " << glewGetErrorString(err) << std::endl;
+	//
+	//}
+	//std::cerr << "Status: Using GLEW " << glewGetString(GLEW_VERSION) << std::endl;
 	glViewport(0, 0, 800, 600);
 
 	glfwSetFramebufferSizeCallback(mRenderWindow, framebuffer_size_callback);
@@ -82,12 +88,12 @@ int MyGE::run()
 		//Process input
 		ProcessInput();
 
-		//Update game
-		mScene->OnUpdate(1.0f/60.f);
-
 		//Rendering
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
+		//Update game
+		mScene->OnUpdate(1.0f/60.f);
+
 
 		glfwSwapBuffers(mRenderWindow);
 		glfwPollEvents();
