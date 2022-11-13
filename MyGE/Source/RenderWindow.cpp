@@ -5,27 +5,30 @@
 #include "Scene.h"
 #include "Components.h"
 
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+	glViewport(0, 0, width, height);
+}
+
 RenderWindow::RenderWindow(){
 	std::cout << "RenderWindow created!" << std::endl;
 }
+
 void RenderWindow::Init(GLFWwindow* window)
 {
-	//std::cout << "RenderWindow initiated!" << std::endl;
-	//mWindow = window;
-	//glfwInit();
-	////Make context current
-	//
-	//glfwMakeContextCurrent(mWindow);
-	////glViewport(0, 0, 800, 600);
-	//if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-	//{
-	//	std::cout << "Failed to initialize GLAD" << std::endl;
-	//}
-	////general OpenGL stuff:
-	//glEnable(GL_DEPTH_TEST);            //enables depth sorting - must then use GL_DEPTH_BUFFER_BIT in glClear
-	////    glEnable(GL_CULL_FACE);       //draws only front side of models - usually what you want - test it out!
-	//glClearColor(0.4f, 0.4f, 0.4f, 1.0f);    //gray color used in glClear GL_COLOR_BUFFER_BIT
-	//glBindVertexArray(0);
+	mWindow = window;
+	//If the window could not open, terminate
+	if (mWindow == NULL) {
+		std::cout << "MyGE : Failed to create GLFW Window" << std::endl;
+		glfwTerminate();
+		return;
+	}
+	//Keeps the screen correct
+	glfwSetFramebufferSizeCallback(mWindow, framebuffer_size_callback);
+
+	glfwMakeContextCurrent(mWindow);
+	std::cout << "RenderWindow finished Init!" << std::endl;
+
 }
 
 void RenderWindow::Render() {

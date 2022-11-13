@@ -34,6 +34,7 @@ public:
 	void ProcessInput();
 
 
+	
 protected:
 	RenderWindow* mWindow;
 
@@ -46,7 +47,7 @@ protected:
 
 	Scene* mScene;
 
-	GLFWwindow* mRenderWindow;
+	RenderWindow* mRenderWindow;
 
 	bool mFirstClick = false;
 	float mWindowHeight = 1200;

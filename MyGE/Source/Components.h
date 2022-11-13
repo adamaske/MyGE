@@ -57,8 +57,10 @@ struct CameraComponent {
 	float mFarPlane;
 
 	//Incase the camera dosent have a transform component
-	glm::vec3 mPosition{ 0,0,0 };
-	glm::vec3 mTarget{ 0, 1, 0 };
+	float mYaw = 0;
+	float mPitch = 0;
+
+	glm::vec3 mLastPosition = glm::vec3(600, 400, 0);
 };
 
 struct RenderComponent {

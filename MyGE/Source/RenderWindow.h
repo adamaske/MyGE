@@ -7,7 +7,9 @@ public:
 	virtual void Init(struct GLFWwindow* window) override;
 	void Render();
 
-
+	void SetScene(class Scene* scene) {
+		mActiveScene = scene;
+	}
 private:
 	class Scene* mActiveScene;
 

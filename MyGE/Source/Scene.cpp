@@ -50,7 +50,7 @@ void Scene::Init()
 	cameraTransform.mMatrix = glm::translate(glm::mat4(1), glm::vec3(0, 0, -5));
 	//Creating systems
 	mSystems.insert({ "ObjMeshSystem", new ObjMeshSystem()});
-
+	mSystems.insert({ "CameraSystem", new CameraMovementSystem() });
 	//Init all systems
 	for (auto it = mSystems.begin(); it != mSystems.end(); it++)
 	{
@@ -102,8 +102,8 @@ void Scene::OnUpdate(float deltaTime) {
 			glUseProgram(shader->GetProgram());
 			glm::vec3 pos(transform.mMatrix[3].x, transform.mMatrix[3].y, transform.mMatrix[3].z);
 			//Update matrices 
-			cameras[i]->mProjectionMatrix = glm::perspective(60.f, 1200/800.f, 0.1f, 1000.f);
-			cameras[i]->mViewMatrix = glm::lookAt(pos, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+			cameras[i]->mProjectionMatrix = glm::perspective(glm::radians(90.f), 1200 / 800.f, 0.1f, 1000.f);
+			cameras[i]->mViewMatrix = glm::lookAt(pos, pos + cameras[i]->mForward, glm::vec3(0, 1, 0));
 			//Set the variables in the PlainShader
 			shader->SetUniformMatrix4(cameras[i]->mViewMatrix, "vMatrix");
 			shader->SetUniformMatrix4(cameras[i]->mProjectionMatrix, "pMatrix");

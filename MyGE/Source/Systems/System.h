@@ -311,3 +311,54 @@ private:
     std::vector<Vertex> mVertices;
     std::vector<GLuint> mIndicies;
 };
+
+class CameraMovementSystem : public System {
+public:
+    virtual void Init() override {
+
+    };
+
+    virtual void OnUpdate(float deltaTime) override {
+        auto cameras = Registry::Instance().GetComponents<CameraComponent>();
+        for (size_t i = 0; i < cameras.size(); i++) {
+            if (cameras[i]->bIsMainCamera) {
+                // Hides mouse cursor
+                  // Prevents camera from jumping on the first click
+                //Gets the current position of the mouse cursor
+                double xpos, ypos;
+                glfwGetCursorPos(glfwGetCurrentContext(), &xpos, &ypos);
+
+                //Find how for the mouse traveled this frame
+                float xoffset = xpos - cameras[i]->mLastPosition.x;
+                float yoffset = cameras[i]->mLastPosition.y - ypos;
+                //Set the current position to the last pos  
+                cameras[i]->mLastPosition.x = xpos;
+                cameras[i]->mLastPosition.y = ypos;
+
+                xoffset *=  mSensitivity * deltaTime;
+                yoffset *=  mSensitivity * deltaTime;
+
+                cameras[i]->mYaw += xoffset;
+                cameras[i]->mPitch += yoffset;
+
+                if (cameras[i]->mPitch > 89.0f)
+                    cameras[i]->mPitch = 89.0f;
+                if (cameras[i]->mPitch < -89.0f)
+                    cameras[i]->mPitch = -89.0f;
+
+                glm::vec3 direction;
+                direction.x = cos(glm::radians(cameras[i]->mYaw)) * cos(glm::radians(cameras[i]->mPitch));
+                direction.y = sin(glm::radians(cameras[i]->mPitch));
+                direction.z = sin(glm::radians(cameras[i]->mYaw)) * cos(glm::radians(cameras[i]->mPitch));
+                cameras[i]->mForward = glm::normalize(direction);
+                //Calculate a new rotation
+                // Sets mouse cursor to the middle of the screen so that it doesn't end up roaming around
+                glfwSetCursorPos(glfwGetCurrentContext(), 600, 400);
+            }
+        }
+    };
+
+private:
+    bool bFirstClick = true;
+    float mSensitivity = 10;
+};
