@@ -35,6 +35,8 @@ public:
 	void ProcessInput();
 
 	void ResizeWindow(uint32_t width, uint32_t height);
+
+	void CalculateDeltaTime();
 protected:
 	RenderWindow* mWindow;
 

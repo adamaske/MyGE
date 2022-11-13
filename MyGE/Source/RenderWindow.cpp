@@ -31,7 +31,7 @@ void RenderWindow::Init(GLFWwindow* window)
 
 }
 
-void RenderWindow::Render() {
+void RenderWindow::Render(float deltaTime) {
 	//std::cout << std::endl << std::endl << "----RenderWindow : Render started!" << std::endl << std::endl << std::endl;
 	//glfwInit();
 	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
