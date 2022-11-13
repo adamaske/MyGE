@@ -18,10 +18,16 @@ public:
 
 	}
 
+	void ViewportRezised(int width, int height);
 private:
 	//The scene wants to know of all the shaders
 	ShaderManager& mShaderManager;
 
 	std::unordered_map<const char*, class System*> mSystems;
+
+	CameraComponent* mSceneCamera;
+
+	int mViewportWidth = 0;
+	int mViewportHeight = 0;
 
 };

@@ -2,6 +2,7 @@
 #include <memory>
 #include "Shader.h"
 #include "Systems/System.h"
+#include "Camera.h"
 void Scene::Init()
 {
 	Registry::Instance().RegisterComponent<ShaderComponent>();
@@ -50,7 +51,7 @@ void Scene::Init()
 	cameraTransform.mMatrix = glm::translate(glm::mat4(1), glm::vec3(0, 0, -5));
 	//Creating systems
 	mSystems.insert({ "ObjMeshSystem", new ObjMeshSystem()});
-	mSystems.insert({ "CameraSystem", new CameraMovementSystem() });
+	mSystems.insert({ "CameraControllerSystem", new CameraControllerSystem() });
 	//Init all systems
 	for (auto it = mSystems.begin(); it != mSystems.end(); it++)
 	{
@@ -77,33 +78,20 @@ void Scene::OnUpdate(float deltaTime) {
 	auto cameras = Registry::Instance().GetComponents<CameraComponent>();
 	for (int i = 0; i < cameras.size(); i++)
 	{
-		std::cout << "Scene : OnUpdate : CameraComponent OnUpdate!" << std::endl;
-	
 		//Check if it is the main camera
 		if (cameras[i]->bIsMainCamera) {
-			if (!Registry::Instance().Has<TransformComponent>(cameras[i]->mGameObjectID)) {
-				//Camera dosent have a transform
-				std::cout << "NO TRANFORM ON CAMERA; RETURNING" << std::endl;
-				
-			}
-			else {
-
-			}
+			//Gets a transform for the caemra
 			TransformComponent& transform = Registry::Instance().GetComponent<TransformComponent>(cameras[i]->mGameObjectID);
+			//Get the shader to apply my view and projection matrix
 			auto shader = mShaderManager.GetShader("PlainShader");
-			if (shader) {
-				std::cout << std::endl << "Scene : OnUpdate : Has a PlainShader : " << shader->mName << std::endl<< std::endl;
-			}
-			else {
-				std::cout << "FOUND NO PLAIN SHADER RETURNING" << std::endl;
-				return;
-			}
 			//Use this shader
 			glUseProgram(shader->GetProgram());
+			//Get a position
 			glm::vec3 pos(transform.mMatrix[3].x, transform.mMatrix[3].y, transform.mMatrix[3].z);
 			//Update matrices 
-			cameras[i]->mProjectionMatrix = glm::perspective(glm::radians(90.f), 1200 / 800.f, 0.1f, 1000.f);
-			cameras[i]->mViewMatrix = glm::lookAt(pos, pos + cameras[i]->mForward, glm::vec3(0, 1, 0));
+			cameras[i]->mProjectionMatrix = glm::perspective(glm::radians(90.f), cameras[i]->mAspectRatio, 0.1f, 1000.f);
+
+			cameras[i]->mViewMatrix = glm::lookAt(pos, pos + glm::vec3(0,0, 1), glm::vec3(0, 1, 0));
 			//Set the variables in the PlainShader
 			shader->SetUniformMatrix4(cameras[i]->mViewMatrix, "vMatrix");
 			shader->SetUniformMatrix4(cameras[i]->mProjectionMatrix, "pMatrix");
@@ -118,5 +106,21 @@ void Scene::OnUpdate(float deltaTime) {
 		std::cout << "Scene : OnUpdate : Systems : " << (*it).first << std::endl;
 		(*it).second->OnUpdate(deltaTime);
 		std::cout << "Scene : OnUpdate : Systems : " << (*it).first << " finished!" << std::endl;
+	}
+}
+
+void Scene::ViewportRezised(int width, int height) {
+	mViewportWidth = width;
+	mViewportHeight = height;
+	//GO through all cameras and change their aspect ratio and size 
+	auto cameras = Registry::Instance().GetComponents<CameraComponent>();
+	for (size_t i = 0; i < cameras.size(); i++)
+	{
+		//Change cameras without a fixed ar
+		if (!cameras[i]->bFixedAsceptRatio) {
+			//Remove one of these
+			cameras[i]->mCamera.SetViewportSize(width, height);
+			cameras[i]->mAspectRatio = (width / height);
+		}
 	}
 }

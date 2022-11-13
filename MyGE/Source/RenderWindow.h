@@ -13,6 +13,8 @@ public:
 private:
 	class Scene* mActiveScene;
 
+	float mScreenWidth = 1200;
+	float mScreenHeight = 800;
 	
 };
 

@@ -23,6 +23,7 @@
 #include "ShaderManager.h"
 
 
+
 class MyGE
 {
 public:
@@ -33,8 +34,7 @@ public:
 
 	void ProcessInput();
 
-
-	
+	void ResizeWindow(uint32_t width, uint32_t height);
 protected:
 	RenderWindow* mWindow;
 
@@ -48,10 +48,16 @@ protected:
 	Scene* mScene;
 
 	RenderWindow* mRenderWindow;
-
-	bool mFirstClick = false;
 	float mWindowHeight = 1200;
 	float mWindowWidth = 900;
-	float mMouseSensitivity = 0.1f;
-	glm::quat mOrientation;
+	//Keeping track of deltaTime
+	float deltaTime = 0.0f;
+	float lastFrame = 0.0f;
+
+	static void WindowSizeChangedCallback(GLFWwindow* window, int width, int height) {
+		//This window pointer is associated width his MYGE instance
+		MyGE* obj = reinterpret_cast<MyGE*>(glfwGetWindowUserPointer(window));
+		obj->ResizeWindow(width, height);
+	};
+
 };

@@ -9,6 +9,7 @@
 #include "glm/gtc/type_ptr.hpp"
 #include "Vertex.h"
 #include "Shader.h"
+#include "Camera.h"
 
 //class TransformComponent : public Component {
 struct TransformComponent {
@@ -39,8 +40,12 @@ struct MeshComponent {
 };
 
 struct CameraComponent {
+	//I may want this to just be a container for a pointer to a camera
+	Camera mCamera;
+
 	int mGameObjectID = 1;
 	bool bIsMainCamera = 1;
+	bool bFixedAsceptRatio = false;
 
 	glm::mat4x4* mPmatrix{ nullptr };         // denne,
 	glm::mat4x4* mVmatrix{ nullptr };         // og denne, skal legges inn i kameraklasse
@@ -51,8 +56,12 @@ struct CameraComponent {
 	glm::vec3 mRight;
 	glm::vec3 mForward;
 
+	glm::vec3 mGlobalUp = { 0,1,0 };
+	glm::vec3 mGlobalRight = { 1,0,0 };
+	glm::vec3 mGlobalForward = { 0,0,1 };
+
 	float mFOV;
-	float mAspectRatio;
+	float mAspectRatio = 4.f / 3.f;
 	float mNearPlane;
 	float mFarPlane;
 
