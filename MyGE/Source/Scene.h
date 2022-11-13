@@ -2,15 +2,11 @@
 #include <iostream>
 #include <vector>
 #include <unordered_map>
-#include "Components.h"
-#include "GameObject.h"
-#include "ShaderManager.h"
-#include "Registry.h"
-
+#include "MyGE.h"
 class Scene
 {
 public:
-	Scene(ShaderManager& shader) : mShaderManager(shader) {
+	Scene(class ShaderManager& shader) : mShaderManager(shader) {
 		std::cout << "Scene created!" << std::endl;
 	};
 
@@ -18,11 +14,14 @@ public:
 
 	virtual void OnUpdate(float deltaTime);
 
+	void AddScene(Scene* scene) {
+
+	}
 
 private:
 	//The scene wants to know of all the shaders
 	ShaderManager& mShaderManager;
-	class ObjMeshSystem* mObjMeshSystem;
+
 	std::unordered_map<const char*, class System*> mSystems;
 
 };

@@ -41,8 +41,8 @@ int MyGE::run()
 	//Our window into the game world is a RenderWindow
 	//mWindow = RenderWindow();
 	//Init, close if not sucess
-	mRenderWindow = glfwCreateWindow(800, 600, "MyGE", NULL, NULL);
-
+	mRenderWindow = glfwCreateWindow(1200, 800, "MyGE", NULL, NULL);
+	//glViewport(0, 0, 1200, 800);
 	//mWindow.Init(window);
 	if (mRenderWindow == NULL) {
 		std::cout << "MyGE : Failed to create GLFW Window" << std::endl;
@@ -65,14 +65,15 @@ int MyGE::run()
 	//
 	//}
 	//std::cerr << "Status: Using GLEW " << glewGetString(GLEW_VERSION) << std::endl;
-	glViewport(0,0, mWindowHeight, mWindowHeight);
+
 
 	glfwSetFramebufferSizeCallback(mRenderWindow, framebuffer_size_callback);
-
+	glViewport(0, 0, 1200, 800);
+	glEnable(GL_DEPTH_TEST);
 	//In this demo I will render 1 secen
 	Registry* registry = new Registry();
 	std::cout << "MyGE : " << std::endl;
-	//Scene Manager created
+	//Scene Manager created|
 	mSceneManager = new SceneManager();
 
 	mScriptingManager = new ScriptingManager();
@@ -120,16 +121,50 @@ void MyGE::ProcessInput()
         std::cout << "Move forward" << std::endl;
       
     }
-    if (glfwGetKey(mRenderWindow, GLFW_KEY_N) == GLFW_PRESS) {
-        std::cout << "Move forward" << std::endl;
-        //Launches new scene
-        Scene* s = &mSceneManager->GetNextScene(1);
-        //Init the scene
-        s->Init();
-        //The render window knows what scene to render
-        //mWindow->SetActiveScene(s);
-    }
 
+	if (glfwGetKey(mRenderWindow, GLFW_KEY_W) == GLFW_PRESS) {
+		auto camera = Registry::Instance().GetComponents <CameraComponent>();
+		for (int i = 0; i < camera.size(); i++) {
+			if (camera[i]->bIsMainCamera) {
+
+				auto& transform = Registry::Instance().GetComponent<TransformComponent>(camera[i]->mGameObjectID);
+				transform.mMatrix[3].z += 1 / 60.f;
+			}
+		}
+	}
+
+	if (glfwGetKey(mRenderWindow, GLFW_KEY_S) == GLFW_PRESS) {
+		auto camera = Registry::Instance().GetComponents <CameraComponent>();
+		for (int i = 0; i < camera.size(); i++) {
+			if (camera[i]->bIsMainCamera) {
+
+				auto& transform = Registry::Instance().GetComponent<TransformComponent>(camera[i]->mGameObjectID);
+				transform.mMatrix[3].z -= 1 / 60.f;
+			}
+		}
+	}
+
+	if (glfwGetKey(mRenderWindow, GLFW_KEY_A) == GLFW_PRESS) {
+		auto camera = Registry::Instance().GetComponents <CameraComponent>();
+		for (int i = 0; i < camera.size(); i++) {
+			if (camera[i]->bIsMainCamera) {
+
+				auto& transform = Registry::Instance().GetComponent<TransformComponent>(camera[i]->mGameObjectID);
+				transform.mMatrix[3].x += 1 / 60.f;
+			}
+		}
+	}
+
+	if (glfwGetKey(mRenderWindow, GLFW_KEY_D) == GLFW_PRESS) {
+		auto camera = Registry::Instance().GetComponents <CameraComponent>();
+		for (int i = 0; i < camera.size(); i++) {
+			if (camera[i]->bIsMainCamera) {
+
+				auto& transform = Registry::Instance().GetComponent<TransformComponent>(camera[i]->mGameObjectID);
+				transform.mMatrix[3].x -= 1 / 60.f;
+			}
+		}
+	}
     // Handles mouse inputs
 	if (glfwGetMouseButton(mRenderWindow, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
 	{

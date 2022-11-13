@@ -9,7 +9,6 @@
 #include "glm/gtc/type_ptr.hpp"
 #include "Vertex.h"
 #include "Shader.h"
-#include "Registry.h"
 
 //class TransformComponent : public Component {
 struct TransformComponent {
@@ -36,9 +35,7 @@ struct MeshComponent {
 	int mGameObjectID = 1;
 	std::vector<Vertex> mVertices;
 	std::vector<uint32_t> mIndices;
-	std::string mObjFilePath = "";
-
-	bool bHasBeenModified = false;
+	std::string mObjFilePath;
 };
 
 struct CameraComponent {

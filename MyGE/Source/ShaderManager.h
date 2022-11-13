@@ -1,14 +1,24 @@
 #pragma once
 #include <iostream>
 #include <unordered_map>
-#include "Shader.h"
+#include "MyGE.h"
+static class ShaderManager* mSMInstance;
 class ShaderManager {
 public:
 
 	ShaderManager() {
 		Init();
 	};
+	~ShaderManager() {
+		delete mSMInstance;
+	}
 
+	static ShaderManager* Instance() {
+		if (mSMInstance == nullptr) {
+			mSMInstance = new ShaderManager();
+		}
+		return mSMInstance;
+	}
 	void Init() {
 		mShaders.insert({ "PlainShader", new Shader("C:/Users/adama/Documents/GitHub/MyGE/Resources/Shaders/plainshader.vert",
 								"C:/Users/adama/Documents/GitHub/MyGE/Resources/Shaders/plainshader.frag", "PlainShader") });

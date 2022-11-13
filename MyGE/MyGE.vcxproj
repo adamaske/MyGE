@@ -157,6 +157,7 @@
   <ItemGroup>
     <ClCompile Include="..\GLAD\src\glad.c" />
     <ClCompile Include="Source\Registry.cpp" />
+    <ClCompile Include="Source\SceneManager.cpp" />
     <ClCompile Include="Source\Script.cpp" />
     <ClCompile Include="Source\ScriptingManager.cpp" />
     <ClCompile Include="Source\GameObject.cpp" />
@@ -172,9 +173,9 @@
   <ItemGroup>
     <ClInclude Include="Source\Registry.h" />
     <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="Source\SceneManager.h" />
     <ClInclude Include="Source\Script.h" />
     <ClInclude Include="Source\ScriptingManager.h" />
-    <ClInclude Include="Source\ScriptManager.h" />
     <ClInclude Include="Source\ShaderManager.h" />
     <ClInclude Include="Source\GameObject.h" />
     <ClInclude Include="Source\Shader.h" />

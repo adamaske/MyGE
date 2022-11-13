@@ -2,40 +2,27 @@
 //#include "glew.h"
 #include <vector>
 
-#include "ScriptingManager.h"
-#include "ShaderManager.h"
+
+
+//All includes, everything include this
+#include "Components.h"
+#include "GameObject.h"
+
+#include "Registry.h"
+
+#include "MainWindow.h"
 #include "RenderWindow.h"
 
-class SceneManager {
-public:
-	SceneManager() {
+#include "Scene.h"
+#include "../../MyGE/Source/SceneManager.h"
 
-	};
+#include "Script.h"
+#include "ScriptingManager.h"
 
-	class Scene& GetNextScene(int dir) {
-		if (mActiveSceneIndex + dir >= mScenes.size()) {
-			mActiveSceneIndex = 0;
-		}
-		else if (mActiveSceneIndex + dir <= 0) {
-			mActiveSceneIndex = mScenes.size() - 1;
-		}
-		else {
-			mActiveSceneIndex += dir;
-		}
-		return *mScenes[mActiveSceneIndex];
-	};
+#include "Shader.h"
+#include "ShaderManager.h"
 
-	Scene& GetScene() {
-		return *mScenes[mActiveSceneIndex];
-	}
 
-	void AddScene(Scene& scene) {
-		mScenes.push_back(&scene);
-	}
-private:
-	std::vector<Scene*> mScenes;
-	int mActiveSceneIndex = 0;
-};
 class MyGE
 {
 public:
@@ -55,7 +42,7 @@ protected:
 	//Scene manager
 	SceneManager* mSceneManager;
 
-	ShaderManager* mShaderManager;
+	class ShaderManager* mShaderManager;
 
 	Scene* mScene;
 

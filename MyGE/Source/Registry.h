@@ -4,7 +4,8 @@
 #include <unordered_map>
 #include <string>
 #include <memory>
-#include "Shader.h"
+
+//Needs only to know about all the components and the GameObject 
 #include "Components.h"
 #include "GameObject.h"
 
@@ -25,27 +26,26 @@ template<typename T>
 class UnitHolder : public IUnitHolder {
 public:
 	UnitHolder() {
-		std::cout << "UnitHolder for " << typeid(T).name() << std::endl;
-		return;
 	}
 	template<typename T>
 	void Insert(int objectID, T& t) {
 		mUnits.insert({ objectID, t });
-		std::cout << "UnitHolder : Inserted unit of type " << typeid(T).name() << ", " << objectID << std::endl;
 	};
 
 	void Pop(int id) {
 		mUnits.erase(id);
-		std::cout << "UnitHolder : Ereased unit" << std::endl;
 	}
-
-	T& GetUnit(int objectID) {
-		//We can safely return this becase Has should be called before
-		std::cout << "Unit holder returning mUnits[ObjectID" << std::endl;
-		return mUnits[objectID];
+	//Does this have any at all, this can techinaccly exist without any items in it yet
+	bool Has() {
+		if (mUnits.size() > 0) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
-	//Is there a component of this type with this object id?
-	bool Contains(int objectID) {
+	//Does this item holder have a key equal to that object
+	bool Has(int objectID) {
 		if (mUnits.find(objectID) != mUnits.end()) {
 			return true;
 		}
@@ -54,19 +54,36 @@ public:
 		}
 	}
 
+	//Get a specific unit, should be lighting fast because it just returns a map position 
+	T& GetUnit(int objectID) {
+		//We can safely return this becase Has should be called before
+		return mUnits[objectID];
+	}
+
+	//Get all objects in this holder
 	std::vector<T&> GetAllUnits() {
-		std::vector<int> keys;
-		keys.reserve(mUnits.size());
 		std::vector<T&> vals;
 		vals.reserve(mUnits.size());
 
 		for (auto kv : mUnits) {
-			keys.push_back(kv.first);
 			vals.push_back(kv.second);
 		}
 		
 		return vals;
 	}
+
+	//Get all the units which has this component
+	std::vector<int> GeAllUnitsKeys() {
+		std::vector<int> keys;
+		keys.reserve(mUnits.size());
+
+		for (auto kv : mUnits) {
+			keys.push_back(kv.first);
+		}
+
+		return keys;
+	}
+
 private:
 	std::unordered_map<int, T> mUnits;
 };
@@ -80,6 +97,11 @@ public:
 		mID = 0;
 		std::cout << "Registry : Created" << std::endl;
 	};
+
+	~Registry() {
+		delete mInstance;
+	};
+
 	//Instance 
 	static Registry& Instance() {
 		if (mInstance == nullptr) {
@@ -88,7 +110,6 @@ public:
 		return *mInstance;
 	}
 
-
 	//Always returns a new not in-use ID
 	static const int GetNewID() {
 		Registry::Instance().mID = Registry::Instance().mID + 1;
@@ -96,53 +117,66 @@ public:
 		return Registry::Instance().mID;
 	}
 
-	//Tell the registry this component type exists
+	int NewGameObject() {
+		GameObject go = GameObject();
+		//All new gameobjects wants a transform
+		go.mID = GetNewID();
+		RegisterGameObject(go);
+		RegisterComponent<struct TransformComponent>(TransformComponent(), go.mID);
+		return go.mID;
+	}
+
+	//Only register a component
 	template<typename T>
-	void RegisterComponent(T& item, int objectID) {
-		std::cout << std::endl << std::endl << "Registry : Starting To Register Component" << std::endl;
+	void RegisterComponent() {
+		const char* typeName = typeid(T).name();
+		if (mComponentTypes.find(typeName) == mComponentTypes.end()) {
+			mComponentTypes.insert({ typeName, GetNewID() });
+			mComponentsHolder.insert({ typeName, new UnitHolder<T>() });
+		}
+		else {
+			return;
+		}
+	}
+
+
+	//Register a specific component to a gameobject
+	template<typename T>
+	T& RegisterComponent(T item, int objectID) {
+		//this function returns nomatter what
 		//We know we want to register
 		const char* typeName = typeid(T).name();
 		if (mComponentTypes.find(typeName) != mComponentTypes.end()) {
 			//If the components is already registered, return
 			//No need to create a new UnitHolder
 			//Now add the compnent
-			std::cout << "Registry : There already is a component of this type, adding to UnitHolder<T>" << std::endl;
+		
 			if (Has<T>(objectID)) {
 				std::cout << "Registry : There is a gameobject which has this type of component" << std::endl;
 				//Since there already is a component of this type on this object, return
-				std::cout << std::endl << std::endl << "Registry : Finished Register Component" << std::endl;
-				return;
-			}
-			else {
-				std::cout << "Registry : There is no gameobject with this ID that has this component" << std::endl;
-				item.mGameObjectID = objectID;
-				GetUnitHolder<T>()->Insert(objectID, item);
-				std::cout << "Registry : Added a new component : " << " a " << typeName << ", " << objectID << std::endl;
-				
-				std::cout << std::endl << std::endl << "This component type already exists" << std::endl;
-				std::cout << "The gameobject did have a component of this type yet" << std::endl;
-				std::cout <<  "Registry : Finished Register Component" << std::endl;
-				
-				return;
+				std::cout << std::endl << std::endl << "Registry : Returned becuse this object already exists on this object" << std::endl;
+				return GetUnitHolder<T>()->GetUnit(objectID);
 			}
 			
+			item.mGameObjectID = objectID;
+
+			//Insert the component into the unitholder
+			GetUnitHolder<T>()->Insert(objectID, item);
+			return GetUnitHolder<T>()->GetUnit(objectID);
 		}
 		else {
-			std::cout << "Registry : RegsiterComponent, there is no component of this type yet" << std::endl;
-
-			mComponentTypes.insert({typeName, GetNewID()});
-			std::cout << "Created a Component Type for this with key" << mComponentTypes[typeName] << std::endl;
-			mComponentsHolder.insert({ typeName, new UnitHolder<T>()});
+			//There was no component of this type yet
+			RegisterComponent<T>();
+			
 			item.mGameObjectID = objectID;
 			
 			//We must set the
 			GetUnitHolder<T>()->Insert(objectID, item);
 			std::cout <<"Registry : Finished Register Component" << std::endl;
-			return;
+			return GetUnitHolder<T>()->GetUnit(objectID);
 		}
 		
 	};
-
 
 	void RegisterGameObject(GameObject& object) {
 		//Check there is no gameobejc with this identity already
@@ -158,13 +192,10 @@ public:
 	//Adding a component must also have a entity
 	template<typename T>
 	void AddComponent(int objectID, T& component) {
-		//We know we want to register
-
-		//auto a = GetUnitHolder<T>();
-
-		std::cout << "Registry : Added a new component";
+		GetUnitHolder<T>()->Insert(objectID, component);
 	}
 
+	//If the gameobject has this type of component, return it
 	template<typename T>
 	T& GetComponent(int objectID){ 
 		//Has has been called on this so we know we can return the unit holder
@@ -181,6 +212,8 @@ public:
 		}
 		return vals;
 	}
+
+	//Get allt 
 	template<typename T>
 	std::vector<T> GetComponents(int objectID) {
 		//Return all components from this item
@@ -204,6 +237,14 @@ public:
 		return units;
 	}
 
+	template<typename T>
+	void GetAllComponentsOfType() {
+
+		//This should always be ok because Has has been called before
+		return mComponentsHolder[typeid(T).name()];
+	}
+
+	//Gets all the gameobjects
 	std::vector<GameObject> GetGameObjects() {
 		std::vector<GameObject> objects;
 		for (auto it = mGameObjects.begin(); it != mGameObjects.end(); it++)
@@ -211,22 +252,6 @@ public:
 			objects.push_back((*it).second);
 		}
 		return objects;
-	}
-
-	template<typename T>
-	bool Has(int objectID) 
-	{
-		const char* typeName = typeid(T).name();
-		
-		//We first need to know if there is a unit holder of this type
-		if (mComponentTypes.find(typeName) != mComponentTypes.end()) {
-			//There is a unit holder fo this type
-			return GetUnitHolder<T>()->Contains(objectID);
-		}
-		else {
-			//There is no unit holder of this type, so return false
-			return false;
-		}
 	}
 
 	//Does this registry have a component of this type
@@ -238,10 +263,30 @@ public:
 			return false;
 		}
 		else {
-			return true;
+			//also check if there is a single component of this type in the holder
+			return GetUnitHolder<T>()->Has();
+		}
+	}
+	//Does this specific object have a T component?
+	template<typename T>
+	bool Has(int objectID) 
+	{
+		const char* typeName = typeid(T).name();
+		if (mComponentsHolder.find(typeName) == mComponentsHolder.end()) {
+			//There is a unit holder with this type
+			std::cout << "Becuse there is no component holder of this type";
+			return false;
+		}
+		else {
+			//also check if there is a single component of this type in the holder
+			return GetUnitHolder<T>()->Has(objectID);
 		}
 	}
 
+	void GetAllObjectsWithComponent(int objectID) {
+
+	}
+	
 private:
 	//We want a unorerd map which holds the string for which type has come in
 	// when that type is stored, 
@@ -262,14 +307,12 @@ private:
 	UnitHolder<T>* GetUnitHolder() {
 		//Gets the type of the component, for
 		const char* typeName = typeid(T).name();
-		std::cout << "GetUnitHolder : Getting Unit Holder for " << typeName << std::endl;
 		//mComponentTypes has a Value with this T as a Key, 
 		//If the theres is no unit holder with this type
 		if (mComponentsHolder.find(typeName) == mComponentsHolder.end()) {
 
 			//No component of this type found 
 			//return std::static_pointer_cast<UnitHolder<T>>(mComponents[typeName]);
-			std::cout << "Registry : GetUnitHolder<" << typeName << "> does not have an array! Returning from here!" << std::endl;
 			return nullptr;
 		}
 		//This returns correct array of components for the type

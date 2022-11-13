@@ -4,55 +4,61 @@
 #include "Systems/System.h"
 void Scene::Init()
 {
-	CameraComponent cameraComponent = CameraComponent();
-	cameraComponent.bIsMainCamera = true;
-	TransformComponent	transform = TransformComponent();
+	Registry::Instance().RegisterComponent<ShaderComponent>();
+	Registry::Instance().RegisterComponent<RenderComponent>();
+	Registry::Instance().RegisterComponent<TransformComponent>();
+	Registry::Instance().RegisterComponent<MeshComponent>();
+	Registry::Instance().RegisterComponent<CameraComponent>();
 
+	std::cout << "Scene started Init!" << std::endl;
+
+	std::string cubePath =		"C:/Users/adama/Documents/GitHub/MyGE/Resources/Meshes/cube.obj";
+	std::string monkeyPath =	"C:/Users/adama/Documents/GitHub/MyGE/Resources/Meshes/monkey.obj";
+
+	//Cube gameobject and components
+	int cubeID = Registry::Instance().NewGameObject();
 	//Create a shader component, should be replaced with material
-	ShaderComponent		shader = ShaderComponent();
-	//Give the shader component the plain shader
+	auto& shader = Registry::Instance().RegisterComponent<ShaderComponent>(ShaderComponent(), cubeID);
 	shader.mShader = mShaderManager.GetShader("PlainShader");
 	//Createa render component
-	RenderComponent		render = RenderComponent();
+	auto& render = Registry::Instance().RegisterComponent<RenderComponent>(RenderComponent(), cubeID);
 	//Create a mesh component
-	MeshComponent		mesh = MeshComponent();
-	mesh.bHasBeenModified = true;
-	mesh.mGameObjectID = 1;
-	//Gives the mesh the file path to its obj file
-	mesh.mObjFilePath = "C:/Users/adama/Documents/GitHub/MyGE/Resources/Meshes/cube.obj";
-	//Register new GameObject(newID from register)
-	int cubeID = Registry::Instance().GetNewID();
-	std::cout << "CUBE ID == " << cubeID << std::endl;
-	//Create a struct of gameobject called cube
-	GameObject cube = { cubeID };
-	//Registry Add GameObject to count
-	Registry::Instance().RegisterGameObject(cube);
-
-	//Register the components we want to exist
-	Registry::Instance().RegisterComponent<CameraComponent>(cameraComponent, cubeID);
-	Registry::Instance().RegisterComponent<TransformComponent>(transform, cubeID);
-	Registry::Instance().RegisterComponent<ShaderComponent>(shader, cubeID);
-	Registry::Instance().RegisterComponent<RenderComponent>(render, cubeID);
-	Registry::Instance().RegisterComponent<MeshComponent>(mesh, cubeID);
-
-	std::cout << "Scene : Finished Creating Components!" << std::endl;
+	auto& cubeMesh = Registry::Instance().RegisterComponent<MeshComponent>(MeshComponent(), cubeID);
+	cubeMesh.mObjFilePath = cubePath;
+	auto& cubeTransform = Registry::Instance().GetComponent<TransformComponent>(cubeID);
+	cubeTransform.mMatrix = glm::translate(glm::mat4(1), glm::vec3(-2, 0, 1));
 
 
-	CameraComponent& camera = Registry::Instance().GetComponent<CameraComponent>(cubeID);
-	std::cout << "Scene : Init : Created CameraComponent" << std::endl;
+	//Monkey gameobject and components
+	int monkeyID = Registry::Instance().NewGameObject();
+	//Creates a shader component, replace with material component
+	ShaderComponent& monkeyShader = Registry::Instance().RegisterComponent<ShaderComponent>(ShaderComponent(), cubeID);
+	//Set correct shader
+	monkeyShader.mShader = mShaderManager.GetShader("PlainShader");
+	//Create render and mesh component, sets path to 
+	RenderComponent& monkeyRender = Registry::Instance().RegisterComponent<RenderComponent>(RenderComponent(), monkeyID);
+	MeshComponent& monkeyMesh = Registry::Instance().RegisterComponent<MeshComponent>(MeshComponent(), monkeyID); // Register the component to the gameobject
+	monkeyMesh.mObjFilePath = monkeyPath;
+	TransformComponent& monkeyTransform = Registry::Instance().GetComponent<TransformComponent>(monkeyID);
+	monkeyTransform.mMatrix = glm::translate(glm::mat4(1), glm::vec3(2, 0, 1));
+
+	//Camera gameobject and components
+	int cameraID = Registry::Instance().NewGameObject();
+	CameraComponent& camera = Registry::Instance().RegisterComponent<CameraComponent>(CameraComponent(), cameraID);
+	camera.bIsMainCamera = true;
+	TransformComponent& cameraTransform = Registry::Instance().GetComponent<TransformComponent>(cameraID);
+	cameraTransform.mMatrix = glm::translate(glm::mat4(1), glm::vec3(0, 0, -5));
 	//Creating systems
-	//System for creating mesh from files nad rendering them
-	mObjMeshSystem = new ObjMeshSystem();
+	mSystems.insert({ "ObjMeshSystem", new ObjMeshSystem()});
 
-	mSystems.insert({ "ObjMeshSystem", mObjMeshSystem });
+	//Init all systems
 	for (auto it = mSystems.begin(); it != mSystems.end(); it++)
 	{
-		std::cout << "Scene : Init : " << (*it).first << std::endl;
 		//Creating systems
 		(*it).second->Init();
-		std::cout << "Scene : Finished Init : " << (*it).first << std::endl;
 	}
 
+	std::cout << "Scene ended Init!" << std::endl;
 }
 
 
@@ -78,13 +84,12 @@ void Scene::OnUpdate(float deltaTime) {
 			if (!Registry::Instance().Has<TransformComponent>(cameras[i]->mGameObjectID)) {
 				//Camera dosent have a transform
 				std::cout << "NO TRANFORM ON CAMERA; RETURNING" << std::endl;
-				return;
+				
 			}
 			else {
 
 			}
-			auto transform = Registry::Instance().GetComponent<TransformComponent>(cameras[i]->mGameObjectID);
-			std::cout << "There is a Main Camera" << std::endl;
+			TransformComponent& transform = Registry::Instance().GetComponent<TransformComponent>(cameras[i]->mGameObjectID);
 			auto shader = mShaderManager.GetShader("PlainShader");
 			if (shader) {
 				std::cout << std::endl << "Scene : OnUpdate : Has a PlainShader : " << shader->mName << std::endl<< std::endl;
@@ -95,9 +100,10 @@ void Scene::OnUpdate(float deltaTime) {
 			}
 			//Use this shader
 			glUseProgram(shader->GetProgram());
+			glm::vec3 pos(transform.mMatrix[3].x, transform.mMatrix[3].y, transform.mMatrix[3].z);
 			//Update matrices 
-			cameras[i]->mProjectionMatrix = glm::perspective(120.f, 800.f/600.f, 0.1f, 1000.f);
-			cameras[i]->mViewMatrix = glm::lookAt(glm::vec3(0, 0, 0), glm::vec3(0,0,1), glm::vec3(0, 1, 0));
+			cameras[i]->mProjectionMatrix = glm::perspective(60.f, 1200/800.f, 0.1f, 1000.f);
+			cameras[i]->mViewMatrix = glm::lookAt(pos, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
 			//Set the variables in the PlainShader
 			shader->SetUniformMatrix4(cameras[i]->mViewMatrix, "vMatrix");
 			shader->SetUniformMatrix4(cameras[i]->mProjectionMatrix, "pMatrix");
@@ -105,59 +111,12 @@ void Scene::OnUpdate(float deltaTime) {
 	}
 
 
-	auto meshes = Registry::Instance().GetComponents<MeshComponent>();
-	for (int i = 0; i < meshes.size(); i++)
-	{
-
-		std::cout << "Scene : OnUpdate : MeshComponent OnUpdate!" << std::endl;
-		//Get a render component from this meshcomponent
-		auto renderComponent = Registry::Instance().GetComponent<RenderComponent>(meshes[i]->mGameObjectID);
-		//Get a shader component from this mesh component
-		auto shader = mShaderManager.GetShader("PlainShader");
-		//If we found th ehsdaer "Plainshader
-		if (!shader) {
-			std::cout << "Did not find shader, returning" << std::endl;
-			return;
-		}
-
-		//Use the shader
-
-		glm::mat4 mPos = glm::translate(glm::mat4(1), glm::vec3(0,0,1));
-		glm::mat4 mRot = glm::mat4(1);
-		glm::mat4 mScale = glm::mat4(1);
-		glm::mat4 matrix = mPos * mRot * mScale;;
-		if (!Registry::Instance().Has<TransformComponent>(meshes[i]->mGameObjectID)) {
-			//There is no transform connected with this scene
-		}
-		auto transfrom = Registry::Instance().GetComponent<TransformComponent>(meshes[i]->mGameObjectID);
 	
-		shader->SetUniformMatrix4(matrix, "mMatrix");
-		
-		glBindVertexArray(renderComponent.mVAO);
-
-		glDrawElements(GL_TRIANGLES, meshes[i]->mIndices.size(), GL_UNSIGNED_INT, nullptr);
-		glBindVertexArray(0);
-		std::cout << "RenderComponent : Render End!" << std::endl;
+	std::cout << "Scene : Systems : OnUpdate started! " << std::endl;
+	for (auto it = mSystems.begin(); it != mSystems.end(); it++)
+	{
+		std::cout << "Scene : OnUpdate : Systems : " << (*it).first << std::endl;
+		(*it).second->OnUpdate(deltaTime);
+		std::cout << "Scene : OnUpdate : Systems : " << (*it).first << " finished!" << std::endl;
 	}
-	//std::cout << "Scene : OnUpdate started! " << std::endl;
-	//for (auto it = mSystems.begin(); it != mSystems.end(); it++)
-	//{
-	//	std::cout << "Scene : OnUpdate : Systems : " << (*it).first << std::endl;
-	//	(*it).second->OnUpdate(deltaTime);
-	//	std::cout << "Scene : OnUpdate : Systems : " << (*it).first << " finished!" << std::endl;
-	//}
-	////Go thorugh meshes
-	//std::cout << "Scene : OnUpdate : Starting to fetch Mesh Componenets!" << std::endl;
-	//if (!Registry::Instance().Has<MeshComponent>()) {
-	//	std::cout << "Scene : OnUpdate : Registry dosent have a mesh component!";
-	//	return;
-	//}
-
-	//
-	////Go thrugh renderers
-	//auto renders = Registry::Instance().GetComponents<RenderComponent>();
-	//for (auto it = renders.begin(); it != renders.end(); it++)
-	//{
-	//	
-	//}
 }
