@@ -1,15 +1,12 @@
 #pragma once
 #include <stdint.h>
 
-enum class RendererAPI {
-	OpenGL = 0
-};
+
 
 class Renderer {
-	inline static RendererAPI GetRendererAPI() { return mRendererAPI; };
-
+	
+	static int ID() { return 1; };
 private:
-	static RendererAPI mRendererAPI;
-
-	uint32_t mRednererID = 0;
+	
+	int mRednererID = 0;
 };

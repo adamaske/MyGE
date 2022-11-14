@@ -11,6 +11,7 @@
 #include "Shader.h"
 #include "Camera.h"
 #include "GUID.h"
+#include ""
 
 struct GUIDComponent {
 	int mGameObjectID = 0;
@@ -86,6 +87,7 @@ struct RenderComponent {
 	GLuint mVAO;
 	GLuint mVBO;
 
+	VBO mVBO;
 	GLint mTextureUniform{ 0 };
 	GLint mMatrixUniform{ 0 };
 
