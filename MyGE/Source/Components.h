@@ -10,6 +10,14 @@
 #include "Vertex.h"
 #include "Shader.h"
 #include "Camera.h"
+#include "GUID.h"
+
+struct GUIDComponent {
+	int mGameObjectID = 0;
+	GUID ID;
+
+
+};
 
 //class TransformComponent : public Component {
 struct TransformComponent {

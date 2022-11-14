@@ -4,7 +4,6 @@
 #include "Systems/System.h"
 #include "Camera.h"
 
-
 void Scene::Init()
 {
 	Registry::Instance().RegisterComponent<ShaderComponent>();
@@ -71,6 +70,7 @@ void Scene::Init()
 class GUID {
 	GUID() {
 		//Generate ID
+		mID = 
 	};
 
 	uint64_t ID() {

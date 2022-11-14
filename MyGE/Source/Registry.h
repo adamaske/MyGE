@@ -71,7 +71,7 @@ public:
 		
 		return vals;
 	}
-
+	
 	//Get all the units which has this component
 	std::vector<int> GeAllUnitsKeys() {
 		std::vector<int> keys;

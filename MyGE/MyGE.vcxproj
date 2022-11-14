@@ -144,6 +144,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)GLAD\include;$(SolutionDir)GLAD\include\GL\;$(SolutionDir)GLFW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -156,8 +157,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\GLAD\src\glad.c" />
+    <ClCompile Include="Source\Buffer.cpp" />
     <ClCompile Include="Source\Camera.cpp" />
+    <ClCompile Include="Source\GUID.cpp" />
     <ClCompile Include="Source\Registry.cpp" />
+    <ClCompile Include="Source\Renderer.cpp" />
     <ClCompile Include="Source\SceneManager.cpp" />
     <ClCompile Include="Source\Script.cpp" />
     <ClCompile Include="Source\ScriptingManager.cpp" />
@@ -172,7 +176,9 @@
     <ClCompile Include="Source\Vertex.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Buffer.h" />
     <ClInclude Include="Source\Camera.h" />
+    <ClInclude Include="Source\GUID.h" />
     <ClInclude Include="Source\Registry.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Source\SceneManager.h" />
@@ -186,6 +192,7 @@
     <ClInclude Include="Source\Scene.h" />
     <ClInclude Include="Source\MyGE.h" />
     <ClInclude Include="Source\MainWindow.h" />
+    <ClInclude Include="Source\Systems\PhysicsSystem.h" />
     <ClInclude Include="Source\Vertex.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
