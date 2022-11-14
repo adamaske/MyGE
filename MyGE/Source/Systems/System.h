@@ -337,3 +337,9 @@ private:
     std::vector<Vertex> mVertices;
     std::vector<GLuint> mIndicies;
 };
+
+class PhysicsSystem : public System {
+public:
+    virtual void Init() override;
+    virtual void OnUpdate(float deltaTime) override;
+};

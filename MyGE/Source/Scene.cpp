@@ -3,6 +3,8 @@
 #include "Shader.h"
 #include "Systems/System.h"
 #include "Camera.h"
+
+
 void Scene::Init()
 {
 	Registry::Instance().RegisterComponent<ShaderComponent>();
@@ -10,7 +12,8 @@ void Scene::Init()
 	Registry::Instance().RegisterComponent<TransformComponent>();
 	Registry::Instance().RegisterComponent<MeshComponent>();
 	Registry::Instance().RegisterComponent<CameraComponent>();
-
+	Registry::Instance().RegisterComponent<RigidBodyComponent>();
+	Registry::Instance().RegisterComponent<MaterialComponent>();
 	std::cout << "Scene started Init!" << std::endl;
 
 	std::string cubePath =		"C:/Users/adama/Documents/GitHub/MyGE/Resources/Meshes/cube.obj";
@@ -28,6 +31,7 @@ void Scene::Init()
 	cubeMesh.mObjFilePath = cubePath;
 	auto& cubeTransform = Registry::Instance().GetComponent<TransformComponent>(cubeID);
 	cubeTransform.mMatrix = glm::translate(glm::mat4(1), glm::vec3(-2, 0, 1));
+	MaterialComponent& cubeMaterial = Registry::Instance().GetComponent<MaterialComponent>(MaterialComponent(), monkeyID);
 
 
 	//Monkey gameobject and components
@@ -42,6 +46,7 @@ void Scene::Init()
 	monkeyMesh.mObjFilePath = monkeyPath;
 	TransformComponent& monkeyTransform = Registry::Instance().GetComponent<TransformComponent>(monkeyID);
 	monkeyTransform.mMatrix = glm::translate(glm::mat4(1), glm::vec3(2, 0, 1));
+	MaterialComponent& monkeyMaterial = Registry::Instance().GetComponent<MaterialComponent>(MaterialComponent(), monkeyID);
 
 	//Camera gameobject and components
 	int cameraID = Registry::Instance().NewGameObject();
@@ -52,6 +57,7 @@ void Scene::Init()
 	//Creating systems
 	mSystems.insert({ "ObjMeshSystem", new ObjMeshSystem()});
 	mSystems.insert({ "CameraControllerSystem", new CameraControllerSystem() });
+	mSystems.insert({ "PhysicsSystem", new PhysicsSystem()});
 	//Init all systems
 	for (auto it = mSystems.begin(); it != mSystems.end(); it++)
 	{
@@ -62,6 +68,17 @@ void Scene::Init()
 	std::cout << "Scene ended Init!" << std::endl;
 }
 
+class GUID {
+	GUID() {
+		//Generate ID
+	};
+
+	uint64_t ID() {
+		return mID;
+	}
+private:
+	uint64_t mID;
+};
 
 void Scene::OnUpdate(float deltaTime) {
 	
