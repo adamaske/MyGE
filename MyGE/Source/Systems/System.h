@@ -7,11 +7,12 @@
 #include "glm/glm.hpp"
 #include "Components.h"
 #include "Registry.h"
-#include "Vertex.h"'
+#include "Vertex.h"
 #include <stdio.h>
 #include <fstream>
 #include <sstream>
-
+#include "Buffer.h"
+#include "VertexArray.h"
 class System {
 public:
     virtual void Init() {
@@ -62,62 +63,49 @@ public:
 
 class ObjMeshSystem : public System {
 public:// Set up vertex data (and buffer(s)) and attribute pointers
-   
+
+    
     virtual void Init() override{
         std::cout << "ObjMeshSystem : Init started!" << std::endl;
+
         if (!Registry::Instance().Has<MeshComponent>()) {
             std::cout << "The registry does not have a MeshComponent array" << std::endl;
             return;
         }
-        else {
-            std::cout << "The registry has a MeshComponent array" << std::endl;
-        }
+
         auto meshes = Registry::Instance().GetComponents<MeshComponent>();
-        std::cout << "ObjMeshSystem : Init got meshes "<< meshes.size() << std::endl;
-        for (auto it = meshes.begin(); it != meshes.end(); it++) {
-        std::cout << "ObjMeshSystem : Init : Setting up RenderComponent for " << (*it)->mGameObjectID << std::endl;
-        if (!Registry::Instance().Has<RenderComponent>((*it)->mGameObjectID)) {
-            //The game object of this NeshComponet has no render component
-            std::cout << "ObjMeshSystem : Init : The game object of this MeshComponent has no RenderComponent" << std::endl;
-            break;
+        std::cout << "ObjMeshSystem : Init got " << meshes.size() << " meshes " << std::endl;
+        for (auto mesh : meshes) {
+            std::cout << "This is a mesh with gameobjectID  = " << mesh->mGameObjectID << std::endl;
         }
-        auto& render = Registry::Instance().GetComponent<RenderComponent>((*it)->mGameObjectID);
-        if (!render.bRender) {
-            std::cout << "ObjMeshSystem : Init : RenderComponent bRender == false!" << std::endl;
-        }
-        //We want vertices and indicies from the mesh
-        std::pair<std::vector<Vertex>, std::vector<GLuint>> couple = LoadMesh((*it)->mObjFilePath);
-        (*it)->mVertices = couple.first;
-        (*it)->mIndices = couple.second;
-        
-        //Instantiate 
-        //Vertex array object-VAO
-        glGenVertexArrays(1, &render.mVAO);
-        //Bind VAO
-        glBindVertexArray(render.mVAO);
-        //Vertex buffer object to hold vertices - VBO
-        glGenBuffers(1, &render.mVBO);
-        glBindBuffer(GL_ARRAY_BUFFER, render.mVBO);
-        glBufferData(GL_ARRAY_BUFFER, (*it)->mVertices.size() * sizeof(Vertex), (*it)->mVertices.data(), GL_STATIC_DRAW);
+        for (auto mesh : meshes) {
+            std::cout << "ObjMeshSystem : Init : Setting up RenderComponent for " << mesh->mGameObjectID << std::endl;
+            if (!Registry::Instance().Has<RenderComponent>(mesh->mGameObjectID)) {
+                //The game object of this NeshComponet has no render component
+                std::cout << "ObjMeshSystem : Init : The game object of this MeshComponent has no RenderComponent" << std::endl;
+                break;
+            }
+            //Find the renderer for this component
+            auto& render = Registry::Instance().GetComponent<RenderComponent>(mesh->mGameObjectID);
 
-        // Element array buffer - EAB
-        glGenBuffers(1, &render.mEAB);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, render.mEAB);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, (*it)->mIndices.size() * sizeof(uint32_t), (*it)->mIndices.data(), GL_STATIC_DRAW);
+            //We want vertices and indicies from the mesh
+            std::pair<std::vector<float>, std::vector<uint32_t>> meshData = LoadMesh(mesh->mObjFilePath);
 
-        //Verts
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)0);
-        glEnableVertexAttribArray(0);
-        //Normals
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(3 * sizeof(float)));
-        glEnableVertexAttribArray(1);
-        //uvs
-        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(6 * sizeof(float)));
-        glEnableVertexAttribArray(2);
+            //Vertex array object-VAO
+            VertexArray* vao = new VertexArray();
+            //Bind VAO
 
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glBindVertexArray(0);
-        std::cout << "ObjMeshSystem : Init : Finished !" << std::endl;
+            //Vertex buffer object to hold vertices - VBO
+            VertexBuffer vbo = VertexBuffer(meshData.first.data(), sizeof(meshData.first));
+            vao->AddVertexBuffer(&vbo);
+
+            // Element array buffer - EAB - ibo
+            IndexBuffer ibo = IndexBuffer(meshData.second.data(), sizeof(meshData.second));
+            vao->AddIndexBuffer(&ibo);
+
+            //Add them to the vertex array
+            render.mVAO = vao;
+            
         }
     }
 
@@ -137,6 +125,7 @@ public:// Set up vertex data (and buffer(s)) and attribute pointers
         }
         std::cout << "ObjMeshSystem : OnUpdate cleared checks!" << std::endl;
         auto meshes = Registry::Instance().GetComponents<MeshComponent>();
+        std::cout << "Found " << meshes.size() << " meshes to render!" << std::endl;
         for (int i = 0; i < meshes.size(); i++)
         {
 
@@ -145,6 +134,7 @@ public:// Set up vertex data (and buffer(s)) and attribute pointers
             RenderComponent& renderComponent = Registry::Instance().GetComponent<RenderComponent>(meshes[i]->mGameObjectID);
             //Get a shader component from this mesh component
             auto shader = ShaderManager::Instance()->GetShader("PlainShader");
+            shader->Use();
             //If we found th ehsdaer "Plainshader
             if (!shader) {
                 std::cout << "Did not find shader, returning" << std::endl;
@@ -158,17 +148,23 @@ public:// Set up vertex data (and buffer(s)) and attribute pointers
             TransformComponent& transform = Registry::Instance().GetComponent<TransformComponent>(meshes[i]->mGameObjectID);
 
             shader->SetUniformMatrix4(transform.mMatrix, "mMatrix");
+            std::cout << " I AM RENDERING" << std::endl;
+            std::cout << "Found " << meshes.size() << " meshes to render!" << std::endl;
+            //We want from this vao
+            if (!renderComponent.mVAO) {
+                std::cout << "ObjMeshSystem : RenderComponent dosent have a VAO" << std::endl;
+                return;
+            }
+            auto vao = renderComponent.mVAO;
+            vao->Bind();
 
-            glBindVertexArray(renderComponent.mVAO);
+            //Draws from the bound vao
+            glDrawElements(GL_TRIANGLES, vao->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
 
-            glDrawElements(GL_TRIANGLES, meshes[i]->mIndices.size(), GL_UNSIGNED_INT, nullptr);
-            glBindVertexArray(0);
-            std::cout << "RenderComponent : Render End!" << std::endl;
         }
-        std::cout << std::endl << "ObjMeshSystem : OnUpdate Finished!" << std::endl << std::endl;;
     }
 
-std::pair<std::vector<Vertex>, std::vector<GLuint>>LoadMesh(std::string filePath) {
+std::pair<std::vector<float>, std::vector<uint32_t>>LoadMesh(std::string filePath) {
         //Kopier obj mesh kode her
         std::ifstream file;
         file.open(filePath, std::ifstream::in);
@@ -190,7 +186,8 @@ std::pair<std::vector<Vertex>, std::vector<GLuint>>LoadMesh(std::string filePath
 
         std::vector<Vertex> mVertices;
         std::vector<GLuint> mIndices;
-
+        std::vector<float> verts;
+        std::vector<uint32_t> inds;
         std::vector<glm::vec3> tempVertices;
         std::vector<glm::vec3> tempNormals;
         std::vector<std::pair<float, float>> tempUVs;
@@ -295,14 +292,28 @@ std::pair<std::vector<Vertex>, std::vector<GLuint>>LoadMesh(std::string filePath
                     //Check if it has a uv or not
                     if (uv > -1) {
                         Vertex tempVert(tempVertices[index], tempNormals[normal], tempUVs[uv]);
-                        mVertices.push_back(tempVert);
+                        verts.push_back(tempVertices[index].x);
+                        verts.push_back(tempVertices[index].y);
+                        verts.push_back(tempVertices[index].z);
+                        verts.push_back(tempNormals[normal].r);
+                        verts.push_back(tempNormals[normal].g);
+                        verts.push_back(tempNormals[normal].b);
+                        verts.push_back(tempUVs[uv].first);
+                        verts.push_back(tempUVs[uv].second);
 
                     }
                     else {
-                        Vertex tempVert(tempVertices[index], tempNormals[normal], std::pair<float, float>(0, 0));
-                        mVertices.push_back(tempVert);
+                        verts.push_back(tempVertices[index].x);
+                        verts.push_back(tempVertices[index].y);
+                        verts.push_back(tempVertices[index].z);
+                        verts.push_back(tempNormals[normal].r);
+                        verts.push_back(tempNormals[normal].g);
+                        verts.push_back(tempNormals[normal].b);
+                        verts.push_back(0);
+                        verts.push_back(0);
                     }
-                    mIndices.push_back(temp_index++);
+                    //Put in ++ when mIndecies is removed
+                    inds.push_back(temp_index++);
 
                 }
                 continue;
@@ -312,29 +323,26 @@ std::pair<std::vector<Vertex>, std::vector<GLuint>>LoadMesh(std::string filePath
         std::cout << "ObjMeshSystem : LoadMesh : Finished reading file" << filePath << std::endl;
         file.close();
         writeFile(copypath + ".txt");
-        return std::pair<std::vector<Vertex>, std::vector<GLuint>>({ mVertices, mIndices });
+        return std::pair<std::vector<float>, std::vector<uint32_t>>({ verts, inds });
     }
 
     void writeFile(std::string filePath) {
-        std::ofstream ut;
-        ut.open(filePath);
-
-        if (ut.is_open())
-        {
-            auto n = mVertices.size();
-            Vertex vertex;
-            ut << n << std::endl;
-            for (auto it = mVertices.begin(); it != mVertices.end(); it++)
-            {
-                vertex = *it;
-                ut << vertex << std::endl;
-            }
-            ut.close();
-        }
+        //std::ofstream ut;
+        //ut.open(filePath);
+        //
+        //if (ut.is_open())
+        //{
+        //    auto n = mVertices.size();
+        //    Vertex vertex;
+        //    ut << n << std::endl;
+        //    for (auto it = mVertices.begin(); it != mVertices.end(); it++)
+        //    {
+        //        vertex = *it;
+        //        ut << vertex << std::endl;
+        //    }
+        //    ut.close();
+        //}
     }
-private:
-    std::vector<MeshComponent> mMeshes;
-    std::vector<Vertex> mVertices;
-    std::vector<GLuint> mIndicies;
+
 };
 

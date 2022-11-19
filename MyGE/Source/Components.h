@@ -11,8 +11,8 @@
 #include "Shader.h"
 #include "Camera.h"
 #include "GUID.h"
-#include ""
-
+#include "Buffer.h"
+#include "VertexArray.h"
 struct GUIDComponent {
 	int mGameObjectID = 0;
 	GUID ID;
@@ -42,7 +42,10 @@ struct MaterialComponent {
 };
 
 struct MeshComponent {
-	int mGameObjectID = 1;
+	MeshComponent() {
+		std::cout << "Created a mesh Component" << std::endl;
+	}
+	int mGameObjectID = 0;
 	std::vector<Vertex> mVertices;
 	std::vector<uint32_t> mIndices;
 	std::string mObjFilePath;
@@ -83,16 +86,8 @@ struct CameraComponent {
 
 struct RenderComponent {
 	int mGameObjectID = 1;
-	GLuint mEAB;
-	GLuint mVAO;
-	GLuint mVBO;
-
-	VBO mVBO;
-	GLint mTextureUniform{ 0 };
-	GLint mMatrixUniform{ 0 };
-
+	VertexArray* mVAO;
 	bool bRender = true;
-
 };
 
 struct ScriptComponent {

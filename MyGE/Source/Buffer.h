@@ -9,19 +9,20 @@ public:
 	virtual void Bind();
 	virtual void Unbind();
 
-	static VertexBuffer* Create(float* vertices, uint32_t size);
 private:
 	uint32_t mRendererID = 0;
 };
 
 class IndexBuffer {
 public:
+	IndexBuffer(uint32_t* indices, uint32_t count);
 	virtual ~IndexBuffer() {};
 
 	virtual void Bind();
 	virtual void Unbind();
 
-	static IndexBuffer* Create(uint32_t* indices, uint32_t size);
+	uint32_t GetCount() { return mCount; };
 private:
 	uint32_t mRendererID = 0;
+	uint32_t mCount;
 };

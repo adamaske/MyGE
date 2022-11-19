@@ -11,28 +11,29 @@ void Scene::Init()
 	Registry::Instance().RegisterComponent<TransformComponent>();
 	Registry::Instance().RegisterComponent<MeshComponent>();
 	Registry::Instance().RegisterComponent<CameraComponent>();
-	Registry::Instance().RegisterComponent<RigidBodyComponent>();
 	Registry::Instance().RegisterComponent<MaterialComponent>();
 	std::cout << "Scene started Init!" << std::endl;
 
-	std::string cubePath =		"C:/Users/adama/Documents/GitHub/MyGE/Resources/Meshes/cube.obj";
-	std::string monkeyPath =	"C:/Users/adama/Documents/GitHub/MyGE/Resources/Meshes/monkey.obj";
+	std::string cubePath =		"C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGE/Resources/Meshes/cube.obj";
+	std::string monkeyPath =	"C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGE/Resources/Meshes/monkey.obj";
 
+#pragma region Create Cube
 	//Cube gameobject and components
 	int cubeID = Registry::Instance().NewGameObject();
 	//Create a shader component, should be replaced with material
 	auto& shader = Registry::Instance().RegisterComponent<ShaderComponent>(ShaderComponent(), cubeID);
 	shader.mShader = mShaderManager.GetShader("PlainShader");
 	//Createa render component
-	auto& render = Registry::Instance().RegisterComponent<RenderComponent>(RenderComponent(), cubeID);
+	auto& cubeRender = Registry::Instance().RegisterComponent<RenderComponent>(RenderComponent(), cubeID);
 	//Create a mesh component
 	auto& cubeMesh = Registry::Instance().RegisterComponent<MeshComponent>(MeshComponent(), cubeID);
 	cubeMesh.mObjFilePath = cubePath;
+	MaterialComponent& cubeMaterial = Registry::Instance().GetComponent<MaterialComponent>(cubeID);
 	auto& cubeTransform = Registry::Instance().GetComponent<TransformComponent>(cubeID);
-	cubeTransform.mMatrix = glm::translate(glm::mat4(1), glm::vec3(-2, 0, 1));
-	MaterialComponent& cubeMaterial = Registry::Instance().GetComponent<MaterialComponent>(MaterialComponent(), monkeyID);
+	cubeTransform.mMatrix = glm::translate(glm::mat4(1), glm::vec3(1, 0, 1));
+#pragma endregion
 
-
+#pragma region Create Monkey
 	//Monkey gameobject and components
 	int monkeyID = Registry::Instance().NewGameObject();
 	//Creates a shader component, replace with material component
@@ -44,19 +45,23 @@ void Scene::Init()
 	MeshComponent& monkeyMesh = Registry::Instance().RegisterComponent<MeshComponent>(MeshComponent(), monkeyID); // Register the component to the gameobject
 	monkeyMesh.mObjFilePath = monkeyPath;
 	TransformComponent& monkeyTransform = Registry::Instance().GetComponent<TransformComponent>(monkeyID);
-	monkeyTransform.mMatrix = glm::translate(glm::mat4(1), glm::vec3(2, 0, 1));
-	MaterialComponent& monkeyMaterial = Registry::Instance().GetComponent<MaterialComponent>(MaterialComponent(), monkeyID);
+	monkeyTransform.mMatrix = glm::translate(glm::mat4(1), glm::vec3(0, 0, 1));
+	MaterialComponent& monkeyMaterial = Registry::Instance().GetComponent<MaterialComponent>(monkeyID);
+#pragma endregion
 
+#pragma region Create Camera
 	//Camera gameobject and components
 	int cameraID = Registry::Instance().NewGameObject();
 	CameraComponent& camera = Registry::Instance().RegisterComponent<CameraComponent>(CameraComponent(), cameraID);
 	camera.bIsMainCamera = true;
-	TransformComponent& cameraTransform = Registry::Instance().GetComponent<TransformComponent>(cameraID);
+	auto& cameraTransform = Registry::Instance().GetComponent<TransformComponent>(cameraID);
 	cameraTransform.mMatrix = glm::translate(glm::mat4(1), glm::vec3(0, 0, -5));
+#pragma endregion
+
 	//Creating systems
 	mSystems.insert({ "ObjMeshSystem", new ObjMeshSystem()});
-	mSystems.insert({ "CameraControllerSystem", new CameraControllerSystem() });
-	mSystems.insert({ "PhysicsSystem", new PhysicsSystem()});
+	//mSystems.insert({ "CameraControllerSystem", new CameraControllerSystem() });
+
 	//Init all systems
 	for (auto it = mSystems.begin(); it != mSystems.end(); it++)
 	{
@@ -66,19 +71,6 @@ void Scene::Init()
 
 	std::cout << "Scene ended Init!" << std::endl;
 }
-
-class GUID {
-	GUID() {
-		//Generate ID
-		mID = 
-	};
-
-	uint64_t ID() {
-		return mID;
-	}
-private:
-	uint64_t mID;
-};
 
 void Scene::OnUpdate(float deltaTime) {
 	

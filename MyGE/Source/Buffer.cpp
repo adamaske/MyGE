@@ -1,31 +1,39 @@
 #include "Buffer.h"
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
+
+VertexBuffer::VertexBuffer(float* verts, size_t size) {
+	//We want a buffer in that renderer
+	glCreateBuffers(1, &mRendererID);
+	//
+	glBindBuffer(GL_ARRAY_BUFFER, mRendererID);
+	//In that buffer we want an array, with the size of size and the floats of verts, which wont chagne 
+	glBufferData(GL_ARRAY_BUFFER, size, verts, GL_STATIC_DRAW);
+}
+
 void VertexBuffer::Bind()
 {
-	glCreateBuffers(1, &mRendererID);
+	//We want to bind the buffer we created in mRenderer
+	glBindBuffer(GL_ARRAY_BUFFER, mRendererID);
 }
 
 void VertexBuffer::Unbind()
 {
+	glBindBuffer(GL_ARRAY_BUFFER, mRendererID);
 }
 
-VertexBuffer* VertexBuffer::Create(float* vertices, uint32_t size)
-{
-
-}
+IndexBuffer::IndexBuffer(uint32_t* indices, uint32_t count) : mCount(count) {
+	glCreateBuffers(1, &mRendererID);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mRendererID);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(uint32_t), indices, GL_STATIC_DRAW);
+};
 
 void IndexBuffer::Bind()
 {
-
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mRendererID);
 }
 
 void IndexBuffer::Unbind()
 {
-
-}
-
-IndexBuffer* IndexBuffer::Create(uint32_t* indices, uint32_t size)
-{
-
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }

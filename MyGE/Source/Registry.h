@@ -27,6 +27,7 @@ class UnitHolder : public IUnitHolder {
 public:
 	UnitHolder() {
 	}
+
 	template<typename T>
 	void Insert(int objectID, T& t) {
 		mUnits.insert({ objectID, t });
@@ -61,12 +62,12 @@ public:
 	}
 
 	//Get all objects in this holder
-	std::vector<T&> GetAllUnits() {
-		std::vector<T&> vals;
-		vals.reserve(mUnits.size());
+	std::vector<T*> GetAllUnits() {
+		std::vector<T*> vals;
+		vals.reserve(mUnits.size()-1);
 
 		for (auto kv : mUnits) {
-			vals.push_back(kv.second);
+			vals.push_back(&kv.second);
 		}
 		
 		return vals;
@@ -75,7 +76,7 @@ public:
 	//Get all the units which has this component
 	std::vector<int> GeAllUnitsKeys() {
 		std::vector<int> keys;
-		keys.reserve(mUnits.size());
+		keys.reserve(mUnits.size()-1);
 
 		for (auto kv : mUnits) {
 			keys.push_back(kv.first);
@@ -99,7 +100,7 @@ public:
 	};
 
 	~Registry() {
-		delete mInstance;
+		//delete mInstance;
 	};
 
 	//Instance 
@@ -133,19 +134,23 @@ public:
 		if (mComponentTypes.find(typeName) == mComponentTypes.end()) {
 			mComponentTypes.insert({ typeName, GetNewID() });
 			mComponentsHolder.insert({ typeName, new UnitHolder<T>() });
+
+			std::cout << "Registered new component " << typeName << std::endl;
 		}
 		else {
+			std::cout << "This component is alreadt registered : " << typeName << std::endl;
 			return;
 		}
 	}
 
-
 	//Register a specific component to a gameobject
 	template<typename T>
 	T& RegisterComponent(T item, int objectID) {
+		
 		//this function returns nomatter what
 		//We know we want to register
 		const char* typeName = typeid(T).name();
+		std::cout << "Got order to register a " << typeName << " to object " << objectID << std::endl;
 		if (mComponentTypes.find(typeName) != mComponentTypes.end()) {
 			//If the components is already registered, return
 			//No need to create a new UnitHolder
@@ -165,14 +170,13 @@ public:
 			return GetUnitHolder<T>()->GetUnit(objectID);
 		}
 		else {
-			//There was no component of this type yet
+			//There was no component of this type yet, register it
 			RegisterComponent<T>();
 			
 			item.mGameObjectID = objectID;
 			
 			//We must set the
 			GetUnitHolder<T>()->Insert(objectID, item);
-			std::cout <<"Registry : Finished Register Component" << std::endl;
 			return GetUnitHolder<T>()->GetUnit(objectID);
 		}
 		
@@ -202,13 +206,18 @@ public:
 		return GetUnitHolder<T>()->GetUnit(objectID);
 	}
 
+	//This should return all components of type T
 	template<typename T>
 	std::vector<T*> GetComponents() {
+
+
+		return GetUnitHolder<T>()->GetAllUnits();
 		std::vector<T*> vals;
 		//This has been checked with Has so can safely return
-		for (auto it = mGameObjects.begin(); it != mGameObjects.end(); it++)
+		for (auto go : mGameObjects)
 		{
-			vals.push_back(&GetUnitHolder<T>()->GetUnit((*it).first));
+			//
+			vals.push_back(&GetUnitHolder<T>()->GetUnit(go.first));
 		}
 		return vals;
 	}
@@ -247,9 +256,9 @@ public:
 	//Gets all the gameobjects
 	std::vector<GameObject> GetGameObjects() {
 		std::vector<GameObject> objects;
-		for (auto it = mGameObjects.begin(); it != mGameObjects.end(); it++)
+		for (auto object : mGameObjects)
 		{
-			objects.push_back((*it).second);
+			objects.push_back(object.second);
 		}
 		return objects;
 	}
