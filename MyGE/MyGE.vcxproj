@@ -165,7 +165,6 @@
     <ClCompile Include="Source\SceneManager.cpp" />
     <ClCompile Include="Source\Script.cpp" />
     <ClCompile Include="Source\ScriptingManager.cpp" />
-    <ClCompile Include="Source\GameObject.cpp" />
     <ClCompile Include="Source\Components.cpp" />
     <ClCompile Include="Source\Shader.cpp" />
     <ClCompile Include="Source\RenderWindow.cpp" />
@@ -185,7 +184,6 @@
     <ClInclude Include="Source\Script.h" />
     <ClInclude Include="Source\ScriptingManager.h" />
     <ClInclude Include="Source\ShaderManager.h" />
-    <ClInclude Include="Source\GameObject.h" />
     <ClInclude Include="Source\Shader.h" />
     <ClInclude Include="Source\Components.h" />
     <ClInclude Include="Source\RenderWindow.h" />

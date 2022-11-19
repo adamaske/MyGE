@@ -6,7 +6,6 @@
 
 //All includes, everything include this
 #include "Components.h"
-#include "GameObject.h"
 
 #include "Registry.h"
 

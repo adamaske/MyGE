@@ -18,44 +18,54 @@ void Scene::Init()
 	std::string monkeyPath =	"C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGE/Resources/Meshes/monkey.obj";
 
 #pragma region Create Cube
+	std::cout << std::endl << "CREATING CUBE" << std::endl << std::endl;
 	//Cube gameobject and components
-	int cubeID = Registry::Instance().NewGameObject();
+	uint32_t cubeID = Registry::Instance().NewGameObject();
 	//Create a shader component, should be replaced with material
 	auto& shader = Registry::Instance().RegisterComponent<ShaderComponent>(ShaderComponent(), cubeID);
-	shader.mShader = mShaderManager.GetShader("PlainShader");
+	shader.mShader = ShaderManager::Instance()->GetShader("PlainShader");
 	//Createa render component
 	auto& cubeRender = Registry::Instance().RegisterComponent<RenderComponent>(RenderComponent(), cubeID);
+	cubeRender.mGameObjectID = cubeID;
 	//Create a mesh component
 	auto& cubeMesh = Registry::Instance().RegisterComponent<MeshComponent>(MeshComponent(), cubeID);
 	cubeMesh.mObjFilePath = cubePath;
 	MaterialComponent& cubeMaterial = Registry::Instance().GetComponent<MaterialComponent>(cubeID);
 	auto& cubeTransform = Registry::Instance().GetComponent<TransformComponent>(cubeID);
 	cubeTransform.mMatrix = glm::translate(glm::mat4(1), glm::vec3(1, 0, 1));
+	std::cout << std::endl << "FINISHED CREATING CUBE" << std::endl << std::endl;
 #pragma endregion
 
 #pragma region Create Monkey
+	std::cout << std::endl << "CREATING MONKEY" << std::endl << std::endl;
 	//Monkey gameobject and components
-	int monkeyID = Registry::Instance().NewGameObject();
+	uint32_t monkeyID = Registry::Instance().NewGameObject();
 	//Creates a shader component, replace with material component
-	ShaderComponent& monkeyShader = Registry::Instance().RegisterComponent<ShaderComponent>(ShaderComponent(), cubeID);
+	ShaderComponent& monkeyShader = Registry::Instance().RegisterComponent<ShaderComponent>(ShaderComponent(), monkeyID);
 	//Set correct shader
-	monkeyShader.mShader = mShaderManager.GetShader("PlainShader");
+	monkeyShader.mShader = ShaderManager::Instance()->GetShader("PlainShader");
 	//Create render and mesh component, sets path to 
 	RenderComponent& monkeyRender = Registry::Instance().RegisterComponent<RenderComponent>(RenderComponent(), monkeyID);
+	monkeyRender.mGameObjectID = monkeyID;
 	MeshComponent& monkeyMesh = Registry::Instance().RegisterComponent<MeshComponent>(MeshComponent(), monkeyID); // Register the component to the gameobject
 	monkeyMesh.mObjFilePath = monkeyPath;
 	TransformComponent& monkeyTransform = Registry::Instance().GetComponent<TransformComponent>(monkeyID);
 	monkeyTransform.mMatrix = glm::translate(glm::mat4(1), glm::vec3(0, 0, 1));
 	MaterialComponent& monkeyMaterial = Registry::Instance().GetComponent<MaterialComponent>(monkeyID);
+	std::cout << std::endl << "FINISHED CREATING MONKEY" << std::endl << std::endl;
 #pragma endregion
 
 #pragma region Create Camera
+	std::cout << std::endl << "CREATING CAMERA" << std::endl << std::endl;
 	//Camera gameobject and components
-	int cameraID = Registry::Instance().NewGameObject();
+	uint32_t cameraID = Registry::Instance().NewGameObject();
+	std::cout << "CAMERA ID : " << cameraID << std::endl;
 	CameraComponent& camera = Registry::Instance().RegisterComponent<CameraComponent>(CameraComponent(), cameraID);
 	camera.bIsMainCamera = true;
+	camera.mGameObjectID = cameraID;
 	auto& cameraTransform = Registry::Instance().GetComponent<TransformComponent>(cameraID);
 	cameraTransform.mMatrix = glm::translate(glm::mat4(1), glm::vec3(0, 0, -5));
+	std::cout << std::endl << "FINISHED CREATING CAMERA" << std::endl << std::endl;
 #pragma endregion
 
 	//Creating systems
@@ -63,10 +73,10 @@ void Scene::Init()
 	//mSystems.insert({ "CameraControllerSystem", new CameraControllerSystem() });
 
 	//Init all systems
-	for (auto it = mSystems.begin(); it != mSystems.end(); it++)
+	for (auto system : mSystems)
 	{
 		//Creating systems
-		(*it).second->Init();
+		system.second->Init();
 	}
 
 	std::cout << "Scene ended Init!" << std::endl;
@@ -78,43 +88,42 @@ void Scene::OnUpdate(float deltaTime) {
 	////Gets all GameObjects in the registry, a go system
 	auto gameObjects = Registry::Instance().GetGameObjects();
 	//Prints all gameobject id's
-	for (auto it = gameObjects.begin(); it != gameObjects.end(); it++)
+	for (auto go : gameObjects)
 	{
-		std::cout << "Scene : OnUpdate : " << (*it).mID << std::endl;
+		std::cout << "Scene : OnUpdate : GameObject " << go << std::endl;
 	}
 
 	//Go thorugh camera
 	auto cameras = Registry::Instance().GetComponents<CameraComponent>();
-	for (int i = 0; i < cameras.size(); i++)
+	for(auto cam : cameras)
 	{
+		std::cout << "Found camera with objectID " << cam.mGameObjectID << std::endl;
 		//Check if it is the main camera
-		if (cameras[i]->bIsMainCamera) {
+		if (cam.bIsMainCamera) {
 			//Gets a transform for the caemra
-			TransformComponent& transform = Registry::Instance().GetComponent<TransformComponent>(cameras[i]->mGameObjectID);
+			TransformComponent& transform = Registry::Instance().GetComponent<TransformComponent>(cam.mGameObjectID);
 			//Get the shader to apply my view and projection matrix
-			auto shader = mShaderManager.GetShader("PlainShader");
+			auto shader = ShaderManager::Instance()->GetShader("PlainShader");
 			//Use this shader
-			glUseProgram(shader->GetProgram());
+			shader->Use();
 			//Get a position
 			glm::vec3 pos(transform.mMatrix[3].x, transform.mMatrix[3].y, transform.mMatrix[3].z);
 			//Update matrices 
-			cameras[i]->mProjectionMatrix = glm::perspective(glm::radians(90.f), cameras[i]->mAspectRatio, 0.1f, 1000.f);
+			cam.mProjectionMatrix = glm::perspective(glm::radians(90.f), cam.mAspectRatio, 0.1f, 1000.f);
 
-			cameras[i]->mViewMatrix = glm::lookAt(pos, pos + glm::vec3(0,0, 1), glm::vec3(0, 1, 0));
+			cam.mViewMatrix = glm::lookAt(pos, pos + glm::vec3(0,0, 1), glm::vec3(0, 1, 0));
 			//Set the variables in the PlainShader
-			shader->SetUniformMatrix4(cameras[i]->mViewMatrix, "vMatrix");
-			shader->SetUniformMatrix4(cameras[i]->mProjectionMatrix, "pMatrix");
+			shader->SetUniformMatrix4(cam.mViewMatrix, "vMatrix");
+			shader->SetUniformMatrix4(cam.mProjectionMatrix, "pMatrix");
 		}
 	}
 
 
 	
-	std::cout << "Scene : Systems : OnUpdate started! " << std::endl;
-	for (auto it = mSystems.begin(); it != mSystems.end(); it++)
+	std::cout<< std::endl << "SCENE : SYSTEMS ONUPDATE STARTED " << std::endl << std::endl;
+	for (auto system : mSystems)
 	{
-		std::cout << "Scene : OnUpdate : Systems : " << (*it).first << std::endl;
-		(*it).second->OnUpdate(deltaTime);
-		std::cout << "Scene : OnUpdate : Systems : " << (*it).first << " finished!" << std::endl;
+		system.second->OnUpdate(deltaTime);
 	}
 }
 
@@ -123,13 +132,13 @@ void Scene::ViewportRezised(int width, int height) {
 	mViewportHeight = height;
 	//GO through all cameras and change their aspect ratio and size 
 	auto cameras = Registry::Instance().GetComponents<CameraComponent>();
-	for (size_t i = 0; i < cameras.size(); i++)
+	for (auto cam : cameras)
 	{
 		//Change cameras without a fixed ar
-		if (!cameras[i]->bFixedAsceptRatio) {
+		if (!cam.bFixedAsceptRatio) {
 			//Remove one of these
-			cameras[i]->mCamera.SetViewportSize(width, height);
-			cameras[i]->mAspectRatio = (width / height);
+			cam.mCamera.SetViewportSize(width, height);
+			cam.mAspectRatio = ((float)width / (float)height);
 		}
 	}
 }

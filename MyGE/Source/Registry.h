@@ -7,7 +7,8 @@
 
 //Needs only to know about all the components and the GameObject 
 #include "Components.h"
-#include "GameObject.h"
+
+using GameObject = uint32_t;
 
 //Uses this abstration to keep a ComponentHolder as refrence without declaring tempalte at compile
 class IUnitHolder
@@ -29,11 +30,11 @@ public:
 	}
 
 	template<typename T>
-	void Insert(int objectID, T& t) {
+	void Insert(uint32_t objectID, T& t) {
 		mUnits.insert({ objectID, t });
 	};
 
-	void Pop(int id) {
+	void Pop(uint32_t id) {
 		mUnits.erase(id);
 	}
 	//Does this have any at all, this can techinaccly exist without any items in it yet
@@ -46,7 +47,7 @@ public:
 		}
 	}
 	//Does this item holder have a key equal to that object
-	bool Has(int objectID) {
+	bool Has(uint32_t objectID) {
 		if (mUnits.find(objectID) != mUnits.end()) {
 			return true;
 		}
@@ -56,16 +57,15 @@ public:
 	}
 
 	//Get a specific unit, should be lighting fast because it just returns a map position 
-	T& GetUnit(int objectID) {
+	T& GetUnit(uint32_t objectID) {
 		//We can safely return this becase Has should be called before
 		return mUnits[objectID];
 	}
 
 	//Get all objects in this holder
-	std::vector<T*> GetAllUnits() {
-		std::vector<T*> vals;
-		vals.reserve(mUnits.size()-1);
-
+	std::vector<T&> GetAllUnits() {
+		std::vector<T&> vals;
+		vals.reserve(mUnits.size());
 		for (auto kv : mUnits) {
 			vals.push_back(&kv.second);
 		}
@@ -74,10 +74,9 @@ public:
 	}
 	
 	//Get all the units which has this component
-	std::vector<int> GeAllUnitsKeys() {
-		std::vector<int> keys;
-		keys.reserve(mUnits.size()-1);
-
+	std::vector<uint32_t> GeAllUnitsKeys() {
+		std::vector<uint32_t> keys;
+		
 		for (auto kv : mUnits) {
 			keys.push_back(kv.first);
 		}
@@ -86,7 +85,7 @@ public:
 	}
 
 private:
-	std::unordered_map<int, T> mUnits;
+	std::unordered_map<uint32_t, T> mUnits;
 };
 //Static instance of this regisrty
 static class Registry* mInstance;
@@ -118,13 +117,12 @@ public:
 		return Registry::Instance().mID;
 	}
 
-	int NewGameObject() {
-		GameObject go = GameObject();
+	uint32_t NewGameObject() {
+		GameObject go = GetNewID();
 		//All new gameobjects wants a transform
-		go.mID = GetNewID();
 		RegisterGameObject(go);
-		RegisterComponent<struct TransformComponent>(TransformComponent(), go.mID);
-		return go.mID;
+		RegisterComponent<struct TransformComponent>(TransformComponent(), go);
+		return go;
 	}
 
 	//Only register a component
@@ -132,20 +130,17 @@ public:
 	void RegisterComponent() {
 		const char* typeName = typeid(T).name();
 		if (mComponentTypes.find(typeName) == mComponentTypes.end()) {
+
 			mComponentTypes.insert({ typeName, GetNewID() });
 			mComponentsHolder.insert({ typeName, new UnitHolder<T>() });
 
 			std::cout << "Registered new component " << typeName << std::endl;
 		}
-		else {
-			std::cout << "This component is alreadt registered : " << typeName << std::endl;
-			return;
-		}
 	}
 
 	//Register a specific component to a gameobject
 	template<typename T>
-	T& RegisterComponent(T item, int objectID) {
+	T& RegisterComponent(T item, uint32_t objectID) {
 		
 		//this function returns nomatter what
 		//We know we want to register
@@ -157,9 +152,7 @@ public:
 			//Now add the compnent
 		
 			if (Has<T>(objectID)) {
-				std::cout << "Registry : There is a gameobject which has this type of component" << std::endl;
 				//Since there already is a component of this type on this object, return
-				std::cout << std::endl << std::endl << "Registry : Returned becuse this object already exists on this object" << std::endl;
 				return GetUnitHolder<T>()->GetUnit(objectID);
 			}
 			
@@ -167,6 +160,7 @@ public:
 
 			//Insert the component into the unitholder
 			GetUnitHolder<T>()->Insert(objectID, item);
+			GetUnitHolder<T>()->GetUnit(objectID).mGameObjectID = objectID;
 			return GetUnitHolder<T>()->GetUnit(objectID);
 		}
 		else {
@@ -177,90 +171,69 @@ public:
 			
 			//We must set the
 			GetUnitHolder<T>()->Insert(objectID, item);
+			GetUnitHolder<T>()->GetUnit(objectID).mGameObjectID = objectID;
 			return GetUnitHolder<T>()->GetUnit(objectID);
 		}
 		
 	};
 
-	void RegisterGameObject(GameObject& object) {
+	void RegisterGameObject(uint32_t go) {
 		//Check there is no gameobejc with this identity already
-		if (mGameObjects.find(object.mID) != mGameObjects.end()) {
-			std::cout << "Registry : RegisterGameObject mGameObjects does already contain an GameObject with this ID" << std::endl;
-			return;
+		for (auto g : mGameObjects) {
+			if (go == g) {
+				return;
+			}
 		}
-
-		mGameObjects.insert({ object.mID, object });
-		std::cout << "Registry : RegisterGameObject the GameObject " << object.mID << " was added to mGameObjects" << std::endl;
+		mGameObjects.push_back(go);
+		std::cout << "Registry : RegisterGameObject the GameObject " << go << " was added to mGameObjects" << std::endl;
 	}
 
 	//Adding a component must also have a entity
 	template<typename T>
-	void AddComponent(int objectID, T& component) {
+	void AddComponent(uint32_t objectID, T& component) {
 		GetUnitHolder<T>()->Insert(objectID, component);
 	}
 
 	//If the gameobject has this type of component, return it
 	template<typename T>
-	T& GetComponent(int objectID){ 
+	T& GetComponent(uint32_t objectID){
 		//Has has been called on this so we know we can return the unit holder
 		return GetUnitHolder<T>()->GetUnit(objectID);
 	}
 
 	//This should return all components of type T
 	template<typename T>
-	std::vector<T*> GetComponents() {
-
-
+	std::vector<T&> GetComponents() {
 		return GetUnitHolder<T>()->GetAllUnits();
-		std::vector<T*> vals;
-		//This has been checked with Has so can safely return
-		for (auto go : mGameObjects)
-		{
-			//
-			vals.push_back(&GetUnitHolder<T>()->GetUnit(go.first));
-		}
-		return vals;
 	}
 
-	//Get allt 
-	template<typename T>
-	std::vector<T> GetComponents(int objectID) {
-		//Return all components from this item
-		const char* typeName = typeid(T).name();
-		std::cout << "Registry : GetComponents<T>(objectID) type " << typeName << std::endl;
+	//template<typename T>
+	//std::vector<T> GetComponents(uint32_t objectID) {
+	//	//Return all components from this item
+	//	const char* typeName = typeid(T).name();
+	//	std::cout << "Registry : GetComponents<T>(objectID) type " << typeName << std::endl;
+	//
+	//	//Find if theres is an array of this item
+	//	if (mComponentsHolder.find(typeName) == mComponentsHolder.end()) {
+	//		//There is no unit holder with this Type of Component
+	//		std::cout << "Regsitry : GetComponents<" << typeName << ">(" << objectID << ") there is no array of this kind" << std::endl;
+	//		return std::vector<T>{};
+	//	}
+	//	auto t = GetComponents<T>;
+	//	std::vector<T> units;
+	//	for (int i = 0; i < t.size(); i++)
+	//	{
+	//		if (t.mGameObjectID == objectID) {
+	//			units.push_back(units[i]);
+	//		}
+	//	}
+	//	return units;
+	//}
 
-		//Find if theres is an array of this item
-		if (mComponentsHolder.find(typeName) == mComponentsHolder.end()) {
-			//There is no unit holder with this Type of Component
-			std::cout << "Regsitry : GetComponents<" << typeName << ">(" << objectID << ") there is no array of this kind" << std::endl;
-			return std::vector<T>{};
-		}
-		auto t = GetComponents<T>;
-		std::vector<T> units;
-		for (int i = 0; i < t.size(); i++)
-		{
-			if (t.mGameObjectID == objectID) {
-				units.push_back(units[i]);
-			}
-		}
-		return units;
-	}
-
-	template<typename T>
-	void GetAllComponentsOfType() {
-
-		//This should always be ok because Has has been called before
-		return mComponentsHolder[typeid(T).name()];
-	}
 
 	//Gets all the gameobjects
 	std::vector<GameObject> GetGameObjects() {
-		std::vector<GameObject> objects;
-		for (auto object : mGameObjects)
-		{
-			objects.push_back(object.second);
-		}
-		return objects;
+		return mGameObjects;
 	}
 
 	//Does this registry have a component of this type
@@ -278,7 +251,7 @@ public:
 	}
 	//Does this specific object have a T component?
 	template<typename T>
-	bool Has(int objectID) 
+	bool Has(uint32_t objectID)
 	{
 		const char* typeName = typeid(T).name();
 		if (mComponentsHolder.find(typeName) == mComponentsHolder.end()) {
@@ -291,22 +264,18 @@ public:
 			return GetUnitHolder<T>()->Has(objectID);
 		}
 	}
-
-	void GetAllObjectsWithComponent(int objectID) {
-
-	}
 	
 private:
 	//We want a unorerd map which holds the string for which type has come in
 	// when that type is stored, 
 	//I want a map which holds component types, these types each has a map with actual component refrences	
 	//GameObjects
-	std::unordered_map<int, GameObject> mGameObjects;
+	std::vector<GameObject> mGameObjects;
 
 	//Components
 	//This holds a string which is the type of the component to a string, 
 	//IUnitHolder is a virtual interface, subclass is only a container of a specific type
-	std::unordered_map<const char*, int> mComponentTypes;
+	std::unordered_map<const char*, uint32_t> mComponentTypes;
 	std::unordered_map <const char*, IUnitHolder*> mComponentsHolder;
 	
 

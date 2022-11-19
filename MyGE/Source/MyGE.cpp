@@ -55,16 +55,15 @@ int MyGE::run()
 
 	glEnable(GL_DEPTH_TEST);
 	//Need a registry for every scene, only one scene here
-	Registry* registry = new Registry();
 	Registry::Instance(); // Just in case
 	//Scene Manager 
 	mSceneManager = new SceneManager();
 	//Scripting manager to handle all lua and native scripting
 	mScriptingManager = new ScriptingManager();
 	//A shader manager to store all shaders
-	mShaderManager = new ShaderManager();
+	ShaderManager::Instance();
 	
-	mScene = new Scene(*mShaderManager);
+	mScene = new Scene();
 	mScene->Init();
 	mSceneManager->AddScene(*mScene);
 
@@ -114,10 +113,10 @@ void MyGE::ProcessInput()
 	if (glfwGetKey(mRenderWindow->GetWindow(), GLFW_KEY_W) == GLFW_PRESS) {
 		auto camera = Registry::Instance().GetComponents <CameraComponent>();
 		for (int i = 0; i < camera.size(); i++) {
-			if (camera[i]->bIsMainCamera) {
+			if (camera[i].bIsMainCamera) {
 
-				auto& transform = Registry::Instance().GetComponent<TransformComponent>(camera[i]->mGameObjectID);
-				transform.mMatrix = glm::translate(transform.mMatrix,camera[i]->mForward);
+				auto& transform = Registry::Instance().GetComponent<TransformComponent>(camera[i].mGameObjectID);
+				transform.mMatrix = glm::translate(transform.mMatrix,camera[i].mForward);
 			}
 		}
 	}
@@ -125,10 +124,10 @@ void MyGE::ProcessInput()
 	if (glfwGetKey(mRenderWindow->GetWindow(), GLFW_KEY_S) == GLFW_PRESS) {
 		auto camera = Registry::Instance().GetComponents <CameraComponent>();
 		for (int i = 0; i < camera.size(); i++) {
-			if (camera[i]->bIsMainCamera) {
+			if (camera[i].bIsMainCamera) {
 
-				auto& transform = Registry::Instance().GetComponent<TransformComponent>(camera[i]->mGameObjectID);
-				transform.mMatrix = glm::translate(transform.mMatrix, -camera[i]->mForward);
+				auto& transform = Registry::Instance().GetComponent<TransformComponent>(camera[i].mGameObjectID);
+				transform.mMatrix = glm::translate(transform.mMatrix, -camera[i].mForward);
 			}
 		}
 	}
@@ -136,10 +135,10 @@ void MyGE::ProcessInput()
 	if (glfwGetKey(mRenderWindow->GetWindow(), GLFW_KEY_A) == GLFW_PRESS) {
 		auto camera = Registry::Instance().GetComponents <CameraComponent>();
 		for (int i = 0; i < camera.size(); i++) {
-			if (camera[i]->bIsMainCamera) {
+			if (camera[i].bIsMainCamera) {
 
-				auto& transform = Registry::Instance().GetComponent<TransformComponent>(camera[i]->mGameObjectID);
-				transform.mMatrix = glm::translate(transform.mMatrix, camera[i]->mRight);
+				auto& transform = Registry::Instance().GetComponent<TransformComponent>(camera[i].mGameObjectID);
+				transform.mMatrix = glm::translate(transform.mMatrix, camera[i].mRight);
 			}
 		}
 	}
@@ -147,10 +146,10 @@ void MyGE::ProcessInput()
 	if (glfwGetKey(mRenderWindow->GetWindow(), GLFW_KEY_D) == GLFW_PRESS) {
 		auto camera = Registry::Instance().GetComponents <CameraComponent>();
 		for (int i = 0; i < camera.size(); i++) {
-			if (camera[i]->bIsMainCamera) {
+			if (camera[i].bIsMainCamera) {
 
-				auto& transform = Registry::Instance().GetComponent<TransformComponent>(camera[i]->mGameObjectID);
-				transform.mMatrix = glm::translate(transform.mMatrix, -camera[i]->mRight);
+				auto& transform = Registry::Instance().GetComponent<TransformComponent>(camera[i].mGameObjectID);
+				transform.mMatrix = glm::translate(transform.mMatrix, -camera[i].mRight);
 			}
 		}
 	}

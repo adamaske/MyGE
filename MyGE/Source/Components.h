@@ -14,15 +14,13 @@
 #include "Buffer.h"
 #include "VertexArray.h"
 struct GUIDComponent {
-	int mGameObjectID = 0;
+	uint32_t mGameObjectID = 0;
 	GUID ID;
-
-
 };
 
 //class TransformComponent : public Component {
 struct TransformComponent {
-	int mGameObjectID = 1;
+	uint32_t mGameObjectID = 1;
 	glm::mat4 mMatrix;
 
 	glm::mat4 mPosition;
@@ -36,16 +34,13 @@ struct TransformComponent {
 };
 
 struct MaterialComponent {
-	int mGameObjectID = 1;
+	uint32_t mGameObjectID = 1;
 	glm::vec4 mColour;
 
 };
 
 struct MeshComponent {
-	MeshComponent() {
-		std::cout << "Created a mesh Component" << std::endl;
-	}
-	int mGameObjectID = 0;
+	uint32_t mGameObjectID = 0;
 	std::vector<Vertex> mVertices;
 	std::vector<uint32_t> mIndices;
 	std::string mObjFilePath;
@@ -55,7 +50,7 @@ struct CameraComponent {
 	//I may want this to just be a container for a pointer to a camera
 	Camera mCamera;
 
-	int mGameObjectID = 1;
+	uint32_t mGameObjectID = 1;
 	bool bIsMainCamera = 1;
 	bool bFixedAsceptRatio = false;
 
@@ -85,13 +80,13 @@ struct CameraComponent {
 };
 
 struct RenderComponent {
-	int mGameObjectID = 1;
+	uint32_t mGameObjectID = 1;
 	VertexArray* mVAO;
 	bool bRender = true;
 };
 
 struct ScriptComponent {
-	int mGameObjectID =1;
+	uint32_t mGameObjectID =1;
 	int mScriptID = 0;
 
 	const GLchar* mVertexPath;
@@ -100,7 +95,7 @@ struct ScriptComponent {
 
 struct ShaderComponent
 {
-	int mGameObjectID = 1;
+	uint32_t mGameObjectID = 1;
 	int mShaderID = 0;
 	GLchar* mVertexPath = 0;
 	GLchar* mFragmentPath = 0;

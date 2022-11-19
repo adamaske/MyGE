@@ -6,7 +6,7 @@
 class Scene
 {
 public:
-	Scene(class ShaderManager& shader) : mShaderManager(shader) {
+	Scene(){
 		std::cout << "Scene created!" << std::endl;
 	};
 
@@ -20,8 +20,6 @@ public:
 
 	void ViewportRezised(int width, int height);
 private:
-	//The scene wants to know of all the shaders
-	ShaderManager& mShaderManager;
 
 	std::unordered_map<const char*, class System*> mSystems;
 
