@@ -63,8 +63,8 @@ public:
 	}
 
 	//Get all objects in this holder
-	std::vector<T&> GetAllUnits() {
-		std::vector<T&> vals;
+	std::vector<T*> GetAllUnits() {
+		std::vector<T*> vals;
 		vals.reserve(mUnits.size());
 		for (auto kv : mUnits) {
 			vals.push_back(&kv.second);
@@ -203,7 +203,7 @@ public:
 
 	//This should return all components of type T
 	template<typename T>
-	std::vector<T&> GetComponents() {
+	std::vector<T*> GetComponents() {
 		return GetUnitHolder<T>()->GetAllUnits();
 	}
 

@@ -113,10 +113,10 @@ void MyGE::ProcessInput()
 	if (glfwGetKey(mRenderWindow->GetWindow(), GLFW_KEY_W) == GLFW_PRESS) {
 		auto camera = Registry::Instance().GetComponents <CameraComponent>();
 		for (int i = 0; i < camera.size(); i++) {
-			if (camera[i].bIsMainCamera) {
+			if (camera[i]->bIsMainCamera) {
 
-				auto& transform = Registry::Instance().GetComponent<TransformComponent>(camera[i].mGameObjectID);
-				transform.mMatrix = glm::translate(transform.mMatrix,camera[i].mForward);
+				auto& transform = Registry::Instance().GetComponent<TransformComponent>(camera[i]->mGameObjectID);
+				transform.mMatrix = glm::translate(transform.mMatrix,camera[i]->mForward);
 			}
 		}
 	}
@@ -124,10 +124,10 @@ void MyGE::ProcessInput()
 	if (glfwGetKey(mRenderWindow->GetWindow(), GLFW_KEY_S) == GLFW_PRESS) {
 		auto camera = Registry::Instance().GetComponents <CameraComponent>();
 		for (int i = 0; i < camera.size(); i++) {
-			if (camera[i].bIsMainCamera) {
+			if (camera[i]->bIsMainCamera) {
 
-				auto& transform = Registry::Instance().GetComponent<TransformComponent>(camera[i].mGameObjectID);
-				transform.mMatrix = glm::translate(transform.mMatrix, -camera[i].mForward);
+				auto& transform = Registry::Instance().GetComponent<TransformComponent>(camera[i]->mGameObjectID);
+				transform.mMatrix = glm::translate(transform.mMatrix, -camera[i]->mForward);
 			}
 		}
 	}
@@ -135,10 +135,10 @@ void MyGE::ProcessInput()
 	if (glfwGetKey(mRenderWindow->GetWindow(), GLFW_KEY_A) == GLFW_PRESS) {
 		auto camera = Registry::Instance().GetComponents <CameraComponent>();
 		for (int i = 0; i < camera.size(); i++) {
-			if (camera[i].bIsMainCamera) {
+			if (camera[i]->bIsMainCamera) {
 
-				auto& transform = Registry::Instance().GetComponent<TransformComponent>(camera[i].mGameObjectID);
-				transform.mMatrix = glm::translate(transform.mMatrix, camera[i].mRight);
+				auto& transform = Registry::Instance().GetComponent<TransformComponent>(camera[i]->mGameObjectID);
+				transform.mMatrix = glm::translate(transform.mMatrix, camera[i]->mRight);
 			}
 		}
 	}
@@ -146,10 +146,10 @@ void MyGE::ProcessInput()
 	if (glfwGetKey(mRenderWindow->GetWindow(), GLFW_KEY_D) == GLFW_PRESS) {
 		auto camera = Registry::Instance().GetComponents <CameraComponent>();
 		for (int i = 0; i < camera.size(); i++) {
-			if (camera[i].bIsMainCamera) {
+			if (camera[i]->bIsMainCamera) {
 
-				auto& transform = Registry::Instance().GetComponent<TransformComponent>(camera[i].mGameObjectID);
-				transform.mMatrix = glm::translate(transform.mMatrix, -camera[i].mRight);
+				auto& transform = Registry::Instance().GetComponent<TransformComponent>(camera[i]->mGameObjectID);
+				transform.mMatrix = glm::translate(transform.mMatrix, -camera[i]->mRight);
 			}
 		}
 	}

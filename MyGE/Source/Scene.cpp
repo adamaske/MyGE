@@ -88,20 +88,20 @@ void Scene::OnUpdate(float deltaTime) {
 	////Gets all GameObjects in the registry, a go system
 	auto gameObjects = Registry::Instance().GetGameObjects();
 	//Prints all gameobject id's
-	for (auto go : gameObjects)
+	for (auto& go : gameObjects)
 	{
 		std::cout << "Scene : OnUpdate : GameObject " << go << std::endl;
 	}
 
 	//Go thorugh camera
 	auto cameras = Registry::Instance().GetComponents<CameraComponent>();
-	for(auto cam : cameras)
+	for(auto& cam : cameras)
 	{
-		std::cout << "Found camera with objectID " << cam.mGameObjectID << std::endl;
+		std::cout << "Found camera with objectID " << cam->mGameObjectID << std::endl;
 		//Check if it is the main camera
-		if (cam.bIsMainCamera) {
+		if (cam->bIsMainCamera) {
 			//Gets a transform for the caemra
-			TransformComponent& transform = Registry::Instance().GetComponent<TransformComponent>(cam.mGameObjectID);
+			TransformComponent& transform = Registry::Instance().GetComponent<TransformComponent>(cam->mGameObjectID);
 			//Get the shader to apply my view and projection matrix
 			auto shader = ShaderManager::Instance()->GetShader("PlainShader");
 			//Use this shader
@@ -109,12 +109,12 @@ void Scene::OnUpdate(float deltaTime) {
 			//Get a position
 			glm::vec3 pos(transform.mMatrix[3].x, transform.mMatrix[3].y, transform.mMatrix[3].z);
 			//Update matrices 
-			cam.mProjectionMatrix = glm::perspective(glm::radians(90.f), cam.mAspectRatio, 0.1f, 1000.f);
+			cam->mProjectionMatrix = glm::perspective(glm::radians(90.f), cam->mAspectRatio, 0.1f, 1000.f);
 
-			cam.mViewMatrix = glm::lookAt(pos, pos + glm::vec3(0,0, 1), glm::vec3(0, 1, 0));
+			cam->mViewMatrix = glm::lookAt(pos, pos + glm::vec3(0,0, 1), glm::vec3(0, 1, 0));
 			//Set the variables in the PlainShader
-			shader->SetUniformMatrix4(cam.mViewMatrix, "vMatrix");
-			shader->SetUniformMatrix4(cam.mProjectionMatrix, "pMatrix");
+			shader->SetUniformMatrix4(cam->mViewMatrix, "vMatrix");
+			shader->SetUniformMatrix4(cam->mProjectionMatrix, "pMatrix");
 		}
 	}
 
@@ -132,13 +132,13 @@ void Scene::ViewportRezised(int width, int height) {
 	mViewportHeight = height;
 	//GO through all cameras and change their aspect ratio and size 
 	auto cameras = Registry::Instance().GetComponents<CameraComponent>();
-	for (auto cam : cameras)
+	for (auto& cam : cameras)
 	{
 		//Change cameras without a fixed ar
-		if (!cam.bFixedAsceptRatio) {
+		if (!cam->bFixedAsceptRatio) {
 			//Remove one of these
-			cam.mCamera.SetViewportSize(width, height);
-			cam.mAspectRatio = ((float)width / (float)height);
+			cam->mCamera.SetViewportSize(width, height);
+			cam->mAspectRatio = ((float)width / (float)height);
 		}
 	}
 }

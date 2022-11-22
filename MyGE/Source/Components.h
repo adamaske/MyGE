@@ -54,8 +54,6 @@ struct CameraComponent {
 	bool bIsMainCamera = 1;
 	bool bFixedAsceptRatio = false;
 
-	glm::mat4x4* mPmatrix{ nullptr };         // denne,
-	glm::mat4x4* mVmatrix{ nullptr };         // og denne, skal legges inn i kameraklasse
 	glm::mat4 mViewMatrix;
 	glm::mat4 mProjectionMatrix;
 
