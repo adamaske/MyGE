@@ -13,14 +13,16 @@
 #include "GUID.h"
 #include "Buffer.h"
 #include "VertexArray.h"
+
+using GameObject = uint32_t;
 struct GUIDComponent {
-	uint32_t mGameObjectID = 0;
+	GameObject mGO = 0;
 	GUID ID;
 };
 
 //class TransformComponent : public Component {
 struct TransformComponent {
-	uint32_t mGameObjectID = 1;
+	GameObject mGO = 0;
 	glm::mat4 mMatrix;
 
 	glm::mat4 mPosition;
@@ -34,13 +36,13 @@ struct TransformComponent {
 };
 
 struct MaterialComponent {
-	uint32_t mGameObjectID = 1;
+	GameObject mGO = 0;
 	glm::vec4 mColour;
 
 };
 
 struct MeshComponent {
-	uint32_t mGameObjectID = 0;
+	GameObject mGO = 0;
 	std::vector<Vertex> mVertices;
 	std::vector<uint32_t> mIndices;
 	std::string mObjFilePath;
@@ -50,7 +52,7 @@ struct CameraComponent {
 	//I may want this to just be a container for a pointer to a camera
 	Camera mCamera;
 
-	uint32_t mGameObjectID = 1;
+	GameObject mGO = 0;
 	bool bIsMainCamera = 1;
 	bool bFixedAsceptRatio = false;
 
@@ -75,16 +77,23 @@ struct CameraComponent {
 	float mPitch = 0;
 
 	glm::vec3 mLastPosition = glm::vec3(600, 400, 0);
+	CameraComponent() {
+		std::cout << " Created Camera !! React if there is more than one camera, only one should exist" << std::endl;
+	};
 };
 
 struct RenderComponent {
-	uint32_t mGameObjectID = 1;
+	GameObject mGO = 0;
 	VertexArray* mVAO;
 	bool bRender = true;
+
+	uint32_t mVAO_t;
+	uint32_t mVBO_t;
+	uint32_t mIBO_t;
 };
 
 struct ScriptComponent {
-	uint32_t mGameObjectID =1;
+	GameObject mGO = 0;
 	int mScriptID = 0;
 
 	const GLchar* mVertexPath;
@@ -93,7 +102,7 @@ struct ScriptComponent {
 
 struct ShaderComponent
 {
-	uint32_t mGameObjectID = 1;
+	GameObject mGO = 0;
 	int mShaderID = 0;
 	GLchar* mVertexPath = 0;
 	GLchar* mFragmentPath = 0;

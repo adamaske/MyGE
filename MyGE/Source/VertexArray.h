@@ -2,12 +2,13 @@
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 #include "Buffer.h"
-
+#include "Renderer.h"
 #include <vector>
 class VertexArray {
 
 public:
 	VertexArray() {
+		mRendererID = Renderer::ID();
 		glCreateVertexArrays(1, &mRendererID);
 	};
 

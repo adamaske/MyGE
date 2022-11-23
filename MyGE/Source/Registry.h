@@ -65,7 +65,6 @@ public:
 	//Get all objects in this holder
 	std::vector<T*> GetAllUnits() {
 		std::vector<T*> vals;
-		vals.reserve(mUnits.size());
 		for (auto kv : mUnits) {
 			vals.push_back(&kv.second);
 		}
@@ -129,9 +128,7 @@ public:
 	template<typename T>
 	void RegisterComponent() {
 		const char* typeName = typeid(T).name();
-		if (mComponentTypes.find(typeName) == mComponentTypes.end()) {
-
-			mComponentTypes.insert({ typeName, GetNewID() });
+		if (mComponentsHolder.find(typeName) == mComponentsHolder.end()) {
 			mComponentsHolder.insert({ typeName, new UnitHolder<T>() });
 
 			std::cout << "Registered new component " << typeName << std::endl;
@@ -140,39 +137,39 @@ public:
 
 	//Register a specific component to a gameobject
 	template<typename T>
-	T& RegisterComponent(T item, uint32_t objectID) {
+	T& RegisterComponent(T item, GameObject go) {
 		
 		//this function returns nomatter what
 		//We know we want to register
 		const char* typeName = typeid(T).name();
-		std::cout << "Got order to register a " << typeName << " to object " << objectID << std::endl;
-		if (mComponentTypes.find(typeName) != mComponentTypes.end()) {
+		std::cout << "Got order to register a " << typeName << " to object " << go << std::endl;
+		if (mComponentsHolder.find(typeName) != mComponentsHolder.end()) {
 			//If the components is already registered, return
 			//No need to create a new UnitHolder
 			//Now add the compnent
 		
-			if (Has<T>(objectID)) {
+			if (Has<T>(go)) {
 				//Since there already is a component of this type on this object, return
-				return GetUnitHolder<T>()->GetUnit(objectID);
+				return GetUnitHolder<T>()->GetUnit(go);
 			}
 			
-			item.mGameObjectID = objectID;
+			item.mGO = go;
 
 			//Insert the component into the unitholder
-			GetUnitHolder<T>()->Insert(objectID, item);
-			GetUnitHolder<T>()->GetUnit(objectID).mGameObjectID = objectID;
-			return GetUnitHolder<T>()->GetUnit(objectID);
+			GetUnitHolder<T>()->Insert(go, item);
+			GetUnitHolder<T>()->GetUnit(go).mGO = go;
+			return GetUnitHolder<T>()->GetUnit(go);
 		}
 		else {
 			//There was no component of this type yet, register it
 			RegisterComponent<T>();
 			
-			item.mGameObjectID = objectID;
+			item.mGO = go;
 			
 			//We must set the
-			GetUnitHolder<T>()->Insert(objectID, item);
-			GetUnitHolder<T>()->GetUnit(objectID).mGameObjectID = objectID;
-			return GetUnitHolder<T>()->GetUnit(objectID);
+			GetUnitHolder<T>()->Insert(go, item);
+			GetUnitHolder<T>()->GetUnit(go).mGO = go;
+			return GetUnitHolder<T>()->GetUnit(go);
 		}
 		
 	};
@@ -204,7 +201,9 @@ public:
 	//This should return all components of type T
 	template<typename T>
 	std::vector<T*> GetComponents() {
-		return GetUnitHolder<T>()->GetAllUnits();
+		auto units = GetUnitHolder<T>()->GetAllUnits();
+
+		return units;
 	}
 
 	//template<typename T>
@@ -223,13 +222,12 @@ public:
 	//	std::vector<T> units;
 	//	for (int i = 0; i < t.size(); i++)
 	//	{
-	//		if (t.mGameObjectID == objectID) {
+	//		if (t.mGO == objectID) {
 	//			units.push_back(units[i]);
 	//		}
 	//	}
 	//	return units;
 	//}
-
 
 	//Gets all the gameobjects
 	std::vector<GameObject> GetGameObjects() {
@@ -275,7 +273,6 @@ private:
 	//Components
 	//This holds a string which is the type of the component to a string, 
 	//IUnitHolder is a virtual interface, subclass is only a container of a specific type
-	std::unordered_map<const char*, uint32_t> mComponentTypes;
 	std::unordered_map <const char*, IUnitHolder*> mComponentsHolder;
 	
 

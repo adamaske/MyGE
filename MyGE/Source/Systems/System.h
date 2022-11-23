@@ -13,6 +13,8 @@
 #include <sstream>
 #include "Buffer.h"
 #include "VertexArray.h"
+
+using GameObject = uint32_t;
 class System {
 public:
     virtual void Init() {
@@ -75,15 +77,16 @@ public:// Set up vertex data (and buffer(s)) and attribute pointers
 
         auto meshes = Registry::Instance().GetComponents<MeshComponent>();
         std::cout << "ObjMeshSystem : Init got " << meshes.size() << " meshes " << std::endl;
-        for (auto& mesh : meshes) {
-            std::cout << "ObjMeshSystem : Init : Setting up RenderComponent for " << mesh->mGameObjectID << std::endl;
-            if (!Registry::Instance().Has<RenderComponent>(mesh->mGameObjectID)) {
+        for (auto mesh : meshes) {
+            auto go = (uint32_t)(*mesh).mGO;
+            std::cout << "ObjMeshSystem : Init : Setting up RenderComponent for " << go << std::endl;
+            if (!Registry::Instance().Has<RenderComponent>(go)) {
                 //The game object of this NeshComponet has no render component
                 std::cout << "ObjMeshSystem : Init : The game object of this MeshComponent has no RenderComponent" << std::endl;
                 break;
             }
             //Find the renderer for this component
-            auto render = Registry::Instance().GetComponent<RenderComponent>(mesh->mGameObjectID);
+            auto render = Registry::Instance().GetComponent<RenderComponent>((uint32_t)mesh->mGO);
 
             //We want vertices and indicies from the mesh
             std::pair<std::vector<float>, std::vector<uint32_t>> meshData = LoadMesh(mesh->mObjFilePath);
@@ -91,7 +94,7 @@ public:// Set up vertex data (and buffer(s)) and attribute pointers
             //Vertex array object-VAO
             VertexArray* vao = new VertexArray();
             //Bind VAO
-
+            
             //Vertex buffer object to hold vertices - VBO
             VertexBuffer vbo = VertexBuffer(meshData.first.data(), sizeof(meshData.first));
             vao->AddVertexBuffer(&vbo);
@@ -111,9 +114,9 @@ public:// Set up vertex data (and buffer(s)) and attribute pointers
         auto renders =  Registry::Instance().GetComponents<RenderComponent>();
         //How many renders did we find
         for (auto& r : renders) {
-            std::cout << "ObjMeshSystem : Found a rendercomponent with goID " << r->mGameObjectID << std::endl;
+            auto go = (uint32_t)(*r).mGO;
+            std::cout << "ObjMeshSystem : Found a rendercomponent with goID " << go << std::endl;
         }
-        return;
 
         std::cout << std::endl << "ObjMeshSystem : OnUpdate" << std::endl;
         if (!Registry::Instance().Has<MeshComponent>()) {
@@ -136,7 +139,7 @@ public:// Set up vertex data (and buffer(s)) and attribute pointers
 
             std::cout << "Scene : OnUpdate : MeshComponent OnUpdate!" << std::endl;
             //Get a render component from this meshcomponent
-            RenderComponent& renderComponent = Registry::Instance().GetComponent<RenderComponent>(mesh->mGameObjectID);
+            RenderComponent& renderComponent = Registry::Instance().GetComponent<RenderComponent>(mesh->mGO);
             //Get a shader component from this mesh component
             auto shader = ShaderManager::Instance()->GetShader("PlainShader");
 
@@ -147,10 +150,10 @@ public:// Set up vertex data (and buffer(s)) and attribute pointers
             }
             //Use the shader
 
-            if (!Registry::Instance().Has<TransformComponent>(mesh->mGameObjectID)) {
+            if (!Registry::Instance().Has<TransformComponent>(mesh->mGO)) {
                 //There is no transform connected with this scene
             }
-            TransformComponent& transform = Registry::Instance().GetComponent<TransformComponent>(mesh->mGameObjectID);
+            TransformComponent& transform = Registry::Instance().GetComponent<TransformComponent>(mesh->mGO);
 
             shader->SetUniformMatrix4(transform.mMatrix, "mMatrix");
             std::cout << " I AM RENDERING" << std::endl;

@@ -26,33 +26,33 @@ void Scene::Init()
 	shader.mShader = ShaderManager::Instance()->GetShader("PlainShader");
 	//Createa render component
 	auto& cubeRender = Registry::Instance().RegisterComponent<RenderComponent>(RenderComponent(), cubeID);
-	cubeRender.mGameObjectID = cubeID;
+	cubeRender.mGO= cubeID;
 	//Create a mesh component
 	auto& cubeMesh = Registry::Instance().RegisterComponent<MeshComponent>(MeshComponent(), cubeID);
 	cubeMesh.mObjFilePath = cubePath;
-	MaterialComponent& cubeMaterial = Registry::Instance().GetComponent<MaterialComponent>(cubeID);
+	auto& cubeMaterial = Registry::Instance().RegisterComponent<MaterialComponent>(MaterialComponent(), cubeID);
 	auto& cubeTransform = Registry::Instance().GetComponent<TransformComponent>(cubeID);
 	cubeTransform.mMatrix = glm::translate(glm::mat4(1), glm::vec3(1, 0, 1));
 	std::cout << std::endl << "FINISHED CREATING CUBE" << std::endl << std::endl;
 #pragma endregion
 
 #pragma region Create Monkey
-	std::cout << std::endl << "CREATING MONKEY" << std::endl << std::endl;
-	//Monkey gameobject and components
-	uint32_t monkeyID = Registry::Instance().NewGameObject();
-	//Creates a shader component, replace with material component
-	ShaderComponent& monkeyShader = Registry::Instance().RegisterComponent<ShaderComponent>(ShaderComponent(), monkeyID);
-	//Set correct shader
-	monkeyShader.mShader = ShaderManager::Instance()->GetShader("PlainShader");
-	//Create render and mesh component, sets path to 
-	RenderComponent& monkeyRender = Registry::Instance().RegisterComponent<RenderComponent>(RenderComponent(), monkeyID);
-	monkeyRender.mGameObjectID = monkeyID;
-	MeshComponent& monkeyMesh = Registry::Instance().RegisterComponent<MeshComponent>(MeshComponent(), monkeyID); // Register the component to the gameobject
-	monkeyMesh.mObjFilePath = monkeyPath;
-	TransformComponent& monkeyTransform = Registry::Instance().GetComponent<TransformComponent>(monkeyID);
-	monkeyTransform.mMatrix = glm::translate(glm::mat4(1), glm::vec3(0, 0, 1));
-	MaterialComponent& monkeyMaterial = Registry::Instance().GetComponent<MaterialComponent>(monkeyID);
-	std::cout << std::endl << "FINISHED CREATING MONKEY" << std::endl << std::endl;
+	//std::cout << std::endl << "CREATING MONKEY" << std::endl << std::endl;
+	////Monkey gameobject and components
+	//uint32_t monkeyID = Registry::Instance().NewGameObject();
+	////Creates a shader component, replace with material component
+	//ShaderComponent& monkeyShader = Registry::Instance().RegisterComponent<ShaderComponent>(ShaderComponent(), monkeyID);
+	////Set correct shader
+	//monkeyShader.mShader = ShaderManager::Instance()->GetShader("PlainShader");
+	////Create render and mesh component, sets path to 
+	//RenderComponent& monkeyRender = Registry::Instance().RegisterComponent<RenderComponent>(RenderComponent(), monkeyID);
+	//monkeyRender.mGO= monkeyID;
+	//MeshComponent& monkeyMesh = Registry::Instance().RegisterComponent<MeshComponent>(MeshComponent(), monkeyID); // Register the component to the gameobject
+	//monkeyMesh.mObjFilePath = monkeyPath;
+	//TransformComponent& monkeyTransform = Registry::Instance().GetComponent<TransformComponent>(monkeyID);
+	//monkeyTransform.mMatrix = glm::translate(glm::mat4(1), glm::vec3(0, 0, 1));
+	//MaterialComponent& monkeyMaterial = Registry::Instance().GetComponent<MaterialComponent>(monkeyID);
+	//std::cout << std::endl << "FINISHED CREATING MONKEY" << std::endl << std::endl;
 #pragma endregion
 
 #pragma region Create Camera
@@ -62,9 +62,9 @@ void Scene::Init()
 	std::cout << "CAMERA ID : " << cameraID << std::endl;
 	CameraComponent& camera = Registry::Instance().RegisterComponent<CameraComponent>(CameraComponent(), cameraID);
 	camera.bIsMainCamera = true;
-	camera.mGameObjectID = cameraID;
 	auto& cameraTransform = Registry::Instance().GetComponent<TransformComponent>(cameraID);
 	cameraTransform.mMatrix = glm::translate(glm::mat4(1), glm::vec3(0, 0, -5));
+
 	std::cout << std::endl << "FINISHED CREATING CAMERA" << std::endl << std::endl;
 #pragma endregion
 
@@ -93,15 +93,18 @@ void Scene::OnUpdate(float deltaTime) {
 		std::cout << "Scene : OnUpdate : GameObject " << go << std::endl;
 	}
 
-	//Go thorugh camera
+	//We want an array of every camera in the scene
+	//If we find a camera whith bisMainCamera  = true, that is the one we want to render the scene view from
 	auto cameras = Registry::Instance().GetComponents<CameraComponent>();
-	for(auto& cam : cameras)
+	for(auto cam : cameras)
 	{
-		std::cout << "Found camera with objectID " << cam->mGameObjectID << std::endl;
+		auto go = (uint32_t)(*cam).mGO;
+		//It does find 
+		std::cout << "Found camera with objectID " << go << std::endl;
 		//Check if it is the main camera
 		if (cam->bIsMainCamera) {
-			//Gets a transform for the caemra
-			TransformComponent& transform = Registry::Instance().GetComponent<TransformComponent>(cam->mGameObjectID);
+			//Gets a transform for the camera
+			TransformComponent& transform = Registry::Instance().GetComponent<TransformComponent>(go);
 			//Get the shader to apply my view and projection matrix
 			auto shader = ShaderManager::Instance()->GetShader("PlainShader");
 			//Use this shader
@@ -113,8 +116,8 @@ void Scene::OnUpdate(float deltaTime) {
 
 			cam->mViewMatrix = glm::lookAt(pos, pos + glm::vec3(0,0, 1), glm::vec3(0, 1, 0));
 			//Set the variables in the PlainShader
-			shader->SetUniformMatrix4(cam->mViewMatrix, "vMatrix");
-			shader->SetUniformMatrix4(cam->mProjectionMatrix, "pMatrix");
+			shader->SetUniformMatrix4((glm::mat4)cam->mViewMatrix, "vMatrix");
+			shader->SetUniformMatrix4((glm::mat4)cam->mProjectionMatrix, "pMatrix");
 		}
 	}
 

@@ -6,6 +6,7 @@
 *.lo
 *.o
 *.obj
+.vcxproj
 
 # Precompiled Headers
 *.gch
@@ -429,4 +430,5 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+*.vcxproj
 *.vcxproj

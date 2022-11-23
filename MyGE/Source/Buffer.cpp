@@ -1,8 +1,9 @@
 #include "Buffer.h"
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
-
+#include "Renderer.h"
 VertexBuffer::VertexBuffer(float* verts, size_t size) {
+	mRendererID = Renderer::ID();
 	//We want a buffer in that renderer
 	glCreateBuffers(1, &mRendererID);
 	//
@@ -23,6 +24,9 @@ void VertexBuffer::Unbind()
 }
 
 IndexBuffer::IndexBuffer(uint32_t* indices, uint32_t count) : mCount(count) {
+
+	mRendererID = Renderer::ID();
+
 	glCreateBuffers(1, &mRendererID);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mRendererID);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(uint32_t), indices, GL_STATIC_DRAW);
