@@ -115,8 +115,8 @@ void MyGE::ProcessInput()
 		for (int i = 0; i < camera.size(); i++) {
 			if (camera[i]->bIsMainCamera) {
 
-				auto& transform = Registry::Instance().GetComponent<TransformComponent>(camera[i]->mGO);
-				transform.mMatrix = glm::translate(transform.mMatrix,camera[i]->mForward);
+				auto transform = Registry::Instance().GetComponent<TransformComponent>(camera[i]->mGO);
+				transform->mMatrix = glm::translate(transform->mMatrix,camera[i]->mForward);
 			}
 		}
 	}
@@ -126,8 +126,8 @@ void MyGE::ProcessInput()
 		for (int i = 0; i < camera.size(); i++) {
 			if (camera[i]->bIsMainCamera) {
 
-				auto& transform = Registry::Instance().GetComponent<TransformComponent>(camera[i]->mGO);
-				transform.mMatrix = glm::translate(transform.mMatrix, -camera[i]->mForward);
+				auto transform = Registry::Instance().GetComponent<TransformComponent>(camera[i]->mGO);
+				transform->mMatrix = glm::translate(transform->mMatrix, -camera[i]->mForward);
 			}
 		}
 	}
@@ -137,8 +137,8 @@ void MyGE::ProcessInput()
 		for (int i = 0; i < camera.size(); i++) {
 			if (camera[i]->bIsMainCamera) {
 
-				auto& transform = Registry::Instance().GetComponent<TransformComponent>(camera[i]->mGO);
-				transform.mMatrix = glm::translate(transform.mMatrix, camera[i]->mRight);
+				auto transform = Registry::Instance().GetComponent<TransformComponent>(camera[i]->mGO);
+				transform->mMatrix = glm::translate(transform->mMatrix, camera[i]->mRight);
 			}
 		}
 	}
@@ -148,8 +148,8 @@ void MyGE::ProcessInput()
 		for (int i = 0; i < camera.size(); i++) {
 			if (camera[i]->bIsMainCamera) {
 
-				auto& transform = Registry::Instance().GetComponent<TransformComponent>(camera[i]->mGO);
-				transform.mMatrix = glm::translate(transform.mMatrix, -camera[i]->mRight);
+				auto transform = Registry::Instance().GetComponent<TransformComponent>(camera[i]->mGO);
+				transform->mMatrix = glm::translate(transform->mMatrix, -camera[i]->mRight);
 			}
 		}
 	}

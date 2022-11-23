@@ -30,7 +30,7 @@ public:
 	}
 
 	template<typename T>
-	void Insert(uint32_t objectID, T& t) {
+	void Insert(uint32_t objectID, std::shared_ptr<T> t) {
 		mUnits.insert({ objectID, t });
 	};
 
@@ -57,16 +57,16 @@ public:
 	}
 
 	//Get a specific unit, should be lighting fast because it just returns a map position 
-	T& GetUnit(uint32_t objectID) {
+	std::shared_ptr<T> GetUnit(uint32_t objectID) {
 		//We can safely return this becase Has should be called before
 		return mUnits[objectID];
 	}
 
 	//Get all objects in this holder
-	std::vector<T*> GetAllUnits() {
-		std::vector<T*> vals;
+	std::vector<std::shared_ptr<T>> GetAllUnits() {
+		std::vector<std::shared_ptr<T>> vals;
 		for (auto kv : mUnits) {
-			vals.push_back(&kv.second);
+			vals.push_back(kv.second);
 		}
 		
 		return vals;
@@ -84,7 +84,7 @@ public:
 	}
 
 private:
-	std::unordered_map<uint32_t, T> mUnits;
+	std::unordered_map<uint32_t, std::shared_ptr<T>> mUnits;
 };
 //Static instance of this regisrty
 static class Registry* mInstance;
@@ -137,8 +137,8 @@ public:
 
 	//Register a specific component to a gameobject
 	template<typename T>
-	T& RegisterComponent(T item, GameObject go) {
-		
+	std::shared_ptr<T> RegisterComponent(T i, GameObject go) {
+		auto item = std::make_shared<T>();
 		//this function returns nomatter what
 		//We know we want to register
 		const char* typeName = typeid(T).name();
@@ -152,23 +152,19 @@ public:
 				//Since there already is a component of this type on this object, return
 				return GetUnitHolder<T>()->GetUnit(go);
 			}
-			
-			item.mGO = go;
 
 			//Insert the component into the unitholder
 			GetUnitHolder<T>()->Insert(go, item);
-			GetUnitHolder<T>()->GetUnit(go).mGO = go;
+			GetUnitHolder<T>()->GetUnit(go)->mGO = go;
 			return GetUnitHolder<T>()->GetUnit(go);
 		}
 		else {
 			//There was no component of this type yet, register it
 			RegisterComponent<T>();
 			
-			item.mGO = go;
-			
 			//We must set the
 			GetUnitHolder<T>()->Insert(go, item);
-			GetUnitHolder<T>()->GetUnit(go).mGO = go;
+			GetUnitHolder<T>()->GetUnit(go)->mGO = go;
 			return GetUnitHolder<T>()->GetUnit(go);
 		}
 		
@@ -193,17 +189,15 @@ public:
 
 	//If the gameobject has this type of component, return it
 	template<typename T>
-	T& GetComponent(uint32_t objectID){
+	std::shared_ptr<T> GetComponent(uint32_t objectID){
 		//Has has been called on this so we know we can return the unit holder
 		return GetUnitHolder<T>()->GetUnit(objectID);
 	}
 
 	//This should return all components of type T
 	template<typename T>
-	std::vector<T*> GetComponents() {
-		auto units = GetUnitHolder<T>()->GetAllUnits();
-
-		return units;
+	std::vector<std::shared_ptr<T>> GetComponents() {
+		return GetUnitHolder<T>()->GetAllUnits();
 	}
 
 	//template<typename T>

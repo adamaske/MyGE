@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include "glad/glad.h"
+
 #include "GLFW/glfw3.h"
 #include "glm/glm.hpp"
 #include "Components.h"
@@ -78,7 +79,7 @@ public:// Set up vertex data (and buffer(s)) and attribute pointers
         auto meshes = Registry::Instance().GetComponents<MeshComponent>();
         std::cout << "ObjMeshSystem : Init got " << meshes.size() << " meshes " << std::endl;
         for (auto mesh : meshes) {
-            auto go = (uint32_t)(*mesh).mGO;
+            auto go = mesh->mGO;
             std::cout << "ObjMeshSystem : Init : Setting up RenderComponent for " << go << std::endl;
             if (!Registry::Instance().Has<RenderComponent>(go)) {
                 //The game object of this NeshComponet has no render component
@@ -104,13 +105,20 @@ public:// Set up vertex data (and buffer(s)) and attribute pointers
             vao->AddIndexBuffer(&ibo);
 
             //Add them to the vertex array
-            render.mVAO = vao;
+            render->mVAO = vao;
             
         }
     }
 
     virtual void OnUpdate(float deltaTime) override{
 
+		auto rendercomps = Registry::Instance().GetComponents<RenderComponent>();
+
+        for (auto re : rendercomps)
+        {
+            auto go = (uint32_t)(*re).mGO;
+            std::cout << "THIS :: " << go << std::endl;
+        }
         auto renders =  Registry::Instance().GetComponents<RenderComponent>();
         //How many renders did we find
         for (auto& r : renders) {
@@ -134,12 +142,12 @@ public:// Set up vertex data (and buffer(s)) and attribute pointers
         std::cout << "ObjMeshSystem : OnUpdate cleared checks!" << std::endl;
         auto meshes = Registry::Instance().GetComponents<MeshComponent>();
         std::cout << "Found " << meshes.size() << " meshes to render!" << std::endl;
-        for (auto& mesh : meshes)
+        for (auto mesh : meshes)
         {
-
+            auto go = (uint32_t)(*mesh).mGO;
             std::cout << "Scene : OnUpdate : MeshComponent OnUpdate!" << std::endl;
             //Get a render component from this meshcomponent
-            RenderComponent& renderComponent = Registry::Instance().GetComponent<RenderComponent>(mesh->mGO);
+            auto renderComponent = Registry::Instance().GetComponent<RenderComponent>(go);
             //Get a shader component from this mesh component
             auto shader = ShaderManager::Instance()->GetShader("PlainShader");
 
@@ -153,17 +161,17 @@ public:// Set up vertex data (and buffer(s)) and attribute pointers
             if (!Registry::Instance().Has<TransformComponent>(mesh->mGO)) {
                 //There is no transform connected with this scene
             }
-            TransformComponent& transform = Registry::Instance().GetComponent<TransformComponent>(mesh->mGO);
+            auto transform = Registry::Instance().GetComponent<TransformComponent>(mesh->mGO);
 
-            shader->SetUniformMatrix4(transform.mMatrix, "mMatrix");
+            shader->SetUniformMatrix4(transform->mMatrix, "mMatrix");
             std::cout << " I AM RENDERING" << std::endl;
             std::cout << "Found " << meshes.size() << " meshes to render!" << std::endl;
             //We want from this vao
-            if (!renderComponent.mVAO) {
+            if (!renderComponent->mVAO) {
                 std::cout << "ObjMeshSystem : RenderComponent dosent have a VAO" << std::endl;
                 return;
             }
-            auto vao = renderComponent.mVAO;
+            auto vao = renderComponent->mVAO;
             vao->Bind();
 
             //Draws from the bound vao

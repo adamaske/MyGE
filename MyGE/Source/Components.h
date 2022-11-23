@@ -13,6 +13,9 @@
 #include "GUID.h"
 #include "Buffer.h"
 #include "VertexArray.h"
+#include "AL/al.h"
+#include "AL/alc.h"
+#include "Audio/wavfilereader.h"
 
 using GameObject = uint32_t;
 struct GUIDComponent {
@@ -20,6 +23,27 @@ struct GUIDComponent {
 	GUID ID;
 };
 
+struct AudioSourceComponent {
+	GameObject mGO = 0;
+	std::string mName;          ///< The name of the sound source (Not used).
+	ALuint mSource;             ///< The sound source.
+	ALuint mBuffer;             ///< The data buffer.
+
+	const char* mFilePath;
+	wave_t mFile;
+
+	float mGain = 1;
+	bool bLoop = 0;
+
+	bool bShouldPlay = true;
+	bool bPlaying = false;
+	bool bShouldStop = false;
+};
+
+struct AudioListenerComponent {
+	GameObject mGO = 0;
+
+};
 //class TransformComponent : public Component {
 struct TransformComponent {
 	GameObject mGO = 0;
@@ -83,13 +107,17 @@ struct CameraComponent {
 };
 
 struct RenderComponent {
-	GameObject mGO = 0;
+	GameObject mGO;
 	VertexArray* mVAO;
 	bool bRender = true;
 
 	uint32_t mVAO_t;
 	uint32_t mVBO_t;
 	uint32_t mIBO_t;
+
+	RenderComponent() {
+		std::cout << "RENDER COMPONENT CREATED; THERE SHOULD BE ONE CUBE + MONKEY ONLY;" << std::endl;
+	}
 };
 
 struct ScriptComponent {
