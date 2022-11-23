@@ -46,22 +46,22 @@ void Scene::Init()
 #pragma endregion
 
 #pragma region Create Monkey
-	//std::cout << std::endl << "CREATING MONKEY" << std::endl << std::endl;
-	////Monkey gameobject and components
-	//uint32_t monkeyID = Registry::Instance().NewGameObject();
-	////Creates a shader component, replace with material component
-	//ShaderComponent& monkeyShader = Registry::Instance().RegisterComponent<ShaderComponent>(ShaderComponent(), monkeyID);
-	////Set correct shader
-	//monkeyShader.mShader = ShaderManager::Instance()->GetShader("PlainShader");
-	////Create render and mesh component, sets path to 
-	//RenderComponent& monkeyRender = Registry::Instance().RegisterComponent<RenderComponent>(RenderComponent(), monkeyID);
-	//monkeyRender.mGO= monkeyID;
-	//MeshComponent& monkeyMesh = Registry::Instance().RegisterComponent<MeshComponent>(MeshComponent(), monkeyID); // Register the component to the gameobject
-	//monkeyMesh.mObjFilePath = monkeyPath;
-	//TransformComponent& monkeyTransform = Registry::Instance().GetComponent<TransformComponent>(monkeyID);
-	//monkeyTransform.mMatrix = glm::translate(glm::mat4(1), glm::vec3(0, 0, 1));
-	//MaterialComponent& monkeyMaterial = Registry::Instance().GetComponent<MaterialComponent>(monkeyID);
-	//std::cout << std::endl << "FINISHED CREATING MONKEY" << std::endl << std::endl;
+	std::cout << std::endl << "CREATING MONKEY" << std::endl << std::endl;
+	//Monkey gameobject and components
+	uint32_t monkeyID = Registry::Instance().NewGameObject();
+	//Creates a shader component, replace with material component
+	auto monkeyShader = Registry::Instance().RegisterComponent<ShaderComponent>(ShaderComponent(), monkeyID);
+	//Set correct shader
+	monkeyShader->mShader = ShaderManager::Instance()->GetShader("PlainShader");
+	//Create render and mesh component, sets path to 
+	auto monkeyRender = Registry::Instance().RegisterComponent<RenderComponent>(RenderComponent(), monkeyID);
+	monkeyRender->mGO = monkeyID;
+	auto monkeyMesh = Registry::Instance().RegisterComponent<MeshComponent>(MeshComponent(), monkeyID); // Register the component to the gameobject
+	monkeyMesh->mObjFilePath = monkeyPath;
+	auto monkeyTransform = Registry::Instance().GetComponent<TransformComponent>(monkeyID);
+	monkeyTransform->mMatrix = glm::translate(glm::mat4(1), glm::vec3(0, 0, 1));
+	auto monkeyMaterial = Registry::Instance().GetComponent<MaterialComponent>(monkeyID);
+	std::cout << std::endl << "FINISHED CREATING MONKEY" << std::endl << std::endl;
 #pragma endregion
 
 #pragma region Create Camera
