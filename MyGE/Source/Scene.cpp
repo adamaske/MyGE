@@ -12,6 +12,8 @@ void Scene::Init()
 	Registry::Instance().RegisterComponent<MeshComponent>();
 	Registry::Instance().RegisterComponent<CameraComponent>();
 	Registry::Instance().RegisterComponent<MaterialComponent>();
+	Registry::Instance().RegisterComponent<AudioSourceComponent>();
+	Registry::Instance().RegisterComponent<AudioListenerComponent>();
 	std::cout << "Scene started Init!" << std::endl;
 
 	std::string cubePath =		"C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGE/Resources/Meshes/cube.obj";
@@ -34,6 +36,13 @@ void Scene::Init()
 	auto cubeTransform = Registry::Instance().GetComponent<TransformComponent>(cubeID);
 	cubeTransform->mMatrix = glm::translate(glm::mat4(1), glm::vec3(1, 0, 1));
 	std::cout << std::endl << "FINISHED CREATING CUBE" << std::endl << std::endl;
+
+	auto cubeSource = Registry::Instance().RegisterComponent<AudioSourceComponent>(AudioSourceComponent(), cubeID);
+
+	cubeSource->mName = "Explosion";
+	cubeSource->mFilePath = "";
+	cubeSource->bShouldPlay = true;
+	cubeSource->mGain = 1;
 #pragma endregion
 
 #pragma region Create Monkey
