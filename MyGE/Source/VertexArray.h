@@ -8,8 +8,8 @@ class VertexArray {
 
 public:
 	VertexArray() {
-		mRendererID = Renderer::ID();
-		glCreateVertexArrays(1, &mRendererID);
+		glGenVertexArrays(1, &mRendererID);
+		glBindVertexArray(mRendererID);
 	};
 
 	void Bind() {
@@ -19,7 +19,7 @@ public:
 		glBindVertexArray(0);
 	};
 
-	void AddVertexBuffer(VertexBuffer* buffer) {
+	void AddVertexBuffer(std::shared_ptr<VertexBuffer> buffer) {
 		//Use this vertex array
 		glBindVertexArray(mRendererID);
 
@@ -46,7 +46,7 @@ public:
 
 		mVertexBuffers.push_back(buffer);
 	};
-	void AddIndexBuffer(IndexBuffer* buffer) {
+	void AddIndexBuffer(std::shared_ptr<IndexBuffer> buffer) {
 		//Use this vertex array
 		glBindVertexArray(mRendererID);
 
@@ -54,19 +54,15 @@ public:
 		//So we bind it
 		buffer->Bind();
 
-
 		mIndexBuffer = buffer;
 	};
 
-	void SetID(uint32_t id) {
-		mRendererID = id;
-	}
-
-	IndexBuffer* GetIndexBuffer() {
+	std::shared_ptr<IndexBuffer> GetIndexBuffer() {
 		return mIndexBuffer;
 	}
+
 private:
 	uint32_t mRendererID = 0;
-	std::vector<VertexBuffer*> mVertexBuffers;
-	IndexBuffer* mIndexBuffer;
+	std::vector<std::shared_ptr<VertexBuffer>> mVertexBuffers;
+	std::shared_ptr<IndexBuffer> mIndexBuffer;
 };

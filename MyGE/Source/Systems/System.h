@@ -23,7 +23,7 @@ public:
     };
 
     virtual void OnUpdate(float deltaTime) {
-        std::cout << "System : OnUpdate" << std::endl;
+
     };
 };
 
@@ -38,7 +38,6 @@ public:
         auto cameras = Registry::Instance().GetComponents<CameraComponent>();
         for (auto cam : cameras) {
             if (cam->bIsMainCamera) {
-                std::cout << "Doing Main Camera" << std::endl;
                 //Apply rotations
 
                 //Yaw affects both pitch and roll
@@ -69,7 +68,6 @@ public:// Set up vertex data (and buffer(s)) and attribute pointers
 
     
     virtual void Init() override{
-        std::cout << "ObjMeshSystem : Init started!" << std::endl;
 
         if (!Registry::Instance().Has<MeshComponent>()) {
             std::cout << "The registry does not have a MeshComponent array" << std::endl;
@@ -77,15 +75,17 @@ public:// Set up vertex data (and buffer(s)) and attribute pointers
         }
 
         auto meshes = Registry::Instance().GetComponents<MeshComponent>();
-        std::cout << "ObjMeshSystem : Init got " << meshes.size() << " meshes " << std::endl;
+
         for (auto mesh : meshes) {
+
             auto go = mesh->mGO;
-            std::cout << "ObjMeshSystem : Init : Setting up RenderComponent for " << go << std::endl;
+
             if (!Registry::Instance().Has<RenderComponent>(go)) {
                 //The game object of this NeshComponet has no render component
                 std::cout << "ObjMeshSystem : Init : The game object of this MeshComponent has no RenderComponent" << std::endl;
                 break;
             }
+
             //Find the renderer for this component
             auto render = Registry::Instance().GetComponent<RenderComponent>((uint32_t)mesh->mGO);
 
@@ -93,59 +93,32 @@ public:// Set up vertex data (and buffer(s)) and attribute pointers
             std::pair<std::vector<float>, std::vector<uint32_t>> meshData = LoadMesh(mesh->mObjFilePath);
 
             //Vertex array object-VAO
-            VertexArray* vao = new VertexArray();
+            auto vao = std::make_shared<VertexArray>();
             //Bind VAO
             
             //Vertex buffer object to hold vertices - VBO
-            VertexBuffer vbo = VertexBuffer(meshData.first.data(), sizeof(meshData.first));
-            vao->AddVertexBuffer(&vbo);
+            auto vbo = std::make_shared<VertexBuffer>(meshData.first.data(), sizeof(meshData.first));
+
+            vao->AddVertexBuffer(vbo);
 
             // Element array buffer - EAB - ibo
-            IndexBuffer ibo = IndexBuffer(meshData.second.data(), sizeof(meshData.second));
-            vao->AddIndexBuffer(&ibo);
+            auto ibo = std::make_shared<IndexBuffer>(meshData.second.data(), sizeof(meshData.second));
+            vao->AddIndexBuffer(ibo);
 
             //Add them to the vertex array
             render->mVAO = vao;
+            
             
         }
     }
 
     virtual void OnUpdate(float deltaTime) override{
 
-		auto rendercomps = Registry::Instance().GetComponents<RenderComponent>();
-
-        for (auto re : rendercomps)
-        {
-            auto go = (uint32_t)(*re).mGO;
-            std::cout << "THIS :: " << go << std::endl;
-        }
-        auto renders =  Registry::Instance().GetComponents<RenderComponent>();
-        //How many renders did we find
-        for (auto& r : renders) {
-            auto go = (uint32_t)(*r).mGO;
-            std::cout << "ObjMeshSystem : Found a rendercomponent with goID " << go << std::endl;
-        }
-
-        std::cout << std::endl << "ObjMeshSystem : OnUpdate" << std::endl;
-        if (!Registry::Instance().Has<MeshComponent>()) {
-            std::cout << "ObjMeshSystem : Exit update because no MeshComponents in Registry" << std::endl;
-            return;
-        }
-        if (!Registry::Instance().Has<RenderComponent>()) {
-            std::cout << "ObjMeshSystem : Exit update because no RenderComponents in Registry" << std::endl;
-            return;
-        }
-        if (!Registry::Instance().Has<ShaderComponent>()) {
-            std::cout << "ObjMeshSystem : Exit update because no ShaderComponents in Registry" << std::endl;
-            return;
-        }
-        std::cout << "ObjMeshSystem : OnUpdate cleared checks!" << std::endl;
         auto meshes = Registry::Instance().GetComponents<MeshComponent>();
-        std::cout << "Found " << meshes.size() << " meshes to render!" << std::endl;
+
         for (auto mesh : meshes)
         {
             auto go = (uint32_t)(*mesh).mGO;
-            std::cout << "Scene : OnUpdate : MeshComponent OnUpdate!" << std::endl;
             //Get a render component from this meshcomponent
             auto renderComponent = Registry::Instance().GetComponent<RenderComponent>(go);
             //Get a shader component from this mesh component
@@ -164,8 +137,6 @@ public:// Set up vertex data (and buffer(s)) and attribute pointers
             auto transform = Registry::Instance().GetComponent<TransformComponent>(mesh->mGO);
 
             shader->SetUniformMatrix4(transform->mMatrix, "mMatrix");
-            std::cout << " I AM RENDERING" << std::endl;
-            std::cout << "Found " << meshes.size() << " meshes to render!" << std::endl;
             //We want from this vao
             if (!renderComponent->mVAO) {
                 std::cout << "ObjMeshSystem : RenderComponent dosent have a VAO" << std::endl;
@@ -336,7 +307,6 @@ std::pair<std::vector<float>, std::vector<uint32_t>>LoadMesh(std::string filePat
             }
 
         }
-        std::cout << "ObjMeshSystem : LoadMesh : Finished reading file" << filePath << std::endl;
         file.close();
         writeFile(copypath + ".txt");
         return std::pair<std::vector<float>, std::vector<uint32_t>>({ verts, inds });

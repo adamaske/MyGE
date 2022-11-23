@@ -110,12 +110,11 @@ struct CameraComponent {
 
 struct RenderComponent {
 	GameObject mGO;
-	VertexArray* mVAO;
-	bool bRender = true;
 
-	uint32_t mVAO_t;
-	uint32_t mVBO_t;
-	uint32_t mIBO_t;
+	std::shared_ptr<VertexArray> mVAO;
+	std::shared_ptr<VertexBuffer> mVBO;
+	std::shared_ptr<IndexBuffer> mIBO;
+	bool bRender = true;
 
 	RenderComponent() {
 		std::cout << "RENDER COMPONENT CREATED; THERE SHOULD BE ONE CUBE + MONKEY ONLY;" << std::endl;
@@ -138,4 +137,21 @@ struct ShaderComponent
 	GLchar* mFragmentPath = 0;
 
 	class Shader* mShader;
+};
+
+struct TerrainComponent {
+	GameObject mGO = 0;
+
+	enum class TerrainType{ PerlinNoise, LAZFile};
+	TerrainType mType  = TerrainType::PerlinNoise;
+
+	std::vector<float> mVertices;
+	std::vector<float> mIndicies;
+
+	float mWidth = 200;  
+	float mHeight = 200;
+
+	float mResolution = 1;
+
+	const char* mFilePath = "../Resources/Terrain/fullData.txt";
 };

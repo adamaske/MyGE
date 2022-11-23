@@ -27,7 +27,6 @@ void RenderWindow::Init(GLFWwindow* window)
 	glfwSetFramebufferSizeCallback(mWindow, framebuffer_size_callback);
 
 	glfwMakeContextCurrent(mWindow);
-	std::cout << "RenderWindow finished Init!" << std::endl;
 
 }
 
@@ -71,9 +70,6 @@ void RenderWindow::Render(float deltaTime) {
 	//// -------------------------------------------------------------------------------
 	//glfwSwapBuffers(mWindow);
 	//glfwPollEvents();
-
-	std::cout << std::endl << std::endl << "-----RenderWindow : Render finished!" << std::endl << std::endl << std::endl;
-	
 }
 
 

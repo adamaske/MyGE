@@ -21,7 +21,10 @@ public:
 	void ViewportRezised(int width, int height);
 private:
 
+	std::unordered_map<const char*, GameObject> mGameObjects;
 	std::unordered_map<const char*, class System*> mSystems;
+
+	class Registry* mRegistry;
 
 	CameraComponent* mSceneCamera;
 

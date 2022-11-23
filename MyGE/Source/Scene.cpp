@@ -3,6 +3,7 @@
 #include "Shader.h"
 #include "Systems/System.h"
 #include "Camera.h"
+#include "Systems/TerrainSystem.h"
 
 void Scene::Init()
 {
@@ -14,13 +15,11 @@ void Scene::Init()
 	Registry::Instance().RegisterComponent<MaterialComponent>();
 	Registry::Instance().RegisterComponent<AudioSourceComponent>();
 	Registry::Instance().RegisterComponent<AudioListenerComponent>();
-	std::cout << "Scene started Init!" << std::endl;
 
-	std::string cubePath =		"C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGE/Resources/Meshes/cube.obj";
-	std::string monkeyPath =	"C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGE/Resources/Meshes/monkey.obj";
+	std::string cubePath =		"../Resources/Meshes/cube.obj";
+	std::string monkeyPath =	"../Resources/Meshes/monkey.obj";
 
 #pragma region Create Cube
-	std::cout << std::endl << "CREATING CUBE" << std::endl << std::endl;
 	//Cube gameobject and components
 	uint32_t cubeID = Registry::Instance().NewGameObject();
 	//Create a shader component, should be replaced with material
@@ -35,7 +34,6 @@ void Scene::Init()
 	auto cubeMaterial = Registry::Instance().RegisterComponent<MaterialComponent>(MaterialComponent(), cubeID);
 	auto cubeTransform = Registry::Instance().GetComponent<TransformComponent>(cubeID);
 	cubeTransform->mMatrix = glm::translate(glm::mat4(1), glm::vec3(1, 0, 1));
-	std::cout << std::endl << "FINISHED CREATING CUBE" << std::endl << std::endl;
 
 	auto cubeSource = Registry::Instance().RegisterComponent<AudioSourceComponent>(AudioSourceComponent(), cubeID);
 
@@ -46,7 +44,6 @@ void Scene::Init()
 #pragma endregion
 
 #pragma region Create Monkey
-	std::cout << std::endl << "CREATING MONKEY" << std::endl << std::endl;
 	//Monkey gameobject and components
 	uint32_t monkeyID = Registry::Instance().NewGameObject();
 	//Creates a shader component, replace with material component
@@ -61,24 +58,30 @@ void Scene::Init()
 	auto monkeyTransform = Registry::Instance().GetComponent<TransformComponent>(monkeyID);
 	monkeyTransform->mMatrix = glm::translate(glm::mat4(1), glm::vec3(0, 0, 1));
 	auto monkeyMaterial = Registry::Instance().GetComponent<MaterialComponent>(monkeyID);
-	std::cout << std::endl << "FINISHED CREATING MONKEY" << std::endl << std::endl;
 #pragma endregion
 
 #pragma region Create Camera
-	std::cout << std::endl << "CREATING CAMERA" << std::endl << std::endl;
 	//Camera gameobject and components
 	uint32_t cameraID = Registry::Instance().NewGameObject();
-	std::cout << "CAMERA ID : " << cameraID << std::endl;
 	auto camera = Registry::Instance().RegisterComponent<CameraComponent>(CameraComponent(), cameraID);
 	camera->bIsMainCamera = true;
 	auto cameraTransform = Registry::Instance().GetComponent<TransformComponent>(cameraID);
 	cameraTransform->mMatrix = glm::translate(glm::mat4(1), glm::vec3(0, 0, -5));
-
-	std::cout << std::endl << "FINISHED CREATING CAMERA" << std::endl << std::endl;
 #pragma endregion
 
+
+#pragma region Create Terrain
+	auto terrainID = Registry::Instance().NewGameObject();
+
+	auto terrain = Registry::Instance().RegisterComponent<TerrainComponent>(TerrainComponent(), terrainID);
+	terrain->mType = TerrainComponent::TerrainType::PerlinNoise;
+
+
+
+#pragma endregion
 	//Creating systems
 	mSystems.insert({ "ObjMeshSystem", new ObjMeshSystem()});
+	mSystems.insert({ "TerrainSystem", new TerrainSystem() });
 	//mSystems.insert({ "CameraControllerSystem", new CameraControllerSystem() });
 
 	//Init all systems
@@ -88,7 +91,6 @@ void Scene::Init()
 		system.second->Init();
 	}
 
-	std::cout << "Scene ended Init!" << std::endl;
 }
 
 void Scene::OnUpdate(float deltaTime) {
@@ -98,8 +100,8 @@ void Scene::OnUpdate(float deltaTime) {
 	auto gameObjects = Registry::Instance().GetGameObjects();
 	//Prints all gameobject id's
 	for (auto& go : gameObjects)
-	{
-		std::cout << "Scene : OnUpdate : GameObject " << go << std::endl;
+	{ 
+
 	}
 
 	//We want an array of every camera in the scene
@@ -109,7 +111,6 @@ void Scene::OnUpdate(float deltaTime) {
 	{
 		auto go = (uint32_t)(*cam).mGO;
 		//It does find 
-		std::cout << "Found camera with objectID " << go << std::endl;
 		//Check if it is the main camera
 		if (cam->bIsMainCamera) {
 			//Gets a transform for the camera
@@ -130,9 +131,6 @@ void Scene::OnUpdate(float deltaTime) {
 		}
 	}
 
-
-	
-	std::cout<< std::endl << "SCENE : SYSTEMS ONUPDATE STARTED " << std::endl << std::endl;
 	for (auto system : mSystems)
 	{
 		system.second->OnUpdate(deltaTime);
