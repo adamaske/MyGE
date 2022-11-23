@@ -1,11 +1,15 @@
 #include "AudioSystem.h"
-#include "wavfilereader.h"
+#include "../Audio/WavFileReader.h"
+#include "../Components.h"
+#include "../Registry.h"
+
 #include <iostream>
 #include <sstream>
 #include <iostream>
 
 AudioSystem::AudioSystem()
 {
+    mReader = new WavFileReader();
 }
 
 void AudioSystem::Init()
@@ -13,8 +17,8 @@ void AudioSystem::Init()
     //
     std::cout << "AudioSystem starting INIT!" << std::endl;
 
-    std::cout << "Intializing OpenAL!\n";
-    mDevice = alcOpenDevice(NULL);
+    std::cout << "Intializing OpenAL!" << std::endl;
+    mDevice = alcOpenDevice("AudioDevice");
     if (mDevice)
     {
         mContext = alcCreateContext(mDevice, NULL);
@@ -43,13 +47,13 @@ void AudioSystem::Init()
         //Get the transform of that gameobject
         auto transform = Registry::Instance().GetComponent<TransformComponent>(gameObjectID);
         //Stores the position of the transform in vec3
-        glm::vec3 position = glm::vec3(transform.mMatrix[3].x, transform.mMatrix[3].y, transform.mMatrix[3].z);
+        glm::vec3 position = glm::vec3(transform->mMatrix[3].x, transform->mMatrix[3].y, transform->mMatrix[3].z);
 
         //Feed the position to the AL 
         ALfloat temp[3] = { position.x,position.y, position.z };
         alSourcefv(source->mSource, AL_POSITION, temp);
         //Feed the velocity to AL
-        glm::vec3 velocity = transform.mVelocity;
+        glm::vec3 velocity = transform->mVelocity;
         ALfloat temp2[3] = { velocity.x, velocity.y, velocity.z };
         alSourcefv(source->mSource, AL_VELOCITY, temp2);
 
@@ -85,9 +89,9 @@ void AudioSystem::OnUpdate(float deltaTime)
 
         auto transform = Registry::Instance().GetComponent<TransformComponent>(gameObjectID);
 
-        glm::vec3 pos = glm::vec3(transform.mMatrix[3].x, transform.mMatrix[3].y, transform.mMatrix[3].z);
-        glm::vec3 vel = transform.mVelocity;
-        glm::vec3 dir = transform.mForward;
+        glm::vec3 pos = glm::vec3(transform->mMatrix[3].x, transform->mMatrix[3].y, transform->mMatrix[3].z);
+        glm::vec3 vel = transform->mVelocity;
+        glm::vec3 dir = transform->mForward;
         glm::vec3 up = glm::vec3(0, 1, 0);
 
         posVec[0] = pos.x;
@@ -153,7 +157,7 @@ wave_t AudioSystem::LoadWave(std::string filePath)
     ALuint frequency{};
     ALenum format{};
     wave_t* waveData = new wave_t();
-    if (!WavFileReader::loadWave(filePath, waveData))
+    if (!mReader->loadWave(filePath, waveData))
     {
         std::cout << "Error loading wave file!\n";
         waveData->bValid = false;

@@ -57,6 +57,8 @@ struct TransformComponent {
 	glm::vec3 mVelocity;
 	//Kollisjoner
 	glm::vec3 mSize;
+
+	glm::vec3 mForward = { 0,0,1 };
 };
 
 struct MaterialComponent {

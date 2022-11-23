@@ -1,5 +1,5 @@
 #define _CRT_SECURE_NO_DEPRECATE // using this to bypass deprecation
-#include "wavfilereader.h"
+#include "WavFileReader.h"
 #include <iostream>
 
 bool WavFileReader::loadWave(std::string filePath, wave_t* wavePtr)

@@ -1,3 +1,4 @@
+#pragma once
 #include <cstdint>    //does not work well on mac
 #include <string>
 #include <cstdio>
@@ -22,24 +23,28 @@ struct wave_t
     ALenum format;
 
     unsigned char* buffer;      ///< Buffer to hold audio data.
-    wave_t() : buffer(NULL) {}  ///< Structure Constructor. Initialises data buffer to NULL.
+   
 };
 
 /// Class to handle loading of Microsoft signed 16-bit PCM WAVE audio files.
 class WavFileReader
 {
 public:
+    WavFileReader() {
+
+    };
     /// Loads a given wave file, fills wave_t structure with wave data.
     /**
         \param File path relative to execution directory.
         \param Pointer to a wave_t structure to contain the wave data.
     **/
-    static bool loadWave(std::string filePath, wave_t* wavePtr);
+   bool loadWave(std::string filePath, wave_t* wavePtr);
+
 private:
     /// Error handling function.
     /**
         Always returns false, outputs argumen string to the command line.
         \param Error message to output.
     **/
-    static bool endOnError(std::string errmsg);
+    bool endOnError(std::string errmsg);
 };

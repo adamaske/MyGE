@@ -5,7 +5,7 @@
 #include <vector>
 #include "../Systems/System.h"
 #include "../glm/glm.hpp"
-#include "../Components.h"
+
 
 class AudioSystem : public System
 {
@@ -27,4 +27,5 @@ private:
     ALCdevice* mDevice{ nullptr };                 ///< Pointer to the ALC Device.
     ALCcontext* mContext{ nullptr };               ///< Pointer to the ALC Context.
 
+    class WavFileReader* mReader;
 };
