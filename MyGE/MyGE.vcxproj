@@ -161,6 +161,7 @@
     <ClCompile Include="Source\Audio\WavFileReader.cpp" />
     <ClCompile Include="Source\Buffer.cpp" />
     <ClCompile Include="Source\Camera.cpp" />
+    <ClCompile Include="Source\Components\Components.cpp" />
     <ClCompile Include="Source\GUID.cpp" />
     <ClCompile Include="Source\Registry.cpp" />
     <ClCompile Include="Source\Renderer.cpp" />
@@ -169,7 +170,6 @@
     <ClCompile Include="Source\Scripting\NativeScriptingSystem.cpp" />
     <ClCompile Include="Source\Scripting\ScriptableObject.cpp" />
     <ClCompile Include="Source\ScriptingManager.cpp" />
-    <ClCompile Include="Source\Components.cpp" />
     <ClCompile Include="Source\Shader.cpp" />
     <ClCompile Include="Source\RenderWindow.cpp" />
     <ClCompile Include="Source\Scene.cpp" />
@@ -187,6 +187,7 @@
     <ClInclude Include="Source\Audio\WavFileReader.h" />
     <ClInclude Include="Source\Buffer.h" />
     <ClInclude Include="Source\Camera.h" />
+    <ClInclude Include="Source\Components\Components.h" />
     <ClInclude Include="Source\GUID.h" />
     <ClInclude Include="Source\Registry.h" />
     <ClInclude Include="SceneManager.h" />
@@ -198,7 +199,6 @@
     <ClInclude Include="Source\ScriptingManager.h" />
     <ClInclude Include="Source\ShaderManager.h" />
     <ClInclude Include="Source\Shader.h" />
-    <ClInclude Include="Source\Components.h" />
     <ClInclude Include="Source\RenderWindow.h" />
     <ClInclude Include="Source\Scene.h" />
     <ClInclude Include="Source\MyGE.h" />

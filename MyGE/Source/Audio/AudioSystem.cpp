@@ -1,6 +1,6 @@
 #include "AudioSystem.h"
 #include "../Audio/WavFileReader.h"
-#include "../Components.h"
+#include "../Components/Components.h"
 #include "../Registry.h"
 
 #include <iostream>

@@ -6,7 +6,7 @@
 #include <memory>
 
 //Needs only to know about all the components and the GameObject 
-#include "Components.h"
+#include "Components/Components.h"
 
 using GameObject = uint32_t;
 

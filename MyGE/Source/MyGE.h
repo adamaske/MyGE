@@ -5,7 +5,7 @@
 
 
 //All includes, everything include this
-#include "Components.h"
+#include "Components/Components.h"
 
 #include "Registry.h"
 

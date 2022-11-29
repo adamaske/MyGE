@@ -5,7 +5,7 @@
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 #include "../glm/glm.hpp"
-#include "../Components.h"
+#include "../Components/Components.h"
 #include "../Registry.h"
 #include "../Vertex.h"
 #include "../Buffer.h"
