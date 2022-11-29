@@ -166,7 +166,8 @@
     <ClCompile Include="Source\Renderer.cpp" />
     <ClCompile Include="Source\SceneManager.cpp" />
     <ClCompile Include="Source\Script.cpp" />
-    <ClCompile Include="Source\ScriptableObject.cpp" />
+    <ClCompile Include="Source\Scripting\NativeScriptingSystem.cpp" />
+    <ClCompile Include="Source\Scripting\ScriptableObject.cpp" />
     <ClCompile Include="Source\ScriptingManager.cpp" />
     <ClCompile Include="Source\Components.cpp" />
     <ClCompile Include="Source\Shader.cpp" />
@@ -175,6 +176,8 @@
     <ClCompile Include="Source\MyGE.cpp" />
     <ClCompile Include="Source\MainWindow.cpp" />
     <ClCompile Include="Source\main.cpp" />
+    <ClCompile Include="Source\Systems\CameraSystem.cpp" />
+    <ClCompile Include="Source\Systems\ObjMeshSystem.cpp" />
     <ClCompile Include="Source\Systems\System.cpp" />
     <ClCompile Include="Source\Systems\TerrainSystem.cpp" />
     <ClCompile Include="Source\Vertex.cpp" />
@@ -190,7 +193,8 @@
     <ClInclude Include="Source\Renderer.h" />
     <ClInclude Include="Source\SceneManager.h" />
     <ClInclude Include="Source\Script.h" />
-    <ClInclude Include="Source\ScriptableObject.h" />
+    <ClInclude Include="Source\Scripting\NativeScriptingSystem.h" />
+    <ClInclude Include="Source\Scripting\ScriptableObject.h" />
     <ClInclude Include="Source\ScriptingManager.h" />
     <ClInclude Include="Source\ShaderManager.h" />
     <ClInclude Include="Source\Shader.h" />
@@ -199,6 +203,8 @@
     <ClInclude Include="Source\Scene.h" />
     <ClInclude Include="Source\MyGE.h" />
     <ClInclude Include="Source\MainWindow.h" />
+    <ClInclude Include="Source\Systems\CameraSystem.h" />
+    <ClInclude Include="Source\Systems\ObjMeshSystem.h" />
     <ClInclude Include="Source\Systems\PhysicsSystem.h" />
     <ClInclude Include="Source\Systems\System.h" />
     <ClInclude Include="Source\Systems\TerrainSystem.h" />

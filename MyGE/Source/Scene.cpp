@@ -2,11 +2,14 @@
 #include <memory>
 #include "Shader.h"
 #include "Systems/System.h"
+#include "Systems/ObjMeshSystem.h"
+#include "Systems/CameraSystem.h"
 #include "Camera.h"
 #include "Systems/TerrainSystem.h"
 
 void Scene::Init()
 {
+	//Registering all components, this can be remvoed
 	Registry::Instance().RegisterComponent<ShaderComponent>();
 	Registry::Instance().RegisterComponent<RenderComponent>();
 	Registry::Instance().RegisterComponent<TransformComponent>();
@@ -15,7 +18,10 @@ void Scene::Init()
 	Registry::Instance().RegisterComponent<MaterialComponent>();
 	Registry::Instance().RegisterComponent<AudioSourceComponent>();
 	Registry::Instance().RegisterComponent<AudioListenerComponent>();
+	Registry::Instance().RegisterComponent<TerrainComponent>();
+	Registry::Instance().RegisterComponent<NativeScriptComponent>();
 
+	//File path for obj meshses
 	std::string cubePath =		"../Resources/Meshes/cube.obj";
 	std::string monkeyPath =	"../Resources/Meshes/monkey.obj";
 
@@ -69,7 +75,6 @@ void Scene::Init()
 	cameraTransform->mMatrix = glm::translate(glm::mat4(1), glm::vec3(0, 0, -5));
 #pragma endregion
 
-
 #pragma region Create Terrain
 	auto terrainID = Registry::Instance().NewGameObject();
 
@@ -79,9 +84,12 @@ void Scene::Init()
 
 
 #pragma endregion
+
+#pragma region Systems
 	//Creating systems
 	mSystems.insert({ "ObjMeshSystem", new ObjMeshSystem()});
 	mSystems.insert({ "TerrainSystem", new TerrainSystem() });
+	mSystems.insert({ "CameraSystem" , new CameraSystem() });
 	//mSystems.insert({ "CameraControllerSystem", new CameraControllerSystem() });
 
 	//Init all systems
@@ -90,7 +98,7 @@ void Scene::Init()
 		//Creating systems
 		system.second->Init();
 	}
-
+#pragma endregion
 }
 
 void Scene::OnUpdate(float deltaTime) {
