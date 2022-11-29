@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -166,6 +166,7 @@
     <ClCompile Include="Source\Renderer.cpp" />
     <ClCompile Include="Source\SceneManager.cpp" />
     <ClCompile Include="Source\Script.cpp" />
+    <ClCompile Include="Source\ScriptableObject.cpp" />
     <ClCompile Include="Source\ScriptingManager.cpp" />
     <ClCompile Include="Source\Components.cpp" />
     <ClCompile Include="Source\Shader.cpp" />
@@ -189,6 +190,7 @@
     <ClInclude Include="Source\Renderer.h" />
     <ClInclude Include="Source\SceneManager.h" />
     <ClInclude Include="Source\Script.h" />
+    <ClInclude Include="Source\ScriptableObject.h" />
     <ClInclude Include="Source\ScriptingManager.h" />
     <ClInclude Include="Source\ShaderManager.h" />
     <ClInclude Include="Source\Shader.h" />

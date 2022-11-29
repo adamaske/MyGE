@@ -129,6 +129,9 @@ struct ScriptComponent {
 	const GLchar* mFragmentPath;
 };
 
+struct NativeScriptComponent {
+
+};
 struct ShaderComponent
 {
 	GameObject mGO = 0;
