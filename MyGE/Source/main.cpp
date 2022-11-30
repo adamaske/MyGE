@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "pch.h"
 #include "MyGE.h"
 
 int main() {

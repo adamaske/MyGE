@@ -1,14 +1,11 @@
 #pragma once
-#include <iostream>
-#include <vector>
-#include <unordered_map>
-#include "MyGE.h"
+#include "pch.h"
+
+using GameObject = uint32_t;
 class Scene
 {
 public:
-	Scene(){
-		std::cout << "Scene created!" << std::endl;
-	};
+	Scene();
 
 	virtual void Init();
 
@@ -26,7 +23,7 @@ private:
 
 	class Registry* mRegistry;
 
-	CameraComponent* mSceneCamera;
+	struct CameraComponent* mSceneCamera;
 
 	int mViewportWidth = 0;
 	int mViewportHeight = 0;

@@ -1,11 +1,10 @@
+#include "pch.h"
+
 #include "AudioSystem.h"
 #include "../Audio/WavFileReader.h"
 #include "../Components/Components.h"
 #include "../Registry.h"
 
-#include <iostream>
-#include <sstream>
-#include <iostream>
 
 AudioSystem::AudioSystem()
 {

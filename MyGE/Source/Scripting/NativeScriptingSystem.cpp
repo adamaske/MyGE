@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "NativeScriptingSystem.h"
 
 void NativeScriptingSystem::Init()

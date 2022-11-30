@@ -1,3 +1,5 @@
+#include "pch.h"
+
 #include "GUID.h"
 #include <random>
 

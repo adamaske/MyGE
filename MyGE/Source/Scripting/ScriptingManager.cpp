@@ -1,8 +1,7 @@
+#include "pch.h"
 #include "ScriptingManager.h"
-#include <iostream>
-#include <string>
 
-#include "Script.h"
+#include "../Script.h"
 
 
 

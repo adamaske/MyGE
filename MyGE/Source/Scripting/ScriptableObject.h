@@ -1,13 +1,11 @@
 #pragma once
 #include <stdint.h>
 #include <memory>
-
 #include "../glm/glm.hpp"
 
 using GameObject = uint32_t;
 
 class ScriptableObject {
-
 public:
 	ScriptableObject(GameObject go);
 
@@ -21,11 +19,11 @@ public:
 	
 	void SetPosition(glm::vec3 pos);
 	void SetPosition(float x, float y, float z);
+
 private:
 	GameObject mGO;
 
 };
-
 
 class Monkey : public ScriptableObject {
 public:

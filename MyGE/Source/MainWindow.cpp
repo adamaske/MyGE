@@ -1,5 +1,5 @@
+#include "pch.h"
 #include "MainWindow.h"
-#include <iostream>
 #include "GLFW/glfw3.h"
 
 MainWindow::MainWindow() : mWindow(nullptr) {

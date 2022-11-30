@@ -1,8 +1,11 @@
+#include "pch.h"
 #include "ScriptableObject.h"
 #include "../Registry.h"
 #include "../Components/Components.h"
 
-#include <iostream>
+ScriptableObject::ScriptableObject(GameObject go) : mGO(go)
+{
+}
 
 template<class T>
 std::shared_ptr<T> ScriptableObject::AddComponent()
@@ -17,9 +20,7 @@ std::shared_ptr<T> ScriptableObject::GetComponent()
 	auto comp = Registry::Instance().GetComponent<T>(mGO);
 	return comp;
 }
-ScriptableObject::ScriptableObject(GameObject go) : mGO(go)
-{
-}
+
 void ScriptableObject::SetPosition(glm::vec3 pos) {
 
 };

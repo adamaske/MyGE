@@ -1,5 +1,7 @@
+#include "pch.h"
+
 #include "Scene.h"
-#include <memory>
+
 #include "Shader.h"
 
 #include "Systems/System.h"
@@ -8,6 +10,10 @@
 #include "Systems/TerrainSystem.h"
 
 #include "Scripting/NativeScriptingSystem.h"
+
+Scene::Scene()
+{
+}
 
 void Scene::Init()
 {

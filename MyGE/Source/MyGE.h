@@ -16,7 +16,7 @@
 #include "../../MyGE/Source/SceneManager.h"
 
 #include "Script.h"
-#include "ScriptingManager.h"
+#include "Scripting/ScriptingManager.h"
 
 #include "Shader.h"
 #include "ShaderManager.h"

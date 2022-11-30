@@ -1,3 +1,5 @@
+#include "pch.h"
+
 #include "MyGE.h"
 #include "MainWindow.h"
 #include "RenderWindow.h"
@@ -5,7 +7,6 @@
 #include "Shader.h"
 #include "Systems/System.h"
 
-#include <iostream>
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 #include "glm/glm.hpp"
