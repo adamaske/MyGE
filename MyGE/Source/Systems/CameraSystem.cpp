@@ -31,8 +31,6 @@ void CameraSystem::OnUpdate(float deltaTime) {
 			//Set the variables in the PlainShader
 			shader->SetUniformMatrix4(cam->mViewMatrix, "vMatrix");
 			shader->SetUniformMatrix4(cam->mProjectionMatrix, "pMatrix");
-
-			shader;
 		}
 	}
 
