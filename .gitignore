@@ -432,3 +432,5 @@ FodyWeavers.xsd
 *.sln.iml
 *.vcxproj
 *.vcxproj
+MyGE/MyGE.vcxproj
+MyGE/MyGE.vcxproj

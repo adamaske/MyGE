@@ -30,8 +30,8 @@ void Scene::Init()
 	Registry::Instance().RegisterComponent<NativeScriptComponent>();
 
 	//File path for obj meshses
-	std::string cubePath =		"../Resources/Meshes/cube.obj";
-	std::string monkeyPath =	"../Resources/Meshes/monkey.obj";
+	std::string cubePath =		"../../Resources/Meshes/cube.obj";
+	std::string monkeyPath =	"Resources/Meshes/monkey.obj";
 
 #pragma region Create Cube
 	//Cube gameobject and components

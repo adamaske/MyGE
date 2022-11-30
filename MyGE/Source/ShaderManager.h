@@ -20,12 +20,12 @@ public:
 		return mSMInstance;
 	}
 	void Init() {
-		mShaders.insert({ "PlainShader", new Shader("C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGE/Resources/Shaders/plainshader.vert",
-								"C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGE/Resources/Shaders/plainshader.frag", "PlainShader") });
-		mShaders.insert({ "PhongShader", new Shader("C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGE/Resources/Shaders/lightshader.vert",
-								"C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGE/Resources/Shaders/lightshader.frag", "PhongShader") });
-		mShaders.insert({ "TextureShader", new Shader("C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGE/Resources/Shaders/plainshader.vert",
-								"C:/Users/adama/OneDrive/Dokumenter/GitHub/MyGE/Resources/Shaders/plainshader.frag", "TextureShader") });
+		mShaders.insert({ "PlainShader", new Shader("Resources/Shaders/plainshader.vert",
+								"Resources/Shaders/plainshader.frag", "PlainShader") });
+		mShaders.insert({ "PhongShader", new Shader("Resources/Shaders/lightshader.vert",
+								"Resources/Shaders/lightshader.frag", "PhongShader") });
+		mShaders.insert({ "TextureShader", new Shader("Resources/Shaders/plainshader.vert",
+								"Resources/Shaders/plainshader.frag", "TextureShader") });
 
 		Shader* mShader = GetShader("PlainShader");
 		if (mShader) {
