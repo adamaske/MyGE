@@ -1,5 +1,18 @@
 #pragma once
+//This should all be in a precompiled header ? 
+#include "../Vertex.h"
+#include "../Shader.h"
+#include "../Camera.h"
+#include "../GUID.h"
+#include "../Buffer.h"
+#include "../VertexArray.h"
+#include "../Audio/wavfilereader.h"
+#include "../Scripting/ScriptableObject.h"
+
+
 #include <vector>
+#include "AL/al.h"
+#include "AL/alc.h"
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 #include "../glm/glm.hpp"
@@ -7,15 +20,6 @@
 #include "../glm/matrix.hpp"
 #include "../glm/gtc/matrix_transform.hpp"
 #include "../glm/gtc/type_ptr.hpp"
-#include "../Vertex.h"
-#include "../Shader.h"
-#include "../Camera.h"
-#include "../GUID.h"
-#include "../Buffer.h"
-#include "../VertexArray.h"
-#include "AL/al.h"
-#include "AL/alc.h"
-#include "../Audio/wavfilereader.h"
 
 using GameObject = uint32_t;
 struct GUIDComponent {
@@ -103,9 +107,6 @@ struct CameraComponent {
 	float mPitch = 0;
 
 	glm::vec3 mLastPosition = glm::vec3(600, 400, 0);
-	CameraComponent() {
-		std::cout << " Created Camera !! React if there is more than one camera, only one should exist" << std::endl;
-	};
 };
 
 struct RenderComponent {
@@ -115,10 +116,6 @@ struct RenderComponent {
 	std::shared_ptr<VertexBuffer> mVBO;
 	std::shared_ptr<IndexBuffer> mIBO;
 	bool bRender = true;
-
-	RenderComponent() {
-		std::cout << "RENDER COMPONENT CREATED; THERE SHOULD BE ONE CUBE + MONKEY ONLY;" << std::endl;
-	}
 };
 
 struct ScriptComponent {
@@ -130,8 +127,27 @@ struct ScriptComponent {
 };
 
 struct NativeScriptComponent {
+	GameObject mGO = 0;
+	//Pointer
+	//This should 
+	class ScriptableObject* mObject;
+	
+	template<typename T>
+	void Bind() {
+		//We want to bind a specific ScriptableObject to mObject
+		//this now sets mObject to a new isntance of T
+		mObject = static_cast<ScriptableObject*>(new T(mGO));
 
+	}
+
+
+	//We want to be able to instantiate this object in run time
+
+	//We should be able to pass any ScriptableObject to this, on rumtine it should then be instantiated and updated i believe
+	
+	//I want to be able to pass this something like a class "CameraController"
 };
+
 struct ShaderComponent
 {
 	GameObject mGO = 0;

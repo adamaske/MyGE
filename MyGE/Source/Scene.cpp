@@ -1,11 +1,13 @@
 #include "Scene.h"
 #include <memory>
 #include "Shader.h"
+
 #include "Systems/System.h"
 #include "Systems/ObjMeshSystem.h"
 #include "Systems/CameraSystem.h"
-#include "Camera.h"
 #include "Systems/TerrainSystem.h"
+
+#include "Scripting/NativeScriptingSystem.h"
 
 void Scene::Init()
 {
@@ -85,11 +87,21 @@ void Scene::Init()
 
 #pragma endregion
 
+#pragma region NativeScripting
+	auto go = Registry::Instance().NewGameObject();
+
+	auto ns = Registry::Instance().RegisterComponent<NativeScriptComponent>(NativeScriptComponent(), go);
+	//This should now instantiate a Monkey(), and the mObejct i ns is now that Monkey, and everything should work
+	ns->Bind<Monkey>();
+
+#pragma endregion
+
 #pragma region Systems
 	//Creating systems
 	mSystems.insert({ "ObjMeshSystem", new ObjMeshSystem()});
 	mSystems.insert({ "TerrainSystem", new TerrainSystem() });
 	mSystems.insert({ "CameraSystem" , new CameraSystem() });
+	mSystems.insert({ "NativeScriptingSystem", new NativeScriptingSystem() });
 	//mSystems.insert({ "CameraControllerSystem", new CameraControllerSystem() });
 
 	//Init all systems

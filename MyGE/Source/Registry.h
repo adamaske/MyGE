@@ -9,7 +9,6 @@
 #include "Components/Components.h"
 
 using GameObject = uint32_t;
-
 //Uses this abstration to keep a ComponentHolder as refrence without declaring tempalte at compile
 class IUnitHolder
 {
