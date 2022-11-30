@@ -149,7 +149,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\adama\OneDrive\Dokumenter\GitHub\MyGE\OPENAL\include;$(SolutionDir)GLAD\include;$(SolutionDir)GLAD\include\GL\;$(SolutionDir)GLFW\include;%(AdditionalIncludeDirectories);$(SolutionDir)OPENAL/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\OPENAL\include;$(SolutionDir)GLAD\include;$(SolutionDir)GLAD\include\GL\;$(SolutionDir)GLFW\include;%(AdditionalIncludeDirectories);$(SolutionDir)OPENAL/include</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
