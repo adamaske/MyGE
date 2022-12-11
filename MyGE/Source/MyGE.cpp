@@ -7,6 +7,8 @@
 #include "Shader.h"
 #include "Systems/System.h"
 
+#include "../ImGUI/imgui.h"
+#include "../ImGUI/imgui_impl_glfw.h"
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 #include "glm/glm.hpp"
@@ -50,6 +52,10 @@ int MyGE::run()
 		return -1;
 	}
 	//glfwSetInputMode(mRenderWindow->GetWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+	ImGui::CreateContext();
+
+
 
 	glfwSetCursorPosCallback(mRenderWindow->GetWindow(), mouse_callback);
 	glfwSetScrollCallback(mRenderWindow->GetWindow(), scroll_callback);
