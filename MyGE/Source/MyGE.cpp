@@ -7,11 +7,13 @@
 #include "Shader.h"
 #include "Systems/System.h"
 
-#include "../ImGUI/imgui.h"
-#include "../ImGUI/imgui_impl_glfw.h"
+
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 #include "glm/glm.hpp"
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
 #include "glm/gtx/quaternion.hpp"
 
 
@@ -53,12 +55,19 @@ int MyGE::run()
 	}
 	//glfwSetInputMode(mRenderWindow->GetWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-	ImGui::CreateContext();
+
 
 
 
 	glfwSetCursorPosCallback(mRenderWindow->GetWindow(), mouse_callback);
 	glfwSetScrollCallback(mRenderWindow->GetWindow(), scroll_callback);
+
+
+	ImGui::CreateContext();
+	ImGui_ImplGlfw_InitForOpenGL(mRenderWindow->GetWindow(), true);
+	// Setup Dear ImGui style
+	ImGui::StyleColorsDark();
+
 
 	glEnable(GL_DEPTH_TEST);
 	//Need a registry for every scene, only one scene here
@@ -89,6 +98,7 @@ int MyGE::run()
 
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 
 
 		//Update scene

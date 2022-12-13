@@ -111,7 +111,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\adama\OneDrive\Dokumenter\GitHub\MyGE\OPENAL\include;C:\Users\adama\OneDrive\Dokumenter\GitHub\MyGe\MyGe\Lua\include;C:\sdk\GLAD\include;C:\sdk\glfw-3.3.8.bin.WIN64\include;%(AdditionalIncludeDirectories)$(SolutionDir)OPENAL/include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)ImGUI;C:\Users\adama\OneDrive\Dokumenter\GitHub\MyGE\OPENAL\include;C:\Users\adama\OneDrive\Dokumenter\GitHub\MyGe\MyGe\Lua\include;C:\sdk\GLAD\include;C:\sdk\glfw-3.3.8.bin.WIN64\include;%(AdditionalIncludeDirectories)$(SolutionDir)OPENAL/include;</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -149,7 +149,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)ImGUI;$(SolutionDir)\OPENAL\include;$(SolutionDir)GLAD\include;$(SolutionDir)GLAD\include\GL\;$(SolutionDir)GLFW\include;%(AdditionalIncludeDirectories);$(SolutionDir)OPENAL/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)ImGUI;$(SolutionDir)ImGUI;$(SolutionDir)\OPENAL\include;$(SolutionDir)GLAD\include;$(SolutionDir)GLAD\include\GL\;$(SolutionDir)GLFW\include;%(AdditionalIncludeDirectories);$(SolutionDir)OPENAL/include</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
