@@ -8,6 +8,9 @@
 #include "Systems/ObjMeshSystem.h"
 #include "Systems/CameraSystem.h"
 #include "Systems/TerrainSystem.h"
+#include "Systems/RenderSystem.h"
+#include "Textures/TextureManager.h"
+#include "Textures/Texture.h"
 
 #include "Scripting/NativeScriptingSystem.h"
 
@@ -18,7 +21,6 @@ Scene::Scene()
 void Scene::Init()
 {
 	//Registering all components, this can be remvoed
-	Registry::Instance().RegisterComponent<ShaderComponent>();
 	Registry::Instance().RegisterComponent<RenderComponent>();
 	Registry::Instance().RegisterComponent<TransformComponent>();
 	Registry::Instance().RegisterComponent<MeshComponent>();
@@ -30,27 +32,29 @@ void Scene::Init()
 	Registry::Instance().RegisterComponent<NativeScriptComponent>();
 
 	//File path for obj meshses
-	std::string cubePath =		"../../Resources/Meshes/cube.obj";
-	std::string monkeyPath =	"Resources/Meshes/monkey.obj";
+	std::string cubePath =		"../Resources/Meshes/cube.obj";
+	std::string monkeyPath =	"../Resources/Meshes/monkey.obj";
 
 #pragma region Create Cube
 	//Cube gameobject and components
 	uint32_t cubeID = Registry::Instance().NewGameObject();
 	//Create a shader component, should be replaced with material
-	auto shader = Registry::Instance().RegisterComponent<ShaderComponent>(ShaderComponent(), cubeID);
-	shader->mShader = ShaderManager::Instance()->GetShader("PlainShader");
+	
 	//Createa render component
 	auto cubeRender = Registry::Instance().RegisterComponent<RenderComponent>(RenderComponent(), cubeID);
 	cubeRender->mGO= cubeID;
 	//Create a mesh component
 	auto cubeMesh = Registry::Instance().RegisterComponent<MeshComponent>(MeshComponent(), cubeID);
 	cubeMesh->mObjFilePath = cubePath;
+	cubeMesh->mMeshName = "Cube";
+	//Material
 	auto cubeMaterial = Registry::Instance().RegisterComponent<MaterialComponent>(MaterialComponent(), cubeID);
+	cubeMaterial->mShader = ShaderManager::Instance()->GetShader("PlainShader");
+	cubeMaterial->mTexture = TextureManager::GetTexture("HammerTexture");
 	auto cubeTransform = Registry::Instance().GetComponent<TransformComponent>(cubeID);
 	cubeTransform->mMatrix = glm::translate(glm::mat4(1), glm::vec3(1, 0, 1));
 
 	auto cubeSource = Registry::Instance().RegisterComponent<AudioSourceComponent>(AudioSourceComponent(), cubeID);
-
 	cubeSource->mName = "Explosion";
 	cubeSource->mFilePath = "";
 	cubeSource->bShouldPlay = true;
@@ -60,18 +64,18 @@ void Scene::Init()
 #pragma region Create Monkey
 	//Monkey gameobject and components
 	uint32_t monkeyID = Registry::Instance().NewGameObject();
-	//Creates a shader component, replace with material component
-	auto monkeyShader = Registry::Instance().RegisterComponent<ShaderComponent>(ShaderComponent(), monkeyID);
-	//Set correct shader
-	monkeyShader->mShader = ShaderManager::Instance()->GetShader("PlainShader");
 	//Create render and mesh component, sets path to 
 	auto monkeyRender = Registry::Instance().RegisterComponent<RenderComponent>(RenderComponent(), monkeyID);
 	monkeyRender->mGO = monkeyID;
 	auto monkeyMesh = Registry::Instance().RegisterComponent<MeshComponent>(MeshComponent(), monkeyID); // Register the component to the gameobject
 	monkeyMesh->mObjFilePath = monkeyPath;
+	monkeyMesh->mMeshName = "Monkey";
 	auto monkeyTransform = Registry::Instance().GetComponent<TransformComponent>(monkeyID);
 	monkeyTransform->mMatrix = glm::translate(glm::mat4(1), glm::vec3(0, 0, 1));
+	//Material
 	auto monkeyMaterial = Registry::Instance().GetComponent<MaterialComponent>(monkeyID);
+	monkeyMaterial->mShader = ShaderManager::Instance()->GetShader("TextureShader");
+	monkeyMaterial->mTexture = TextureManager::GetTexture("HammerTexture");
 #pragma endregion
 
 #pragma region Create Camera
@@ -104,6 +108,7 @@ void Scene::Init()
 
 #pragma region Systems
 	//Creating systems
+	mSystems.insert({ "RednerSystem", new RenderSystem() });
 	mSystems.insert({ "ObjMeshSystem", new ObjMeshSystem()});
 	mSystems.insert({ "TerrainSystem", new TerrainSystem() });
 	mSystems.insert({ "CameraSystem" , new CameraSystem() });

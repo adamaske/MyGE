@@ -5,12 +5,16 @@
 #include "GLFW/glfw3.h"
 #include "Renderer.h"
 VertexBuffer::VertexBuffer(float* verts, size_t size) {
+
 	//We want a buffer in that renderer
 	glGenBuffers(1, &mRendererID);
 	//
 	glBindBuffer(GL_ARRAY_BUFFER, mRendererID);
 	//In that buffer we want an array, with the size of size and the floats of verts, which wont chagne 
-	glBufferData(GL_ARRAY_BUFFER, size, verts, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, size * 8, &verts[0], GL_STATIC_DRAW);
+
+	mVerts	= verts;
+	mSize	= size;
 }
 
 void VertexBuffer::Bind()
@@ -28,6 +32,9 @@ IndexBuffer::IndexBuffer(uint32_t* indices, uint32_t count) : mCount(count) {
 	glGenBuffers(1, &mRendererID);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mRendererID);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(uint32_t), indices, GL_STATIC_DRAW);
+
+	mIndices	= indices;
+	mSize		= count;
 };
 
 void IndexBuffer::Bind()

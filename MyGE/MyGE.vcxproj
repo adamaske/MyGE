@@ -141,7 +141,7 @@
       <AdditionalDependencies>glew32s.lib;glfw3.lib;glfw3dll.lib;opengl32.lib;user32.lib;gdi32.lib;shell32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'"> 
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -211,8 +211,11 @@
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\Systems\CameraSystem.cpp" />
     <ClCompile Include="Source\Systems\ObjMeshSystem.cpp" />
+    <ClCompile Include="Source\Systems\RenderSystem.cpp" />
     <ClCompile Include="Source\Systems\System.cpp" />
     <ClCompile Include="Source\Systems\TerrainSystem.cpp" />
+    <ClCompile Include="Source\Textures\Texture.cpp" />
+    <ClCompile Include="Source\Textures\TextureManager.cpp" />
     <ClCompile Include="Source\Vertex.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -239,8 +242,11 @@
     <ClInclude Include="Source\Systems\CameraSystem.h" />
     <ClInclude Include="Source\Systems\ObjMeshSystem.h" />
     <ClInclude Include="Source\Systems\PhysicsSystem.h" />
+    <ClInclude Include="Source\Systems\RenderSystem.h" />
     <ClInclude Include="Source\Systems\System.h" />
     <ClInclude Include="Source\Systems\TerrainSystem.h" />
+    <ClInclude Include="Source\Textures\Texture.h" />
+    <ClInclude Include="Source\Textures\TextureManager.h" />
     <ClInclude Include="Source\Vertex.h" />
     <ClInclude Include="Source\VertexArray.h" />
   </ItemGroup>

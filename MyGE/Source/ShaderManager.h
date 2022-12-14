@@ -20,14 +20,14 @@ public:
 		return mSMInstance;
 	}
 	void Init() {
-		mShaders.insert({ "PlainShader", new Shader("Resources/Shaders/plainshader.vert",
-								"Resources/Shaders/plainshader.frag", "PlainShader") });
-		mShaders.insert({ "PhongShader", new Shader("Resources/Shaders/lightshader.vert",
-								"Resources/Shaders/lightshader.frag", "PhongShader") });
-		mShaders.insert({ "TextureShader", new Shader("Resources/Shaders/plainshader.vert",
-								"Resources/Shaders/plainshader.frag", "TextureShader") });
+		mShaders.insert({ "PlainShader", std::make_shared<Shader>("../Resources/Shaders/plainshader.vert",
+								"../Resources/Shaders/plainshader.frag", "PlainShader") });
+		mShaders.insert({ "PhongShader", std::make_shared<Shader>("../Resources/Shaders/lightshader.vert",
+								"../Resources/Shaders/lightshader.frag", "PhongShader") });
+		mShaders.insert({ "TextureShader", std::make_shared<Shader>("../Resources/Shaders/plainshader.vert",
+								"../Resources/Shaders/plainshader.frag", "TextureShader") });
 
-		Shader* mShader = GetShader("PlainShader");
+		auto mShader = GetShader("PlainShader");
 		if (mShader) {
 			std::cout << "Got shader from GetShader : " << mShader->mName << std::endl;
 		}
@@ -41,7 +41,7 @@ public:
 		}
 	};
 
-	Shader* GetShader(std::string name) {
+	std::shared_ptr<Shader> GetShader(std::string name) {
 		if (mShaders.find(name.c_str()) != mShaders.end()) {
 
 			return mShaders[name.c_str()];
@@ -49,7 +49,7 @@ public:
 		return nullptr;
 	}
 
-	void InsertShader(std::string shaderName, Shader* shader) {
+	void InsertShader(std::string shaderName, std::shared_ptr < Shader> shader) {
 
 		//Insert the pointer into the map
 		mShaders.insert({ shaderName.c_str(), shader});
@@ -63,6 +63,8 @@ public:
 			it->second->SetUniformMatrix4(p, "mPmatrix");
 		}
 	}
+	
+
 private:
-	std::unordered_map<std::string, Shader*> mShaders;
+	std::unordered_map<std::string, std::shared_ptr<Shader>> mShaders;
 };

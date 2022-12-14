@@ -120,6 +120,7 @@ public:
 		//All new gameobjects wants a transform
 		RegisterGameObject(go);
 		RegisterComponent<struct TransformComponent>(TransformComponent(), go);
+		RegisterComponent<struct MaterialComponent>(MaterialComponent(), go);
 		return go;
 	}
 

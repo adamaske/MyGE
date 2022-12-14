@@ -48,6 +48,7 @@ struct AudioListenerComponent {
 	GameObject mGO = 0;
 
 };
+
 //class TransformComponent : public Component {
 struct TransformComponent {
 	GameObject mGO = 0;
@@ -69,13 +70,23 @@ struct MaterialComponent {
 	GameObject mGO = 0;
 	glm::vec4 mColour;
 
+	//textures
+	std::string mTexturePath = "../Resources/Textures/hammer.bmp";
+	std::shared_ptr<class Texture> mTexture;
+
+	//Shaders
+	int mShaderID = 0;
+	GLchar* mVertexPath = 0;
+	GLchar* mFragmentPath = 0;
+	std::shared_ptr<class Shader> mShader;
+
+	bool bUseTexture = true;
 };
 
 struct MeshComponent {
 	GameObject mGO = 0;
-	std::vector<Vertex> mVertices;
-	std::vector<uint32_t> mIndices;
 	std::string mObjFilePath;
+	std::string mMeshName = " Cube ";
 };
 
 struct CameraComponent {
@@ -115,6 +126,11 @@ struct RenderComponent {
 	std::shared_ptr<VertexArray> mVAO;
 	std::shared_ptr<VertexBuffer> mVBO;
 	std::shared_ptr<IndexBuffer> mIBO;
+
+	GLuint m_VAO;
+	GLuint m_VBO;
+	GLuint m_IBO;
+
 	bool bRender = true;
 };
 
@@ -146,16 +162,6 @@ struct NativeScriptComponent {
 	//We should be able to pass any ScriptableObject to this, on rumtine it should then be instantiated and updated i believe
 	
 	//I want to be able to pass this something like a class "CameraController"
-};
-
-struct ShaderComponent
-{
-	GameObject mGO = 0;
-	int mShaderID = 0;
-	GLchar* mVertexPath = 0;
-	GLchar* mFragmentPath = 0;
-
-	class Shader* mShader;
 };
 
 struct TerrainComponent {

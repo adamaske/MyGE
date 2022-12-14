@@ -11,6 +11,8 @@
 #include "../Buffer.h"
 #include "../VertexArray.h"
 #include "../ShaderManager.h"
+#include "../Textures/Texture.h"
+#include "../Textures/TextureManager.h"
 #include <stdio.h>
 #include <fstream>
 #include <sstream>
@@ -18,12 +20,8 @@
 using GameObject = uint32_t;
 class System {
 public:
-    virtual void Init() {
+    virtual void Init() = 0;
 
-    };
-
-    virtual void OnUpdate(float deltaTime) {
-
-    };
+    virtual void OnUpdate(float deltaTime) = 0;
 };
 

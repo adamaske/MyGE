@@ -6,6 +6,8 @@
 #include "Scene.h"
 #include "Shader.h"
 #include "Systems/System.h"
+#include "Textures/TextureManager.h"
+#include "Textures/Texture.h"
 
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
@@ -64,6 +66,10 @@ int MyGE::run()
 	//A shader manager to store all shaders
 	ShaderManager::Instance();
 	
+	mTextureManger = new TextureManager();
+	mTextureManger->InsertTexture("../Resources/Textures/hammer.bmp", "HammerTexture");
+
+
 	mScene = new Scene();
 	mScene->Init();
 	mSceneManager->AddScene(*mScene);

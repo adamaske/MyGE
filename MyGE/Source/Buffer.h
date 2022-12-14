@@ -9,6 +9,8 @@ public:
 	virtual void Bind();
 	virtual void Unbind();
 
+	float* mVerts;
+	size_t mSize;
 private:
 	uint32_t mRendererID = 0;
 };
@@ -21,8 +23,13 @@ public:
 	virtual void Bind();
 	virtual void Unbind();
 
+	uint32_t* mIndices;
+	size_t mSize;
+
 	uint32_t GetCount() { return mCount; };
 private:
 	uint32_t mRendererID = 0;
 	uint32_t mCount;
+
+	
 };

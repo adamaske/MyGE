@@ -46,6 +46,7 @@ protected:
 
 	class ShaderManager* mShaderManager;
 
+	class TextureManager* mTextureManger;
 	Scene* mScene;
 
 	RenderWindow* mRenderWindow;

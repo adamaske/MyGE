@@ -1,133 +1,10 @@
 #pragma once
-
 #include "System.h"
-
-class ObjMeshSystem : public System {
-public:// Set up vertex data (and buffer(s)) and attribute pointers
-
-    
-    virtual void Init() override {
-        return;
-        if (!Registry::Instance().Has<MeshComponent>()) {
-            std::cout << "The registry does not have a MeshComponent array" << std::endl;
-            return;
-        }
-
-        auto meshes = Registry::Instance().GetComponents<MeshComponent>();
-
-        for (auto mesh : meshes) {
-
-            auto go = mesh->mGO;
-
-            if (!Registry::Instance().Has<RenderComponent>(go)) {
-                //The game object of this NeshComponet has no render component
-                std::cout << "ObjMeshSystem : Init : The game object of this MeshComponent has no RenderComponent" << std::endl;
-                break;
-            }
-
-           
-            //Find the renderer for this component
-            auto render = Registry::Instance().GetComponent<RenderComponent>((uint32_t)mesh->mGO);
-
-            //We want vertices and indicies from the mesh
-            std::pair<std::vector<float>, std::vector<uint32_t>> meshData = LoadMesh(mesh->mObjFilePath);
-            std::cout << "ObjMesh : Init : size of meshData.first = " << meshData.first.size() << std::endl;
-            std::cout << "ObjMesh : Init : size of meshData.second = " << meshData.second.size() << std::endl;
-            //mesh->mVertices = meshData.first;
-            for (int i = 0; i < 100; i += 8) {
-                std::cout << "v1(" << meshData.first[i] << "), " << "v2(" << meshData.first[i + 1] << ")," << "v3(" << meshData.first[i + 2] << ")" << std::endl;
-
-                std::cout << "n1(" << meshData.first[i + 3] << "), " << "n2(" << meshData.first[i + 4] << ")," << "n3(" << meshData.first[i + 5] << ")" << std::endl;
-
-                std::cout << "t1(" << meshData.first[6] << "), " << "t2(" << meshData.first[i + 7] << ")" << std::endl;
-            }
-            //Vertex array object-VAO
-            auto vao = std::make_shared<VertexArray>();
-            //Bind VAO
-
-            //Vertex buffer object to hold vertices - VBO
-            auto vbo = std::make_shared<VertexBuffer>(meshData.first.data(), sizeof(meshData.first));
-
-            vao->AddVertexBuffer(vbo);
-
-            // Element array buffer - EAB - ibo
-            auto ibo = std::make_shared<IndexBuffer>(meshData.second.data(), sizeof(meshData.second));
-            vao->AddIndexBuffer(ibo);
-
-            auto material = Registry::Instance().GetComponent<MaterialComponent>((uint32_t)mesh->mGO);
-            if (material) {
-                if (material->bUseTexture && material->mTexture) {
-                    //material->mTexture->useTexture();
-                }
-            }
-           //glGenVertexArrays(1, &render->m_VAO);
-           //glBindVertexArray(render->m_VAO);
-           //
-           ////Vertex buffer object to hold vertices - VBO
-           //glGenBuffers(1, &render->m_VBO);
-           //glBindBuffer(GL_ARRAY_BUFFER, render->m_VBO);
-           //
-           //glBufferData(GL_ARRAY_BUFFER, mesh->mVertices.size() * sizeof(Vertex), &mesh->mVertices[0], GL_STATIC_DRAW);
-           //
-           ////Verts
-           //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)0);
-           //glEnableVertexAttribArray(0);
-           ////Colors
-           //glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(3 * sizeof(GLfloat)));
-           //glEnableVertexAttribArray(1);
-           ////uvs
-           //glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(6 * sizeof(GLfloat)));
-           //glEnableVertexAttribArray(2);
-           //
-           //// Element array buffer - EAB
-           //glGenBuffers(1, &render->m_IBO);
-           //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, render->m_IBO);
-           //glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh->mIndices.size() * sizeof(GLuint), mesh->mIndices.data(), GL_STATIC_DRAW);
-           //
-            //Add them to the vertex array
-            render->mVAO = vao;
-
-
-        }
-    }
-
-    virtual void OnUpdate(float deltaTime) override {
-        return;
-        auto meshes = Registry::Instance().GetComponents<MeshComponent>();
-
-        for (auto mesh : meshes)
-        {
-            auto go = (uint32_t)(*mesh).mGO;
-            //Get a render component from this meshcomponent
-            auto renderComponent = Registry::Instance().GetComponent<RenderComponent>(go);
-            //Get a shader component from this mesh component
-            auto shader = ShaderManager::Instance()->GetShader("PlainShader");
-
-            //If we found th ehsdaer "Plainshader
-            if (!shader) {
-                std::cout << "Did not find shader, returning" << std::endl;
-                return;
-            }
-            //Use the shader
-
-            if (!Registry::Instance().Has<TransformComponent>(mesh->mGO)) {
-                //There is no transform connected with this scene
-            }
-            auto transform = Registry::Instance().GetComponent<TransformComponent>(mesh->mGO);
-
-            shader->SetUniformMatrix4(transform->mMatrix, "mMatrix");
-            //We want from this vao
-            if (!renderComponent->mVAO) {
-                std::cout << "ObjMeshSystem : RenderComponent dosent have a VAO" << std::endl;
-                return;
-            }
-            auto vao = renderComponent->mVAO;
-            vao->Bind();
-            //Draws from the bound vao
-            glDrawElements(GL_TRIANGLES, vao->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
-            vao->Unbind();
-        }
-    }
+class RenderSystem : public System {
+public:
+	RenderSystem();
+	virtual void Init() override;
+	virtual void OnUpdate(float deltaTime) override;
     std::pair<std::vector<float>, std::vector<uint32_t>>LoadMesh(std::string filePath) {
         //Kopier obj mesh kode her
         std::ifstream file;
@@ -290,6 +167,8 @@ public:// Set up vertex data (and buffer(s)) and attribute pointers
         file.close();
         writeFile(copypath + ".txt");
         std::cout << "ObjMesh: loadMesh : size of verts = " << verts.size() << std::endl;;
+
+        std::cout << "ObjMesh: loadMesh : size of inds = " << inds.size() << std::endl;;
         return std::pair<std::vector<float>, std::vector<uint32_t>>({ verts, inds });
     }
 
@@ -310,6 +189,6 @@ public:// Set up vertex data (and buffer(s)) and attribute pointers
         //    ut.close();
         //}
     }
+private:
 
 };
-
