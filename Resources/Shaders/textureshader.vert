@@ -1,6 +1,6 @@
 #version 410 core
-layout(location = 0) in vec4 positionIn;
-layout(location = 1) in vec4 colorIn;
+layout(location = 0) in vec3 positionIn;
+layout(location = 1) in vec3 colorIn;
 layout(location = 2) in vec2 vertexUV;
 
 out vec4 colorOut;

@@ -20,6 +20,8 @@ public:
 		return mSMInstance;
 	}
 	void Init() {
+		mShaders.insert({"TestShader", std::make_shared<Shader>("../Resources/Shaders/testshader.vert",
+								"../Resources/Shaders/testshader.frag", "TestShader")});
 		mShaders.insert({ "PlainShader", std::make_shared<Shader>("../Resources/Shaders/plainshader.vert",
 								"../Resources/Shaders/plainshader.frag", "PlainShader") });
 		mShaders.insert({ "PhongShader", std::make_shared<Shader>("../Resources/Shaders/lightshader.vert",

@@ -11,7 +11,7 @@ VertexBuffer::VertexBuffer(float* verts, size_t size) {
 	//
 	glBindBuffer(GL_ARRAY_BUFFER, mRendererID);
 	//In that buffer we want an array, with the size of size and the floats of verts, which wont chagne 
-	glBufferData(GL_ARRAY_BUFFER, size * 8, &verts[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(verts), &verts[0], GL_STATIC_DRAW);
 
 	mVerts	= verts;
 	mSize	= size;

@@ -11,9 +11,12 @@ Texture::Texture(const std::string& filename)
 {
 	textureFilename = filename;
 	bool success = readBitmap(filename);       //reads the BMP into memory
-	if (success)
-		setTexture();               //set texture up for OpenGL
+    if (success) {
+        setTexture();               //set texture up for OpenGL
+        std::cout << "Texture was sett" << std::endl;
+    }
 }
+		
 
 GLuint Texture::id() const
 {
@@ -121,4 +124,6 @@ void Texture::makeDummyTexture()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGB, GL_UNSIGNED_BYTE,
         reinterpret_cast<const GLvoid*>(pixels));
+
+    setTexture();
 }

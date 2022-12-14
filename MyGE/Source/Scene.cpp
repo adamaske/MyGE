@@ -33,7 +33,7 @@ void Scene::Init()
 
 	//File path for obj meshses
 	std::string cubePath =		"../Resources/Meshes/cube.obj";
-	std::string monkeyPath =	"../Resources/Meshes/monkey.obj";
+	std::string monkeyPath =	"../Resources/Meshes/monkey2Test.obj";
 
 #pragma region Create Cube
 	//Cube gameobject and components
@@ -49,7 +49,7 @@ void Scene::Init()
 	cubeMesh->mMeshName = "Cube";
 	//Material
 	auto cubeMaterial = Registry::Instance().RegisterComponent<MaterialComponent>(MaterialComponent(), cubeID);
-	cubeMaterial->mShader = ShaderManager::Instance()->GetShader("PlainShader");
+	cubeMaterial->mShader = ShaderManager::Instance()->GetShader("TextureShader");
 	cubeMaterial->mTexture = TextureManager::GetTexture("HammerTexture");
 	auto cubeTransform = Registry::Instance().GetComponent<TransformComponent>(cubeID);
 	cubeTransform->mMatrix = glm::translate(glm::mat4(1), glm::vec3(1, 0, 1));

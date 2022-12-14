@@ -59,7 +59,7 @@ void RenderSystem::Init() {
 			// Element array buffer - EAB - ibo
 			auto ibo = std::make_shared<IndexBuffer>(meshData.second.data(), sizeof(meshData.second));
 			vao->AddIndexBuffer(ibo);
-
+			//vao->Init();
 			render->mVAO = vao;
 		}
 		else {

@@ -1,12 +1,18 @@
 #version 410 core
+layout(location = 0) in vec3 vertexPosition;    //renamed from earlier shaders
+layout(location = 1) in vec3 colorIn;      //renamed from earlier shaders
+layout(location = 2) in vec2 vertexUV;          //not used when we don't use textures
 
-layout(location = 0) in vec4 positionIn;    // 1st attribute buffer = vertex positions
-layout(location = 1) in vec4 colorIn;       // 2nd attribute buffer = colors
-out vec4 color;                             //color sent to rest of pipeline
-uniform mat4 mMatrix;                        //the matrix for the model
+
+out vec4 colorOut;
+out vec2 UV;
+
+uniform mat4 mMatrix;
 uniform mat4 vMatrix;
 uniform mat4 pMatrix;
+
 void main() {
-   color = colorIn;                         //passing on the vertex color
-   gl_Position = pMatrix * vMatrix * mMatrix * positionIn;       //calculate the position of the model
+   colorOut = colorIn;
+   UV = vertexUV;
+   gl_Position = pMatrix * vMatrix * mMatrix * positionIn;
 }
