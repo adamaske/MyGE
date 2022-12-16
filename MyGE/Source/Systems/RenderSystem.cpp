@@ -1,6 +1,9 @@
 #include "pch.h"
 #include "RenderSystem.h"
 #include "ObjMeshSystem.h"
+
+#include "../Textures/Texture.h"
+#include "../ObjFileReader.h"
 RenderSystem::RenderSystem() {
 
 
@@ -50,7 +53,7 @@ void RenderSystem::Init() {
 			//Vertex array object-VAO
 			auto vao = std::make_shared<VertexArray>();
 			//Bind VAO
-			auto meshData = LoadMesh(mesh->mObjFilePath);
+			auto meshData = ObjFileReader::GetMeshNoVertex(mesh->mObjFilePath);
 			//Vertex buffer object to hold vertices - VBO
 			auto vbo = std::make_shared<VertexBuffer>(meshData.first.data(), sizeof(meshData.first));
 
@@ -59,6 +62,7 @@ void RenderSystem::Init() {
 			// Element array buffer - EAB - ibo
 			auto ibo = std::make_shared<IndexBuffer>(meshData.second.data(), sizeof(meshData.second));
 			vao->AddIndexBuffer(ibo);
+
 			//vao->Init();
 			render->mVAO = vao;
 		}

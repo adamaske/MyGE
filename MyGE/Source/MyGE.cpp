@@ -67,7 +67,7 @@ int MyGE::run()
 	ShaderManager::Instance();
 	
 	mTextureManger = new TextureManager();
-	mTextureManger->InsertTexture("../Resources/Textures/hammer.bmp", "HammerTexture");
+	mTextureManger->InsertTexture("../Resources/Textures/hammerDiffuse.bmp", "HammerDiffuse");
 
 
 	mScene = new Scene();

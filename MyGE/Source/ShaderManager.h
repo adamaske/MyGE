@@ -20,32 +20,34 @@ public:
 		return mSMInstance;
 	}
 	void Init() {
-		mShaders.insert({"TestShader", std::make_shared<Shader>("../Resources/Shaders/testshader.vert",
-								"../Resources/Shaders/testshader.frag", "TestShader")});
-		mShaders.insert({ "PlainShader", std::make_shared<Shader>("../Resources/Shaders/plainshader.vert",
-								"../Resources/Shaders/plainshader.frag", "PlainShader") });
-		mShaders.insert({ "PhongShader", std::make_shared<Shader>("../Resources/Shaders/lightshader.vert",
-								"../Resources/Shaders/lightshader.frag", "PhongShader") });
-		mShaders.insert({ "TextureShader", std::make_shared<Shader>("../Resources/Shaders/plainshader.vert",
-								"../Resources/Shaders/plainshader.frag", "TextureShader") });
-
-		auto mShader = GetShader("PlainShader");
-		if (mShader) {
-			std::cout << "Got shader from GetShader : " << mShader->mName << std::endl;
-		}
-		mShader = GetShader("PhongShader");
-		if (mShader) {
-			std::cout << "Got shader from GetShader : " << mShader->mName << std::endl;
-		}
-		mShader = GetShader("TextureShader");
-		if (mShader) {
-			std::cout << "Got shader from GetShader : " << mShader->mName << std::endl;
-		}
+		mShaders.insert({ "MyGEShader", std::make_shared<Shader>("../Resources/Shaders/mygeshader.vert",
+								"../Resources/Shaders/mygeshader.frag", "MyGEShader") });
+		//mShaders.insert({"TestShader", std::make_shared<Shader>("../Resources/Shaders/testshader.vert",
+		//						"../Resources/Shaders/testshader.frag", "TestShader")});
+		//mShaders.insert({ "PlainShader", std::make_shared<Shader>("../Resources/Shaders/plainshader.vert",
+		//						"../Resources/Shaders/plainshader.frag", "PlainShader") });
+		//mShaders.insert({ "PhongShader", std::make_shared<Shader>("../Resources/Shaders/lightshader.vert",
+		//						"../Resources/Shaders/lightshader.frag", "PhongShader") });
+		//mShaders.insert({ "TextureShader", std::make_shared<Shader>("../Resources/Shaders/plainshader.vert",
+		//						"../Resources/Shaders/plainshader.frag", "TextureShader") });
+		//
+		//auto mShader = GetShader("PlainShader");
+		//if (mShader) {
+		//	std::cout << "Got shader from GetShader : " << mShader->mName << std::endl;
+		//}
+		//mShader = GetShader("PhongShader");
+		//if (mShader) {
+		//	std::cout << "Got shader from GetShader : " << mShader->mName << std::endl;
+		//}
+		//mShader = GetShader("TextureShader");
+		//if (mShader) {
+		//	std::cout << "Got shader from GetShader : " << mShader->mName << std::endl;
+		//}
 	};
 
 	std::shared_ptr<Shader> GetShader(std::string name) {
 		if (mShaders.find(name.c_str()) != mShaders.end()) {
-
+		;
 			return mShaders[name.c_str()];
 		}
 		return nullptr;

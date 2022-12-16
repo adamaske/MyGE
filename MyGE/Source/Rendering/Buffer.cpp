@@ -7,9 +7,9 @@
 VertexBuffer::VertexBuffer(float* verts, size_t size) {
 
 	//We want a buffer in that renderer
-	glGenBuffers(1, &mRendererID);
+	glGenBuffers(1, &mVBO);
 	//
-	glBindBuffer(GL_ARRAY_BUFFER, mRendererID);
+	glBindBuffer(GL_ARRAY_BUFFER, mVBO);
 	//In that buffer we want an array, with the size of size and the floats of verts, which wont chagne 
 	glBufferData(GL_ARRAY_BUFFER, sizeof(verts), &verts[0], GL_STATIC_DRAW);
 
@@ -20,17 +20,17 @@ VertexBuffer::VertexBuffer(float* verts, size_t size) {
 void VertexBuffer::Bind()
 {
 	//We want to bind the buffer we created in mRenderer
-	glBindBuffer(GL_ARRAY_BUFFER, mRendererID);
+	glBindBuffer(GL_ARRAY_BUFFER, mVBO);
 }
 
 void VertexBuffer::Unbind()
 {
-	glBindBuffer(GL_ARRAY_BUFFER, mRendererID);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 IndexBuffer::IndexBuffer(uint32_t* indices, uint32_t count) : mCount(count) {
-	glGenBuffers(1, &mRendererID);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mRendererID);
+	glGenBuffers(1, &mIBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(uint32_t), indices, GL_STATIC_DRAW);
 
 	mIndices	= indices;
@@ -39,7 +39,7 @@ IndexBuffer::IndexBuffer(uint32_t* indices, uint32_t count) : mCount(count) {
 
 void IndexBuffer::Bind()
 {
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mRendererID);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIBO);
 }
 
 void IndexBuffer::Unbind()

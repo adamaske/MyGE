@@ -2,17 +2,19 @@
 
 #include "Scene.h"
 
+#include "ShaderManager.h"
 #include "Shader.h"
+
+#include "Textures/TextureManager.h"
+#include "Textures/Texture.h"
 
 #include "Systems/System.h"
 #include "Systems/ObjMeshSystem.h"
 #include "Systems/CameraSystem.h"
 #include "Systems/TerrainSystem.h"
 #include "Systems/RenderSystem.h"
-#include "Textures/TextureManager.h"
-#include "Textures/Texture.h"
-
 #include "Scripting/NativeScriptingSystem.h"
+
 
 Scene::Scene()
 {
@@ -33,7 +35,7 @@ void Scene::Init()
 
 	//File path for obj meshses
 	std::string cubePath =		"../Resources/Meshes/cube.obj";
-	std::string monkeyPath =	"../Resources/Meshes/monkey2Test.obj";
+	std::string monkeyPath =	"../Resources/Meshes/monkey.obj";
 
 #pragma region Create Cube
 	//Cube gameobject and components
@@ -49,7 +51,7 @@ void Scene::Init()
 	cubeMesh->mMeshName = "Cube";
 	//Material
 	auto cubeMaterial = Registry::Instance().RegisterComponent<MaterialComponent>(MaterialComponent(), cubeID);
-	cubeMaterial->mShader = ShaderManager::Instance()->GetShader("TextureShader");
+	cubeMaterial->mShader = ShaderManager::Instance()->GetShader("MyGEShader");
 	cubeMaterial->mTexture = TextureManager::GetTexture("HammerTexture");
 	auto cubeTransform = Registry::Instance().GetComponent<TransformComponent>(cubeID);
 	cubeTransform->mMatrix = glm::translate(glm::mat4(1), glm::vec3(1, 0, 1));
@@ -74,7 +76,7 @@ void Scene::Init()
 	monkeyTransform->mMatrix = glm::translate(glm::mat4(1), glm::vec3(0, 0, 1));
 	//Material
 	auto monkeyMaterial = Registry::Instance().GetComponent<MaterialComponent>(monkeyID);
-	monkeyMaterial->mShader = ShaderManager::Instance()->GetShader("TextureShader");
+	monkeyMaterial->mShader = ShaderManager::Instance()->GetShader("MyGEShader");
 	monkeyMaterial->mTexture = TextureManager::GetTexture("HammerTexture");
 #pragma endregion
 
@@ -108,8 +110,7 @@ void Scene::Init()
 
 #pragma region Systems
 	//Creating systems
-	mSystems.insert({ "RednerSystem", new RenderSystem() });
-	mSystems.insert({ "ObjMeshSystem", new ObjMeshSystem()});
+	mSystems.insert({ "RenderSystem", new RenderSystem() });
 	mSystems.insert({ "TerrainSystem", new TerrainSystem() });
 	mSystems.insert({ "CameraSystem" , new CameraSystem() });
 	mSystems.insert({ "NativeScriptingSystem", new NativeScriptingSystem() });
@@ -147,7 +148,7 @@ void Scene::OnUpdate(float deltaTime) {
 			//Gets a transform for the camera
 			auto transform = Registry::Instance().GetComponent<TransformComponent>(go);
 			//Get the shader to apply my view and projection matrix
-			auto shader = ShaderManager::Instance()->GetShader("PlainShader");
+			auto shader = ShaderManager::Instance()->GetShader("MyGEShader");
 			//Use this shader
 			shader->Use();
 			//Get a position

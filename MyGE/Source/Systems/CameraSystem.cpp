@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "CameraSystem.h"
 
+#include "../Shader.h"
+#include "../ShaderManager.h"
 void CameraSystem::Init(){
     //Init cameras
 }
@@ -19,7 +21,7 @@ void CameraSystem::OnUpdate(float deltaTime) {
 			//Gets a transform for the camera
 			auto transform = Registry::Instance().GetComponent<TransformComponent>(go);
 			//Get the shader to apply my view and projection matrix
-			auto shader = ShaderManager::Instance()->GetShader("PlainShader");
+			auto shader = ShaderManager::Instance()->GetShader("MyGEShader");
 			//Use this shader
 			shader->Use();
 			//Get a position

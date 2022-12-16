@@ -124,6 +124,5 @@ void Texture::makeDummyTexture()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGB, GL_UNSIGNED_BYTE,
         reinterpret_cast<const GLvoid*>(pixels));
-
-    setTexture();
+    
 }

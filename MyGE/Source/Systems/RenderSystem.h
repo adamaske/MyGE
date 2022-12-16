@@ -5,6 +5,7 @@ public:
 	RenderSystem();
 	virtual void Init() override;
 	virtual void OnUpdate(float deltaTime) override;
+
     std::pair<std::vector<float>, std::vector<uint32_t>>LoadMesh(std::string filePath) {
         //Kopier obj mesh kode her
         std::ifstream file;

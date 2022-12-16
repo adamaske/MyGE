@@ -2,7 +2,8 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
-
+#include <stdio.h>
+#include <fstream>
 #include <stdint.h>
 
 #include <string>
@@ -14,6 +15,7 @@
 #include "GLFW/glfw3.h"
 
 #include "Registry.h"
+#include "Logger.h"
 #include "stb/stb_image.h"
 #include <unordered_map>
 #define _CRT_SECURE_NO_DEPRECATE // using this to bypass deprecation

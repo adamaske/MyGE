@@ -12,7 +12,7 @@ public:
 	float* mVerts;
 	size_t mSize;
 private:
-	uint32_t mRendererID = 0;
+	uint32_t mVBO = 0;
 };
 
 class IndexBuffer {
@@ -28,7 +28,7 @@ public:
 
 	uint32_t GetCount() { return mCount; };
 private:
-	uint32_t mRendererID = 0;
+	uint32_t mIBO = 0;
 	uint32_t mCount;
 
 	

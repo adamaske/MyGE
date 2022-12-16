@@ -4,8 +4,8 @@
 #include "../Shader.h"
 #include "../Camera.h"
 #include "../GUID.h"
-#include "../Buffer.h"
-#include "../VertexArray.h"
+#include "../Rendering/Buffer.h"
+#include "../Rendering/VertexArray.h"
 #include "../Audio/wavfilereader.h"
 #include "../Scripting/ScriptableObject.h"
 

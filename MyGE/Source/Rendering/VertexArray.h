@@ -8,12 +8,12 @@ class VertexArray {
 
 public:
 	VertexArray() {
-		glGenVertexArrays(1, &mRendererID);
-		glBindVertexArray(mRendererID);
+		glGenVertexArrays(1, &mVAO);
+		glBindVertexArray(mVAO);
 	};
 
 	void Bind() {
-		glBindVertexArray(mRendererID);
+		glBindVertexArray(mVAO);
 	};
 	void Unbind() {
 		glBindVertexArray(0);
@@ -58,7 +58,7 @@ public:
 	};
 	void AddIndexBuffer(std::shared_ptr<IndexBuffer> buffer) {
 		//Use this vertex array
-		glBindVertexArray(mRendererID);
+		glBindVertexArray(mVAO);
 
 		//So we bind it
 		buffer->Bind();
@@ -71,7 +71,7 @@ public:
 	}
 
 private:
-	uint32_t mRendererID = 0;
+	uint32_t mVAO = 0;
 	std::vector<std::shared_ptr<VertexBuffer>> mVertexBuffers;
 	std::shared_ptr<IndexBuffer> mIndexBuffer;
 };

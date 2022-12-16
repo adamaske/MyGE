@@ -20,7 +20,7 @@ Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath, const char*
         std::cout << vertexPath << std::endl;
     }
     else {
-        std::cout << "Did open fragment shader file!" << std::endl;
+        std::cout << "Did open vertex shader file!" << std::endl;
     }
     fShaderFile.open(fragmentPath);
     if (!fShaderFile) {
@@ -95,8 +95,8 @@ Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath, const char*
     else
     {
         std::cout << "Shader succsess!" << std::endl;
-        std::cout << "Create shader " << shadername << " with programID = " << GetProgram() << std::endl;
-       // mName = shadername.c_str();
+        std::cout << "Create shader " << name << " with programID = " << GetProgram() << std::endl;
+        //Name = shadername.c_str();
     }
     // Delete the shaders as they're linked into our program now and no longer needed
     // The shader program is now on the GPU and we reference it by using the mProgram variable
