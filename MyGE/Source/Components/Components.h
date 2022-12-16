@@ -52,11 +52,11 @@ struct AudioListenerComponent {
 //class TransformComponent : public Component {
 struct TransformComponent {
 	GameObject mGO = 0;
-	glm::mat4 mMatrix;
+	glm::mat4 mMatrix = glm::mat4(1.0f);
 
-	glm::mat4 mPosition;
-	glm::mat4 mRotation;
-	glm::mat4 mScale;
+	glm::mat4 mPosition = glm::mat4(1.0f);;
+	glm::mat4 mRotation = glm::mat4(1.0f);;
+	glm::mat4 mScale = glm::mat4(1.0f);;
 
 	// Legger til rette for simulering
 	glm::vec3 mVelocity;

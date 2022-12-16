@@ -34,8 +34,6 @@ private:
     ///Loads the image into GPU memory, and set up its parameters.
     void setTexture();
 
-    ///Utility class Logger to write to Output Log in the application.
-    class Logger* mLogger{ nullptr };
 
 private:
     //This is put inside this class to avoid spamming the main namespace

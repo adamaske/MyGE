@@ -17,6 +17,8 @@ void TextureManager::InsertTexture(std::string fileName, std::string name)
 	auto texture = std::make_shared<Texture>(fileName);
 
 	mTextures[name] = texture;
+
+	Logger::Log("TextureManager : InsertTexture " + name + " made");
 }
 
 std::shared_ptr<Texture> TextureManager::GetTexture(std::string name)

@@ -15,6 +15,7 @@
 #include "GLFW/glfw3.h"
 
 #include "Registry.h"
+#include "Vertex.h"
 #include "Logger.h"
 #include "stb/stb_image.h"
 #include <unordered_map>

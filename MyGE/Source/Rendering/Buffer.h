@@ -3,6 +3,8 @@
 //Class for all vertex buffers
 class VertexBuffer {
 public:
+	VertexBuffer(std::vector<Vertex> verts);
+	VertexBuffer(std::vector<float> verts);
 	VertexBuffer(float* verts, size_t size);
 	virtual ~VertexBuffer() { };
 
@@ -17,6 +19,7 @@ private:
 
 class IndexBuffer {
 public:
+	IndexBuffer(std::vector<uint32_t> inds);
 	IndexBuffer(uint32_t* indices, uint32_t count);
 	virtual ~IndexBuffer() {};
 

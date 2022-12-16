@@ -4,6 +4,7 @@
 
 #include "../Textures/Texture.h"
 #include "../ObjFileReader.h"
+
 RenderSystem::RenderSystem() {
 
 
@@ -53,14 +54,14 @@ void RenderSystem::Init() {
 			//Vertex array object-VAO
 			auto vao = std::make_shared<VertexArray>();
 			//Bind VAO
-			auto meshData = ObjFileReader::GetMeshNoVertex(mesh->mObjFilePath);
+			auto meshData = ObjFileReader::GetMesh(mesh->mObjFilePath);
 			//Vertex buffer object to hold vertices - VBO
-			auto vbo = std::make_shared<VertexBuffer>(meshData.first.data(), sizeof(meshData.first));
+			auto vbo = std::make_shared<VertexBuffer>(meshData.first);
 
 			vao->AddVertexBuffer(vbo);
 
 			// Element array buffer - EAB - ibo
-			auto ibo = std::make_shared<IndexBuffer>(meshData.second.data(), sizeof(meshData.second));
+			auto ibo = std::make_shared<IndexBuffer>(meshData.second);
 			vao->AddIndexBuffer(ibo);
 
 			//vao->Init();
@@ -108,10 +109,12 @@ void RenderSystem::OnUpdate(float deltaTime) {
 
 			auto texture = material->mTexture;
 			if (texture) {
+				//This activates the 0'th texture unit
 				glActiveTexture(GL_TEXTURE0);
 				glBindTexture(GL_TEXTURE_2D, texture->id());
 				if(shader) {
-					shader->SetUniform1i(0, "textureSampler");
+					//The diffuse sampler is using the 0'th texture unit
+					shader->SetUniform1i(0, "diffuseSampler");
 				}
 			}
 			else {
@@ -144,7 +147,7 @@ void RenderSystem::OnUpdate(float deltaTime) {
 			continue;
 		}
 		vao->Bind();
-		vao->Print();
+		std::cout << "REDNER TEST: sizeof GLint = " << sizeof(GLint) << ", size of uint32_t =" << sizeof(uint32_t) << "\n";
 		//Draws from the bound vao
 		glDrawElements(GL_TRIANGLES, vao->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
 

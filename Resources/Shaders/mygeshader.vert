@@ -8,13 +8,10 @@ uniform mat4 mMatrix;
 uniform mat4 vMatrix;
 uniform mat4 pMatrix;
 
-out vec3 surfaceNormal;
 out vec2 texCoord;
 
 void main(){
     texCoord = vertexTexCoord;
-
-    surfaceNormal = vec3(1,1,1);
 
     gl_Position = pMatrix * vMatrix * mMatrix * vec4(vertexPosition, 1.0);
 }

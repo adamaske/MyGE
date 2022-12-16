@@ -19,22 +19,6 @@ public:
 		glBindVertexArray(0);
 	};
 
-	void Print() {
-		for (auto vbo : mVertexBuffers) {
-			for (int i = 0; i < 50; i += 8) {
-				std::cout << "v1(" << vbo->mVerts[i] << "), " << "v2(" << vbo->mVerts[i + 1] << "), " << "v2(" << vbo->mVerts[i + 2] << ")" << std::endl;
-
-				std::cout << "n1(" << vbo->mVerts[i + 3] << "), " << "n2(" << vbo->mVerts[i + 4] << "), " << "n2(" << vbo->mVerts[i + 5] << ")" << std::endl;
-				std::cout << "t1(" << vbo->mVerts[i + 6] << "), " << "t2(" << vbo->mVerts[i + 7] << ")" << std::endl;
-			}
-			
-		}
-		std::cout << std::endl;
-		for (int i = 0; i < 100; i++) {
-			std::cout << mIndexBuffer->mIndices[i];
-		}
-		std::cout << std::endl;
-	}
 
 	void AddVertexBuffer(std::shared_ptr<VertexBuffer> buffer) {
 		mVertexBuffers.push_back(buffer);
@@ -42,13 +26,15 @@ public:
 		//So we bind it
 		buffer->Bind();
 		//Verts
+		
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 		glEnableVertexAttribArray(0);
-
+		
 		//Normals
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
 		glEnableVertexAttribArray(1);
-		//uvs																
+		//uvs
+		
 		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 		glEnableVertexAttribArray(2);
 
