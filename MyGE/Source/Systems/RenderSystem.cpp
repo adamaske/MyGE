@@ -13,13 +13,13 @@ RenderSystem::RenderSystem() {
 void RenderSystem::Init() {
 	///find all render components
 	auto renders = Registry::Instance().GetComponents<RenderComponent>();
-	std::cout << "RednerSystem : Init renderers = " << renders.size() << std::endl;
+	Logger::Log("RednerSystem : Init renderers = " + renders.size(), INFO);
 	for (auto render : renders) {
 
-		std::cout << "RednerSystem : Init starting init on renderer" << std::endl;
+		Logger::Log("RednerSystem : Init starting init on renderer", INFO);
 		//Check if we want to render
 		if (!render->bRender) {
-			std::cout << "RednerSystem : Init should not render = " << renders.size() << std::endl;
+			Logger::Log("RednerSystem : Init should not render = " + renders.size());
 			continue;
 		}
 		//Check for material, the material should have a shader and a texture, 

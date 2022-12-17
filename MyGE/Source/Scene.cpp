@@ -15,6 +15,8 @@
 #include "Systems/RenderSystem.h"
 #include "Scripting/NativeScriptingSystem.h"
 
+#include "Cameras/CameraMovement.h"
+#include "Audio/AudioSystem.h"
 
 Scene::Scene()
 {
@@ -80,13 +82,16 @@ void Scene::Init()
 	monkeyMaterial->mTexture = TextureManager::GetTexture("HammerDiffuse");
 #pragma endregion
 
-#pragma region Create Camera
+#pragma region Create Game Camera
 	//Camera gameobject and components
 	uint32_t cameraID = Registry::Instance().NewGameObject();
 	auto camera = Registry::Instance().RegisterComponent<CameraComponent>(CameraComponent(), cameraID);
 	camera->bIsMainCamera = true;
 	auto cameraTransform = Registry::Instance().GetComponent<TransformComponent>(cameraID);
 	cameraTransform->mMatrix = glm::translate(glm::mat4(1), glm::vec3(0, 0, -1));
+	//This gives the camera a CameraMovement script, which handles input and etc for the camera, this is 
+	auto cameraMovementScript = Registry::Instance().RegisterComponent<NativeScriptComponent>(NativeScriptComponent(), cameraID);
+	cameraMovementScript->Bind<CameraMovement>();
 #pragma endregion
 
 #pragma region Create Terrain
@@ -113,6 +118,7 @@ void Scene::Init()
 	mSystems.insert({ "RenderSystem", new RenderSystem() });
 	mSystems.insert({ "TerrainSystem", new TerrainSystem() });
 	mSystems.insert({ "CameraSystem" , new CameraSystem() });
+	//OPENAL32.DLL NOT FOUND CAUSES THIS TO ERROR ->>> mSystems.insert({ "AudioSystem", new AudioSystem() });
 	mSystems.insert({ "NativeScriptingSystem", new NativeScriptingSystem() });
 	//mSystems.insert({ "CameraControllerSystem", new CameraControllerSystem() });
 
@@ -133,35 +139,7 @@ void Scene::OnUpdate(float deltaTime) {
 	//Prints all gameobject id's
 	for (auto& go : gameObjects)
 	{ 
-
-	}
-
-	//We want an array of every camera in the scene
-	//If we find a camera whith bisMainCamera  = true, that is the one we want to render the scene view from
-	auto cameras = Registry::Instance().GetComponents<CameraComponent>();
-	for(auto cam : cameras)
-	{
-		auto go = (uint32_t)(*cam).mGO;
-		//It does find 
-		//Check if it is the main camera
-		if (cam->bIsMainCamera) {
-			//We techincally want to apply the camera to all shaders
-			//Gets a transform for the camera
-			auto transform = Registry::Instance().GetComponent<TransformComponent>(go);
-			//Get the shader to apply my view and projection matrix
-			auto shader = ShaderManager::Instance()->GetShader("MyGEShader");
-			//Use this shader
-			shader->Use();
-			//Get a position
-			glm::vec3 pos(transform->mMatrix[3].x, transform->mMatrix[3].y, transform->mMatrix[3].z);
-			//Update matrices 
-			cam->mProjectionMatrix = glm::perspective(glm::radians(90.f), cam->mAspectRatio, 0.1f, 1000.f);
-			std::cout << "Camera pos : " << pos.x << ", " << pos.y << ", " << pos.z << "\n";
-			cam->mViewMatrix = glm::lookAt(pos, pos + glm::vec3(0,0, 1), glm::vec3(0, 1, 0));
-			//Set the variables in the PlainShader
-			shader->SetUniformMatrix4(cam->mViewMatrix, "vMatrix");
-			shader->SetUniformMatrix4(cam->mProjectionMatrix, "pMatrix");
-		}
+		
 	}
 
 	for (auto system : mSystems)

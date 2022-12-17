@@ -17,6 +17,7 @@
 #include "Registry.h"
 #include "Vertex.h"
 #include "Logger.h"
+#include "Input/Input.h"
 #include "stb/stb_image.h"
 #include <unordered_map>
 #define _CRT_SECURE_NO_DEPRECATE // using this to bypass deprecation

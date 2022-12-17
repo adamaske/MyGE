@@ -181,6 +181,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Source\Cameras\CameraMovement.cpp" />
+    <ClCompile Include="Source\Input\Input.cpp" />
     <ClCompile Include="Source\Logger.cpp" />
     <ClCompile Include="Source\ObjFileReader.cpp" />
     <ClCompile Include="Source\Rendering\Buffer.cpp" />
@@ -224,6 +226,8 @@
   <ItemGroup>
     <ClInclude Include="Source\Audio\AudioSystem.h" />
     <ClInclude Include="Source\Audio\WavFileReader.h" />
+    <ClInclude Include="Source\Cameras\CameraMovement.h" />
+    <ClInclude Include="Source\Input\Input.h" />
     <ClInclude Include="Source\Logger.h" />
     <ClInclude Include="Source\ObjFileReader.h" />
     <ClInclude Include="Source\Rendering\Buffer.h" />

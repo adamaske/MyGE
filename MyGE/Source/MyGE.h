@@ -39,6 +39,8 @@ public:
 protected:
 	RenderWindow* mWindow;
 
+	std::unique_ptr<Logger> mLogger;
+	std::unique_ptr<Input> mInput;
 	////Lua scripting
 	ScriptingManager* mScriptingManager;
 	//Scene manager

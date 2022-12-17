@@ -29,6 +29,8 @@ int MyGE::run()
 {
 	std::cout << "MyGE : started running" << std::endl;
 
+	mLogger = std::make_unique<Logger>();
+	mInput = std::make_unique<Input>();
 	//Init gl
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);

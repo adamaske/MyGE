@@ -32,3 +32,4 @@ public:
 
 	virtual void OnUpdate(float deltaTime) override;
 };
+

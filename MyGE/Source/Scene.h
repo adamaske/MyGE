@@ -23,7 +23,7 @@ private:
 
 	class Registry* mRegistry;
 
-	struct CameraComponent* mSceneCamera;
+	struct CameraComponent* mEditorCamera;
 
 	int mViewportWidth = 0;
 	int mViewportHeight = 0;
