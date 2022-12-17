@@ -28,7 +28,7 @@ MyGE::MyGE() {
 int MyGE::run()
 {
 	std::cout << "MyGE : started running" << std::endl;
-	Logger::StartLoggingType(ERROR);
+	Logger::Init();
 	//Init gl
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -108,16 +108,9 @@ int MyGE::run()
 void MyGE::ProcessInput()
 {
     if (glfwGetKey(mRenderWindow->GetWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-        std::cout << "Escape Pressed" << std::endl;
+        
         glfwSetWindowShouldClose(mRenderWindow->GetWindow(), true);
-    }
-    if (glfwGetKey(mRenderWindow->GetWindow(), GLFW_KEY_W) == GLFW_PRESS) {
-        std::cout << "Move forward" << std::endl;
-      
-    }
-
-
-    
+    } 
 }
 
 void mouse_callback(GLFWwindow * window, double xposIn, double yposIn)

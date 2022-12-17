@@ -16,6 +16,7 @@ class Logger {
 public:
 	Logger();
 	~Logger();
+	static void Init();
 	static void Log(std::string file);
 	static void Log(std::string file, LogType type);
 	static void Log(std::string file, LogType type, bool logToFile);
