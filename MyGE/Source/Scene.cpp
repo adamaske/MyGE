@@ -120,19 +120,19 @@ void Scene::Init()
 	mSystems.insert({ "CameraSystem" , new CameraSystem() });
 	//OPENAL32.DLL NOT FOUND CAUSES THIS TO ERROR ->>> mSystems.insert({ "AudioSystem", new AudioSystem() });
 	mSystems.insert({ "NativeScriptingSystem", new NativeScriptingSystem() });
-	//mSystems.insert({ "CameraControllerSystem", new CameraControllerSystem() });
 
 	//Init all systems
 	for (auto system : mSystems)
 	{
 		//Creating systems
+		Logger::Log("Starting init for system : " + (std::string)system.first);
 		system.second->Init();
 	}
+	Logger::Log("Finished creating Initing systems");
 #pragma endregion
 }
 
 void Scene::OnUpdate(float deltaTime) {
-	
 	
 	////Gets all GameObjects in the registry, a go system
 	auto gameObjects = Registry::Instance().GetGameObjects();

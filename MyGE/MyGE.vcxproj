@@ -186,7 +186,7 @@
     <ClCompile Include="Source\Logger.cpp" />
     <ClCompile Include="Source\ObjFileReader.cpp" />
     <ClCompile Include="Source\Rendering\Buffer.cpp" />
-    <ClCompile Include="Source\Camera.cpp" />
+    <ClCompile Include="Source\Cameras\Camera.cpp" />
     <ClCompile Include="Source\Components\Components.cpp" />
     <ClCompile Include="Source\GUID.cpp" />
     <ClCompile Include="Source\pch.cpp">
@@ -231,7 +231,7 @@
     <ClInclude Include="Source\Logger.h" />
     <ClInclude Include="Source\ObjFileReader.h" />
     <ClInclude Include="Source\Rendering\Buffer.h" />
-    <ClInclude Include="Source\Camera.h" />
+    <ClInclude Include="Source\Cameras\Camera.h" />
     <ClInclude Include="Source\Components\Components.h" />
     <ClInclude Include="Source\GUID.h" />
     <ClInclude Include="Source\pch.h" />

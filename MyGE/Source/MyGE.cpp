@@ -28,9 +28,7 @@ MyGE::MyGE() {
 int MyGE::run()
 {
 	std::cout << "MyGE : started running" << std::endl;
-
-	mLogger = std::make_unique<Logger>();
-	mInput = std::make_unique<Input>();
+	Logger::StartLoggingType(ERROR);
 	//Init gl
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -50,7 +48,7 @@ int MyGE::run()
 	//Loading glad?
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
-		std::cout << "Failed to initialize GLAD" << std::endl;
+		Logger::Log("Failed to initialize GLAD", ERROR, true);
 		return -1;
 	}
 	//glfwSetInputMode(mRenderWindow->GetWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -118,49 +116,7 @@ void MyGE::ProcessInput()
       
     }
 
-	if (glfwGetKey(mRenderWindow->GetWindow(), GLFW_KEY_W) == GLFW_PRESS) {
-		auto camera = Registry::Instance().GetComponents <CameraComponent>();
-		for (int i = 0; i < camera.size(); i++) {
-			if (camera[i]->bIsMainCamera) {
 
-				auto transform = Registry::Instance().GetComponent<TransformComponent>(camera[i]->mGO);
-				transform->mMatrix = glm::translate(transform->mMatrix,camera[i]->mForward);
-			}
-		}
-	}
-
-	if (glfwGetKey(mRenderWindow->GetWindow(), GLFW_KEY_S) == GLFW_PRESS) {
-		auto camera = Registry::Instance().GetComponents <CameraComponent>();
-		for (int i = 0; i < camera.size(); i++) {
-			if (camera[i]->bIsMainCamera) {
-
-				auto transform = Registry::Instance().GetComponent<TransformComponent>(camera[i]->mGO);
-				transform->mMatrix = glm::translate(transform->mMatrix, -camera[i]->mForward);
-			}
-		}
-	}
-
-	if (glfwGetKey(mRenderWindow->GetWindow(), GLFW_KEY_A) == GLFW_PRESS) {
-		auto camera = Registry::Instance().GetComponents <CameraComponent>();
-		for (int i = 0; i < camera.size(); i++) {
-			if (camera[i]->bIsMainCamera) {
-
-				auto transform = Registry::Instance().GetComponent<TransformComponent>(camera[i]->mGO);
-				transform->mMatrix = glm::translate(transform->mMatrix, camera[i]->mRight);
-			}
-		}
-	}
-
-	if (glfwGetKey(mRenderWindow->GetWindow(), GLFW_KEY_D) == GLFW_PRESS) {		
-		auto camera = Registry::Instance().GetComponents <CameraComponent>();
-		for (int i = 0; i < camera.size(); i++) {
-			if (camera[i]->bIsMainCamera) {
-
-				auto transform = Registry::Instance().GetComponent<TransformComponent>(camera[i]->mGO);
-				transform->mMatrix = glm::translate(transform->mMatrix, -camera[i]->mRight);
-			}
-		}
-	}
     
 }
 

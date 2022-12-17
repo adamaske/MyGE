@@ -2,7 +2,7 @@
 //This should all be in a precompiled header ? 
 #include "../Vertex.h"
 #include "../Shader.h"
-#include "../Camera.h"
+#include "../Cameras/Camera.h"
 #include "../GUID.h"
 #include "../Rendering/Buffer.h"
 #include "../Rendering/VertexArray.h"

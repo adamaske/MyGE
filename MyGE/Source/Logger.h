@@ -6,11 +6,11 @@ enum LogType {
 		INFO
 };
 
-struct LogEntry{
+struct LogEntry {
 	LogType mType;
 	std::string mText;
 	//Date, time, other stuff maybe
-}
+};
 
 class Logger {
 public:
@@ -21,12 +21,15 @@ public:
 	static void Log(std::string file, LogType type, bool logToFile);
 
 	bool IsLoggingType(LogType type);
-	void StartLoggingType(LogType type);
-	void StopLoggingType(LogType type);
+	static void StartLoggingType(LogType type);
+	static void StopLoggingType(LogType type);
 
 	bool LogsToFile();
 private:
-	static Logger* mInstance;
+	static Logger& GetInstance() {
+		static Logger instance;
+		return instance;
+	}
 	std::unordered_map<LogType, bool> mActiveLoggingTypes;
 	std::vector<LogEntry> mLogs;
 };

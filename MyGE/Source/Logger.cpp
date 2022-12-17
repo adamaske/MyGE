@@ -3,17 +3,19 @@
 
 Logger::Logger()
 {
-	mInstance = this;
-
-	mInstance->mActiveLoggingTypes[WARNING] = true;
-
-	mInstance->mActiveLoggingTypes[ERROR] = true;
-
-	mInstance->mActiveLoggingTypes[INFO] = true;
+	
 }
 
 Logger::~Logger()
 {
+	GetInstance().LogsToFile();
+}
+
+void Logger::Init()
+{
+	GetInstance().StartLoggingType(ERROR);
+	GetInstance().StartLoggingType(WARNING);
+	GetInstance().StartLoggingType(INFO);
 }
 
 void Logger::Log(std::string file)
@@ -24,31 +26,31 @@ void Logger::Log(std::string file)
 void Logger::Log(std::string file, LogType type)
 {
 	//If we are currently logging this type to the output window
-	if (mInstance->IsLoggingType(type)) {
-		Log(file);
+	if (GetInstance().IsLoggingType(type)) {
+		GetInstance().Log(file);
 	}
 }
 
 void Logger::Log(std::string file, LogType type, bool logToFile)
 {
-	Log(file, type);
+	GetInstance().Log(file, type);
 	if (logToFile) {
-		mInstance->mLogs.push_back(LogEntry{ type, file });
+		GetInstance().mLogs.push_back(LogEntry{ type, file });
 	}
 }
 
 bool Logger::IsLoggingType(LogType type) {
-	return mInstance->mActiveLoggingTypes[type];
+	return GetInstance().mActiveLoggingTypes[type];
 }
 
 void Logger::StartLoggingType(LogType type)
 {
-	mInstance->mActiveLoggingTypes[type] = true;
+	GetInstance().mActiveLoggingTypes[type] = true;
 }
 
 void Logger::StopLoggingType(LogType type)
 {
-	mInstance->mActiveLoggingTypes[type] = false
+	GetInstance().mActiveLoggingTypes[type] = false;
 }
 
 bool Logger::LogsToFile()
@@ -64,6 +66,6 @@ bool Logger::LogsToFile()
 
 	}
 	else {
-		Log("Could not create file to output logs to!", ERROR);
+		GetInstance().Log("Could not create file to output logs to!", ERROR);
 	}
 }

@@ -2,12 +2,10 @@
 
 class Input {
 public:
-	Input() {
-		mInstance = this;
-	};
+	Input();
 	// Check if a specific key is currently being pressed
 	static bool IsKeyDown(int key);
-
+	bool IsKeyDownImplentation(int key);
 	//// Check if a specific key was just pressed (i.e. went from not being pressed to being pressed)
 	//bool IsKeyPressed(int key) const;
 	//
@@ -30,6 +28,9 @@ public:
 	//void Update();
 
 private:
-	static Input* mInstance;
+	static Input& GetInstance() {
+		static Input instance;
+		return instance;
+	};
 
 };
