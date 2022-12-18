@@ -123,7 +123,14 @@ public:
 		RegisterComponent<struct MaterialComponent>(MaterialComponent(), go);
 		return go;
 	}
+	uint32_t NewGameObject(GameObject parent) {
+		GameObject go = NewGameObject();
 
+		//Do parent logic
+		//auto parent = 
+
+		return go;
+	}
 	//Only register a component
 	template<typename T>
 	void RegisterComponent() {

@@ -132,6 +132,7 @@ struct RenderComponent {
 	GLuint m_IBO;
 
 	bool bRender = true;
+	bool bRenderMesh = true;
 };
 
 struct ScriptComponent {
@@ -179,4 +180,11 @@ struct TerrainComponent {
 	float mResolution = 1;
 
 	const char* mFilePath = "../Resources/Terrain/fullData.txt";
+};
+
+struct BillboardComponent {
+	GameObject mGO = 0;
+
+
+
 };

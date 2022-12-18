@@ -22,6 +22,8 @@ public:
 	void Init() {
 		mShaders.insert({ "MyGEShader", std::make_shared<Shader>("../Resources/Shaders/mygeshader.vert",
 								"../Resources/Shaders/mygeshader.frag", "MyGEShader") });
+		mShaders.insert({ "BillboardShader", std::make_shared<Shader>("../Resources/Shaders/billboardshader.vert",
+								"../Resources/Shaders/billboardshader.frag", "BillboardShader")});
 		//mShaders.insert({"TestShader", std::make_shared<Shader>("../Resources/Shaders/testshader.vert",
 		//						"../Resources/Shaders/testshader.frag", "TestShader")});
 		//mShaders.insert({ "PlainShader", std::make_shared<Shader>("../Resources/Shaders/plainshader.vert",
@@ -53,6 +55,13 @@ public:
 		return nullptr;
 	}
 
+	std::vector<std::shared_ptr<Shader>> GetShaders() {
+		std::vector<std::shared_ptr<Shader>> shaders;
+		for (auto shader : mShaders) {
+			shaders.push_back(shader.second);
+		}
+		return shaders;
+	}
 	void InsertShader(std::string shaderName, std::shared_ptr < Shader> shader) {
 
 		//Insert the pointer into the map

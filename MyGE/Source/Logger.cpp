@@ -40,17 +40,36 @@ void Logger::Log(std::string file, LogType type, bool logToFile)
 }
 
 bool Logger::IsLoggingType(LogType type) {
-	return GetInstance().mActiveLoggingTypes[type];
+	
+	return GetInstance().IsLoggingTypeImpl(type);
+}
+
+bool Logger::IsLoggingTypeImpl(LogType type)
+{
+	for (int i = 0; i < mActiveLoggingTypes.size(); i++) {
+		if (mActiveLoggingTypes[i].first == type){
+			return mActiveLoggingTypes[i].second;
+		}
+	}
+	return false;
 }
 
 void Logger::StartLoggingType(LogType type)
 {
-	GetInstance().mActiveLoggingTypes[type] = true;
+	for (int i = 0; i < GetInstance().mActiveLoggingTypes.size(); i++) {
+		if (GetInstance().mActiveLoggingTypes[i].first == type) {
+			GetInstance().mActiveLoggingTypes[i].second = true;
+		}
+	}
 }
 
 void Logger::StopLoggingType(LogType type)
 {
-	GetInstance().mActiveLoggingTypes[type] = false;
+	for (int i = 0; i < GetInstance().mActiveLoggingTypes.size(); i++) {
+		if (GetInstance().mActiveLoggingTypes[i].first == type) {
+			GetInstance().mActiveLoggingTypes[i].second = false;
+		}
+	}
 }
 
 bool Logger::LogsToFile()

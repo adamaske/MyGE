@@ -22,6 +22,7 @@ void CameraSystem::OnUpdate(float deltaTime) {
 			auto transform = Registry::Instance().GetComponent<TransformComponent>(go);
 			//Get the shader to apply my view and projection matrix
 			auto shader = ShaderManager::Instance()->GetShader("MyGEShader");
+			
 			//Use this shader
 			shader->Use();
 			//Get a position
@@ -30,9 +31,14 @@ void CameraSystem::OnUpdate(float deltaTime) {
 			cam->mProjectionMatrix = glm::perspective(glm::radians(90.f), cam->mAspectRatio, 0.1f, 1000.f);
 
 			cam->mViewMatrix = glm::lookAt(pos, pos + glm::vec3(0, 0, 1), glm::vec3(0, 1, 0));
-			//Set the variables in the PlainShader
-			shader->SetUniformMatrix4(cam->mViewMatrix, "vMatrix");
-			shader->SetUniformMatrix4(cam->mProjectionMatrix, "pMatrix");
+			
+			auto shaders = ShaderManager::Instance()->GetShaders();
+			for (auto shader : shaders) {
+				//Set the variables in the shaders, every shader should have these variables
+				shader->SetUniformMatrix4(cam->mViewMatrix, "vMatrix");
+				shader->SetUniformMatrix4(cam->mProjectionMatrix, "pMatrix");
+
+			}
 		}
 	}
 

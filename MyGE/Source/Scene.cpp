@@ -118,7 +118,8 @@ void Scene::Init()
 	mSystems.insert({ "RenderSystem", new RenderSystem() });
 	mSystems.insert({ "TerrainSystem", new TerrainSystem() });
 	mSystems.insert({ "CameraSystem" , new CameraSystem() });
-	//OPENAL32.DLL NOT FOUND CAUSES THIS TO ERROR ->>> mSystems.insert({ "AudioSystem", new AudioSystem() });
+	//OPENAL32.DLL NOT FOUND CAUSES THIS TO ERROR ->>> 
+	//mSystems.insert({ "AudioSystem", new AudioSystem() });
 	mSystems.insert({ "NativeScriptingSystem", new NativeScriptingSystem() });
 
 	//Init all systems

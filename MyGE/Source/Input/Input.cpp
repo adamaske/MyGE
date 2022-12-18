@@ -12,9 +12,5 @@ bool Input::IsKeyDown(int key)
 bool Input::IsKeyDownImplentation(int key)
 {
 	auto window = glfwGetCurrentContext();
-	auto pressed = glfwGetKey(window, key);
-	if (pressed == GLFW_PRESS) {
-		return true;
-	}
-	return false;
+	return glfwGetKey(window, key) == GLFW_PRESS ? true : false;
 }

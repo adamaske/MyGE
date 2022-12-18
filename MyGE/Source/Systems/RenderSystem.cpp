@@ -19,14 +19,14 @@ void RenderSystem::Init() {
 		Logger::Log("RednerSystem : Init starting init on renderer", INFO);
 		//Check if we want to render
 		if (!render->bRender) {
-			Logger::Log("RednerSystem : Init should not render = " + renders.size());
+			Logger::Log("RednerSystem : Init should not render = " + renders.size(), INFO);
 			continue;
 		}
 		//Check for material, the material should have a shader and a texture, 
 		auto material = Registry::Instance().GetComponent<MaterialComponent>((uint32_t)render->mGO);
 		if (material) {
 			if (!material->mShader) {
-				std::cout << "RednerSystem : Init on shader" << std::endl;
+				Logger::Log("RednerSystem : Init on shader", INFO);
 				continue;
 			}
 			auto shader = material->mShader;
@@ -44,13 +44,13 @@ void RenderSystem::Init() {
 		}
 		else {
 
-			std::cout << "RednerSystem : Init no material" << std::endl;
+			Logger::Log("RednerSystem : Init no material", INFO);
 		}
 
 		//Check for mesh
 		auto mesh = Registry::Instance().GetComponent<MeshComponent>((uint32_t)render->mGO);
 		if (mesh) {
-			std::cout << "RenderSystem : Now initing mesh " << mesh->mMeshName << std::endl;;
+			Logger::Log("RenderSystem : Now initing mesh ", INFO);
 			//Vertex array object-VAO
 			auto vao = std::make_shared<VertexArray>();
 			//Bind VAO
@@ -68,13 +68,10 @@ void RenderSystem::Init() {
 			render->mVAO = vao;
 		}
 		else {
-
-			std::cout << "RednerSystem : Init no mesh" << std::endl;
+			render->bRenderMesh = false;
+			Logger::Log("RenderSystem : Found no mesh", INFO);
 		}
 		//Check if we should render
-
-
-		std::cout << "RednerSystem : Init completed one render init" << std::endl;
 
 	}
 }
@@ -87,7 +84,6 @@ void RenderSystem::OnUpdate(float deltaTime) {
 	for (auto render : renders) {
 		//Check if we want to render
 		if (!render->bRender) {
-			std::cout << "RenderSystem : this render component should not render" << std::endl;;
 			continue;
 		}
 
@@ -104,7 +100,7 @@ void RenderSystem::OnUpdate(float deltaTime) {
 				shader->SetUniformMatrix4(transform->mMatrix, "mMatrix");
 			}
 			else {
-				std::cout << "RednerSystem : No Shader" << std::endl;
+				Logger::Log("RednerSystem : No Shader", INFO);
 			}
 
 			auto texture = material->mTexture;
@@ -118,41 +114,34 @@ void RenderSystem::OnUpdate(float deltaTime) {
 				}
 			}
 			else {
-				std::cout << "RenderSystem : No Texture" << std::endl;
+				Logger::Log("RenderSystem : No Texture", INFO);
 			}
 		}
 		else {
-			std::cout << "RenderSystem : No material";
+			Logger::Log("RenderSystem : No material, cannot render!", ERROR, true);
 		}
 
+		
 		auto mesh = Registry::Instance().GetComponent<MeshComponent>((uint32_t)render->mGO);
 		if (!mesh) {
-			std::cout << "RenderSystem : No MeshComponent" << std::endl;
+			Logger::Log("RenderSystem : No MeshComponent", INFO);
 		}
 
-		std::cout << "RenderSystem : Now updating mesh " << mesh->mMeshName << std::endl;;
-		//std::cout << "RenderSystem : Size of mesh vertices = " << mesh->mVertices.size() << std::endl;
-		//for (int i = 0; i < mesh->mVertices.size(); i += 8) {
-		//	std::cout << "v1(" << mesh->mVertices[i] << "), " << "v2(" << mesh->mVertices[i + 1] << ")," << "v3(" << mesh->mVertices[i + 2] << ")" << std::endl;
-		//
-		//	std::cout << "n1(" << mesh->mVertices[i+3] << "), " << "n2(" << mesh->mVertices[i + 4] << ")," << "n3(" << mesh->mVertices[i + 5] << ")" << std::endl;
-		//	
-		//	std::cout << "t1(" << mesh->mVertices[6] << "), " << "t2(" << mesh->mVertices[i + 7] << ")"<< std::endl;
-		//}
+		if(render->bRenderMesh){
+			//This should be replaced by calling Renderer functions from Renderer.cpp
+			auto vao = render->mVAO;
+			if (!vao) {
+				Logger::Log("RenderSystem : RenderComponent dosent have a VAO", INFO);
+				continue;
+			}
+			vao->Bind();
+			//Draws from the bound vao
+			glDrawElements(GL_TRIANGLES, vao->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
 
-
-		auto vao = render->mVAO;
-		if (!vao) {
-			std::cout << "RenderSystem : RenderComponent dosent have a VAO" << std::endl;
-			continue;
+			vao->Unbind();
 		}
-		vao->Bind();
-		std::cout << "REDNER TEST: sizeof GLint = " << sizeof(GLint) << ", size of uint32_t =" << sizeof(uint32_t) << "\n";
-		//Draws from the bound vao
-		glDrawElements(GL_TRIANGLES, vao->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+		
 
-		vao->Unbind();
-
-		std::cout << "RenderSystem : Completed Rendering!" << std::endl;
+		Logger::Log("RenderSystem : Completed Rendering!", INFO);
 	}
 }
