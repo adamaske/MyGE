@@ -91,7 +91,7 @@ struct MeshComponent {
 
 struct CameraComponent {
 	//I may want this to just be a container for a pointer to a camera
-	Camera mCamera;
+	std::shared_ptr<Camera> mCamera;
 
 	GameObject mGO = 0;
 	bool bIsMainCamera = 1;
@@ -180,6 +180,10 @@ struct TerrainComponent {
 	float mResolution = 1;
 
 	const char* mFilePath = "../Resources/Terrain/fullData.txt";
+
+	std::shared_ptr<VertexArray> mVAO;
+	std::shared_ptr<VertexBuffer> mVBO;
+	std::shared_ptr<IndexBuffer> mIBO;
 };
 
 struct BillboardComponent {

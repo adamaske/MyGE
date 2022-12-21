@@ -1,11 +1,7 @@
-#include <iostream>
-
 #include "pch.h"
-#include "MyGE.h"
+#include "Core/MyGE.h"
 
 int main() {
-    
-	MyGE ge = MyGE();
-	ge.run();
-	return 0;
+	std::unique_ptr<MyGE> myGe = std::make_unique<MyGE>();
+	return myGe->Run();
 }

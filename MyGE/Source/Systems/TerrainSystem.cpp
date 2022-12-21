@@ -1,19 +1,67 @@
 #include "pch.h"
 #include "TerrainSystem.h"
+#include "../Components/Components.h"
+#include "../Rendering/VertexArray.h"
+#include "../Rendering/Buffer.h"
 
 TerrainSystem::TerrainSystem()
 {
+
 }
+
 void TerrainSystem::Init()
 {
 	auto terrains = Registry::Instance().GetComponents<TerrainComponent>();
-
+	Logger::Log("TerrainSystem : Amount of terrains to init " + std::to_string(terrains.size()));
 	for (auto terrain : terrains) {
+		std::vector<Vertex> verts;
+		std::vector<uint32_t> inds;
+	
+		for (int i = 0; i < terrain->mHeight; i++) {
+			for (int j = 0; j < terrain->mWidth; j++)
+			{
+				verts.push_back(Vertex(glm::vec3(j, 0, i), glm::vec3(0, 0, 0), std::pair<float,float>{0,0}));
+			}
+		}
+		//Indeksering
+		for (int j = 0; j < terrain->mHeight - 1; j++) {
+			for (int i = 0; i < (terrain->mWidth  - 1); i++) {
+				//Første index
+				inds.push_back(i + ((terrain->mWidth * j)));
+				////Høyre for første
+				inds.push_back(i + ((terrain->mWidth * j) + 1));
+				////Under første
+				inds.push_back(i + ((terrain->mWidth * j) + terrain->mWidth));
+
+				continue;
+				//Høyre for første
+				inds.push_back(i + ((terrain->mWidth * j) + 1));
+				//Under første
+				inds.push_back(i + ((terrain->mWidth * j) + terrain->mWidth));
+				//Til høyre for under første
+				inds.push_back(i + ((terrain->mWidth * j) + terrain->mWidth + 1));
+			}
+		}
+
+		//Vertex array object-VAO
+		auto vao = std::make_shared<VertexArray>();
+		//Vertex buffer object to hold vertices - VBO
+		auto vbo = std::make_shared<VertexBuffer>(verts);
+
+		vao->AddVertexBuffer(vbo);
+
+		// Element array buffer - EAB - ibo
+		auto ibo = std::make_shared<IndexBuffer>(inds);
+		vao->AddIndexBuffer(ibo);
+
+		terrain->mVAO = vao;
+		terrain->mVBO = vbo;
+		terrain->mIBO = ibo;
 
 
 		//Does the terrain compøonent hold the mesh data ?  yeah probably
 		switch (terrain->mType) {
-
+		
 		case  TerrainComponent::TerrainType::PerlinNoise:
 
 			
@@ -27,6 +75,7 @@ void TerrainSystem::Init()
 
 
 		}
+
 	}
 }
 
@@ -36,19 +85,26 @@ void TerrainSystem::OnUpdate(float deltaSeconds)
 	auto terrains = Registry::Instance().GetComponents<TerrainComponent>();
 
 	for (auto terrain : terrains) {
-
-
+		if (!terrain->mVAO) {
+			Logger::Log("TerrainSystem : Terrain has no VAO!", ERROR);
+			return;
+		}
+		terrain->mVAO->Bind();
+		//Renderer que (terrain->mVAO)
+		glDrawElements(GL_TRIANGLES, terrain->mVAO->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+		glBindVertexArray(0);
 		//Does the terrain compøonent hold the mesh data ?  yeah probably
 		switch (terrain->mType) {
 
 		case  TerrainComponent::TerrainType::PerlinNoise: 
 
-			LoadPerlinNoiseTerrain(terrain);
+			//LoadPerlinNoiseTerrain(terrain);
+			
 			break;
 
 		case  TerrainComponent::TerrainType::LAZFile:
 
-			LoadLAZFileTerrain(terrain);
+			//LoadLAZFileTerrain(terrain);
 
 			break;
 

@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "MyGERuntime.h"
-
+#include "MyGEEditor.h"
 #include "MyGEMode.h"
 #include "../Scenes/Scene.h"
 

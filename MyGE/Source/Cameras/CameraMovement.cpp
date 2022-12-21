@@ -14,10 +14,11 @@ void CameraMovement::Init()
 
 void CameraMovement::OnUpdate(float deltaTime)
 {
-	Logger::Log("CAMERA MOVEMENT UPDATE");
-	return;
+	//Logger::Log("CAMERA MOVEMENT UPDATE");
+	
 	if (Input::IsKeyDown(GLFW_KEY_W)) {
 		//Move camera forward
 		Logger::Log("CAMERA MOVEMENT MOVE FORWARD");
+		//MoveForward(mMovementSpeed * deltaTime)
 	}
 }

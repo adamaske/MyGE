@@ -14,4 +14,5 @@ public:
 	std::shared_ptr<class Scene> GetScene();
 private:
 	std::shared_ptr<Scene> mEditorScene;
+
 };

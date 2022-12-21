@@ -1,13 +1,17 @@
 #pragma once
-#include "../glm/glm.hpp"
-#include "../glm/gtc/matrix_transform.hpp"
+using GameObject = uint32_t;
 class Camera {
 public:
-	void Init();
+	Camera(GameObject go);
+	Camera(std::shared_ptr<struct CameraComponent> camera);
+
+	virtual void Init();
 	//Gets a perspective matrix
-	glm::mat4 GetPerspectiveMatrix() {
+	glm::mat4 GetProjectionMatrix() {
 		return glm::perspective(glm::radians(90.f), mAspectRatio, 0.1f, 1000.f);
 	}
+
+	virtual void OnUpdate(float deltaTime);
 	//Gets a view matrix
 	glm::mat4 GetViewMatrix() {
 		return glm::mat4(1.f);
@@ -18,7 +22,7 @@ public:
 		mViewportHeight = height;
 		mAspectRatio = (float)mViewportWidth / (float)mViewportHeight;
 	}
-
+	
 private:
 	glm::mat4 mViewMatrix;
 	glm::mat4 mProjectionMatrix;
@@ -26,4 +30,5 @@ private:
 	uint32_t mViewportWidth = 1920, mViewportHeight = 1080;
 	float mAspectRatio = 1.78f;
 
+	std::shared_ptr<CameraComponent> mCameraComponent;
 };

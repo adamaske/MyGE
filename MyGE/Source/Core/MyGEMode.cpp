@@ -2,3 +2,8 @@
 #include "MyGEMode.h"
 
 #include "../Scenes/Scene.h"
+
+MyGEMode::MyGEMode()
+{
+
+}

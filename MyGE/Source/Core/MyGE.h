@@ -1,27 +1,4 @@
 #pragma once
-//#include "glew.h"
-#include <vector>
-
-
-
-//All includes, everything include this
-#include "Components/Components.h"
-
-#include "Registry.h"
-
-#include "MainWindow.h"
-#include "RenderWindow.h"
-
-#include "Scenes/Scene.h"
-#include "Scenes/SceneManager.h"
-
-#include "Script.h"
-#include "Scripting/ScriptingManager.h"
-
-#include "Shader.h"
-#include "ShaderManager.h"
-
-
 
 class MyGE
 {
@@ -29,7 +6,7 @@ public:
 
 	MyGE();
 
-	int run();
+	int Run();
 
 	void ProcessInput();
 
@@ -39,17 +16,17 @@ public:
 
 	void StartPlaytime();
 protected:
-	RenderWindow* mWindow;
+	class RenderWindow* mWindow;
 
 	////Lua scripting
-	ScriptingManager* mScriptingManager;
+	class ScriptingManager* mScriptingManager;
 	//Scene manager
-	SceneManager* mSceneManager;
+	class SceneManager* mSceneManager;
 
 	class ShaderManager* mShaderManager;
 
 	class TextureManager* mTextureManger;
-	Scene* mScene;
+	class Scene* mScene;
 
 	RenderWindow* mRenderWindow;
 	float mWindowHeight = 1200;

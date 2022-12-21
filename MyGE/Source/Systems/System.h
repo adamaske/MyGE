@@ -1,6 +1,6 @@
 #pragma once
 
-    
+#include <stdint.h>
 
 using GameObject = uint32_t;
 class System {

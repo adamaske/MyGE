@@ -8,7 +8,7 @@ public:
 	virtual void OnUpdate(float deltaTime) override;
 
 
-
+	float mMovementSpeed = 1;
 
 private:
 

@@ -36,7 +36,7 @@ private:
 	}
 	//Changed to a vector from a unorered map, since we have to loop thorugh
 	//it, I feel the vector should be faster than a map
-	std::vector<std::pair<LogType, bool>> mActiveLoggingTypes;
+	std::vector<std::pair<LogType, bool>> mActiveLoggingTypes{ {INFO, true},{ERROR,false},{WARNING, false} };
 	std::vector<LogEntry> mLogs;
 
 	//std::ostream mOut;

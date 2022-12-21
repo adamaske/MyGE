@@ -47,11 +47,6 @@ void VertexBuffer::Unbind()
 
 IndexBuffer::IndexBuffer(std::vector<uint32_t> inds) : mCount(inds.size())
 {
-	std::cout << "Amount of indicies " << inds.size() << "\n";
-	for (auto a : inds) {
-		std::cout << a << ", ";
-	}
-	std::cout << "\n";
 	glGenBuffers(1, &mIBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, inds.size() * sizeof(uint32_t), inds.data(), GL_STATIC_DRAW);

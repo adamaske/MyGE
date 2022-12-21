@@ -21,7 +21,7 @@
     <ClCompile Include="Source\MainWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\MyGE.cpp">
+    <ClCompile Include="Source\Core\MyGE.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Scenes\Scene.cpp">
@@ -129,12 +129,15 @@
     <ClCompile Include="Source\Core\MyGERuntime.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Systems\EditorSystems\QuickCreateObjectsSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\MainWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\MyGE.h">
+    <ClInclude Include="Source\Core\MyGE.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Scenes\Scene.h">
@@ -243,6 +246,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\MyGERuntime.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Systems\EditorSystems\QuickCreateObjectsSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

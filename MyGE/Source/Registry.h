@@ -183,11 +183,11 @@ public:
 		//Check there is no gameobejc with this identity already
 		for (auto g : mGameObjects) {
 			if (go == g) {
+				Logger::Log("This GameObject is already registered", ERROR);
 				return;
 			}
 		}
 		mGameObjects.push_back(go);
-		Logger::Log("Registry : Registered GameObject " + go, INFO, true);
 	}
 
 	//Adding a component must also have a entity

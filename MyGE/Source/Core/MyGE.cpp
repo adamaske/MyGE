@@ -1,23 +1,27 @@
 #include "pch.h"
 
 #include "MyGE.h"
-#include "MainWindow.h"
-#include "RenderWindow.h"
-#include "Scenes/Scene.h"
-#include "Scenes/MonkeyScene.h"
-#include "Shader.h"
-#include "Systems/System.h"
-#include "Textures/TextureManager.h"
-#include "Textures/Texture.h"
+#include "MyGEMode.h"
+#include "MyGEEditor.h"
+#include "MyGERuntime.h"
 
-#include "Core/MyGEMode.h"
-#include "Core/MyGEEditor.h"
-#include "Core/MyGERuntime.h"
+#include "../Textures/Texture.h"
+#include "../Textures/TextureManager.h"
 
-#include "glad/glad.h"
-#include "GLFW/glfw3.h"
-#include "glm/glm.hpp"
-#include "glm/gtx/quaternion.hpp"
+#include "../Components/Components.h"
+
+#include "../MainWindow.h"
+#include "../RenderWindow.h"
+
+#include "../Scenes/Scene.h"
+#include "../Scenes/SceneManager.h"
+
+#include "../Script.h"
+#include "../Scripting/ScriptingManager.h"
+
+#include "../Shader.h"
+#include "../ShaderManager.h"
+
 
 
 void glfw_onError(int error, const char* desc) {
@@ -33,7 +37,7 @@ MyGE::MyGE() {
 	//mEditor = std::make_shared<MyGEEditor>();
 	//mRuntime = std::make_shared<MyGERuntime>();
 }
-int MyGE::run()
+int MyGE::Run()
 {
 	std::cout << "MyGE : started running" << std::endl;
 	Logger::Init();

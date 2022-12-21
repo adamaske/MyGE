@@ -79,8 +79,10 @@ void RenderSystem::Init() {
 void RenderSystem::OnUpdate(float deltaTime) {
 	///find all render components
 	auto renders = Registry::Instance().GetComponents<RenderComponent>();
-
-	std::cout << "RenderSystem : found renderers " << renders.size() << std::endl;;
+	if (renders.size() == 0) {
+		Logger::Log("RenderSystem : Found no rendercomponents!", WARNING);
+		return;
+	}
 	for (auto render : renders) {
 		//Check if we want to render
 		if (!render->bRender) {
@@ -141,7 +143,5 @@ void RenderSystem::OnUpdate(float deltaTime) {
 			vao->Unbind();
 		}
 		
-
-		Logger::Log("RenderSystem : Completed Rendering!", INFO);
 	}
 }

@@ -30,15 +30,15 @@ void ScriptableObject::SetPosition(float x, float y, float z) {
 
 Monkey::Monkey(GameObject go) : ScriptableObject(go)
 {
-	std::cout << "MONKEY CREATED" << std::endl;
+	//std::cout << "MONKEY CREATED" << std::endl;
 }
 
 void Monkey::Init()
 {
-	std::cout << "MONKEY INIT" << std::endl;
+	//std::cout << "MONKEY INIT" << std::endl;
 }
 
 void Monkey::OnUpdate(float deltaTime)
 {
-	std::cout << "MONKEY UPDATE" << std::endl;
+	//std::cout << "MONKEY UPDATE" << std::endl;
 }

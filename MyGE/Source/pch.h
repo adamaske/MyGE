@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <fstream>
 #include <stdint.h>
-
+#include <array>
 #include <string>
 #include <vector>
 #include "glm/glm.hpp" 

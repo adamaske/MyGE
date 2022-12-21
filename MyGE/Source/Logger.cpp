@@ -25,6 +25,7 @@ void Logger::Log(std::string file)
 
 void Logger::Log(std::string file, LogType type)
 {
+
 	//If we are currently logging this type to the output window
 	if (GetInstance().IsLoggingType(type)) {
 		GetInstance().Log(file);
@@ -35,12 +36,13 @@ void Logger::Log(std::string file, LogType type, bool logToFile)
 {
 	GetInstance().Log(file, type);
 	if (logToFile) {
+		//This cannot be used until optimizations are done, use some error code instead, this stackoverflows very quickly
+		return;
 		GetInstance().mLogs.push_back(LogEntry{ type, file });
 	}
 }
 
 bool Logger::IsLoggingType(LogType type) {
-	
 	return GetInstance().IsLoggingTypeImpl(type);
 }
 

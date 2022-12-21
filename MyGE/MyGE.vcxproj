@@ -215,10 +215,11 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Source\MyGE.cpp" />
+    <ClCompile Include="Source\Core\MyGE.cpp" />
     <ClCompile Include="Source\MainWindow.cpp" />
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\Systems\CameraSystem.cpp" />
+    <ClCompile Include="Source\Systems\EditorSystems\QuickCreateObjectsSystem.cpp" />
     <ClCompile Include="Source\Systems\ObjMeshSystem.cpp" />
     <ClCompile Include="Source\Systems\RenderSystem.cpp" />
     <ClCompile Include="Source\Systems\System.cpp" />
@@ -254,9 +255,10 @@
     <ClInclude Include="Source\Shader.h" />
     <ClInclude Include="Source\RenderWindow.h" />
     <ClInclude Include="Source\Scenes\Scene.h" />
-    <ClInclude Include="Source\MyGE.h" />
+    <ClInclude Include="Source\Core\MyGE.h" />
     <ClInclude Include="Source\MainWindow.h" />
     <ClInclude Include="Source\Systems\CameraSystem.h" />
+    <ClInclude Include="Source\Systems\EditorSystems\QuickCreateObjectsSystem.h" />
     <ClInclude Include="Source\Systems\ObjMeshSystem.h" />
     <ClInclude Include="Source\Systems\PhysicsSystem.h" />
     <ClInclude Include="Source\Systems\RenderSystem.h" />

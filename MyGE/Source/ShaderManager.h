@@ -1,7 +1,6 @@
 #pragma once
 #include <iostream>
 #include <unordered_map>
-#include "MyGE.h"
 static class ShaderManager* mSMInstance;
 class ShaderManager {
 public:

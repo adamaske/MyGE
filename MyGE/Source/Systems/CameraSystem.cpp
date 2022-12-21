@@ -1,10 +1,14 @@
 #include "pch.h"
 #include "CameraSystem.h"
-
+#include "../Cameras/Camera.h"
 #include "../Shader.h"
 #include "../ShaderManager.h"
 void CameraSystem::Init(){
     //Init cameras
+	auto cameras = Registry::Instance().GetComponents<CameraComponent>();
+	for (auto cam : cameras) {
+		cam->mCamera = std::make_shared<Camera>(cam);
+	}
 }
 
 void CameraSystem::OnUpdate(float deltaTime) {
@@ -14,6 +18,7 @@ void CameraSystem::OnUpdate(float deltaTime) {
 	auto cameras = Registry::Instance().GetComponents<CameraComponent>();
 	for (auto cam : cameras)
 	{
+		cam->mCamera->OnUpdate();
 		auto go = (uint32_t)(*cam).mGO;
 		//It does find 
 		//Check if it is the main camera
@@ -28,6 +33,7 @@ void CameraSystem::OnUpdate(float deltaTime) {
 			//Get a position
 			glm::vec3 pos(transform->mMatrix[3].x, transform->mMatrix[3].y, transform->mMatrix[3].z);
 			//Update matrices 
+			//Should be done by the camera
 			cam->mProjectionMatrix = glm::perspective(glm::radians(90.f), cam->mAspectRatio, 0.1f, 1000.f);
 
 			cam->mViewMatrix = glm::lookAt(pos, pos + glm::vec3(0, 0, 1), glm::vec3(0, 1, 0));
@@ -35,8 +41,8 @@ void CameraSystem::OnUpdate(float deltaTime) {
 			auto shaders = ShaderManager::Instance()->GetShaders();
 			for (auto shader : shaders) {
 				//Set the variables in the shaders, every shader should have these variables
-				shader->SetUniformMatrix4(cam->mViewMatrix, "vMatrix");
-				shader->SetUniformMatrix4(cam->mProjectionMatrix, "pMatrix");
+				shader->SetUniformMatrix4(cam->mCamera->GetViewMatrix(), "vMatrix");
+				shader->SetUniformMatrix4(cam->mCamera->GetProjectionMatrix(), "pMatrix");
 
 			}
 		}

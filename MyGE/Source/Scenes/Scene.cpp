@@ -88,7 +88,7 @@ void Scene::Init()
 	auto camera = Registry::Instance().RegisterComponent<CameraComponent>(CameraComponent(), cameraID);
 	camera->bIsMainCamera = true;
 	auto cameraTransform = Registry::Instance().GetComponent<TransformComponent>(cameraID);
-	cameraTransform->mMatrix = glm::translate(glm::mat4(1), glm::vec3(0, 0, -1));
+	cameraTransform->mMatrix = glm::translate(glm::mat4(1), glm::vec3(0, 1, -1));
 	//This gives the camera a CameraMovement script, which handles input and etc for the camera, this is 
 	auto cameraMovementScript = Registry::Instance().RegisterComponent<NativeScriptComponent>(NativeScriptComponent(), cameraID);
 	cameraMovementScript->Bind<CameraMovement>();
@@ -159,7 +159,7 @@ void Scene::ViewportRezised(int width, int height) {
 		//Change cameras without a fixed ar
 		if (!cam->bFixedAsceptRatio) {
 			//Remove one of these
-			cam->mCamera.SetViewportSize(width, height);
+			cam->mCamera->SetViewportSize(width, height);
 			cam->mAspectRatio = ((float)width / (float)height);
 		}
 	}
