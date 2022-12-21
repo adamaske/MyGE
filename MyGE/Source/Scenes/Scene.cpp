@@ -160,7 +160,9 @@ void Scene::ViewportRezised(int width, int height) {
 		if (!cam->bFixedAsceptRatio) {
 			//Remove one of these
 			cam->mCamera->SetViewportSize(width, height);
+			
 			cam->mAspectRatio = ((float)width / (float)height);
+
 		}
 	}
 }

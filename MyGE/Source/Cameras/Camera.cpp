@@ -15,3 +15,8 @@ Camera::Camera(std::shared_ptr<CameraComponent> camera)
 void Camera::Init() {
 
 }
+
+void Camera::OnUpdate(float deltaTime)
+{
+	//Set view and projection matrices 
+}

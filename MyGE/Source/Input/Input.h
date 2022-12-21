@@ -27,20 +27,20 @@ public:
 	static float MouseX();
 	static float MouseY();
 
-	std::array<bool, GLFW_KEY_LAST + 1> mKeys;
+	//Change this 350 to the amount of keys, GLFW_LAST_KEY + 1, 
+	//then it goes from 0 to 349 still but updates with opengl updates
+	//Each bool represents if the key is down or not
+	std::array<bool, 350> mKeys;
 private:
 	// Callback functions for GLFW input events.
 	static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 	static void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
 	static void CursorPosCallback(GLFWwindow* window, double xpos, double ypos);
-	
-	//To accsess the input as fast as possible i create an array for every key
-	//with length of the last key index + 1, 
 
 	//Mouse position
 	float mouseX = 0;
 	float mouseY = 0;
-	std::pair<float, float> mMouse;
+
 	static Input& GetInstance() {
 		static Input instance;
 		return instance;

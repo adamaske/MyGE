@@ -14,5 +14,5 @@ public:
 	void StopRuntime();
 private:
 	std::shared_ptr<Scene> mScene;
-
+	std::unordered_map<const char*, std::shared_ptr<System>> mRuntimeSystems;
 };

@@ -18,6 +18,7 @@ void MyGERuntime::OnUpdate(float deltaTime)
 
 void MyGERuntime::StartRuntime(std::shared_ptr<Scene> scene)
 {
+
 	mScene = scene;
 }
 

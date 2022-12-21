@@ -18,7 +18,7 @@ void CameraSystem::OnUpdate(float deltaTime) {
 	auto cameras = Registry::Instance().GetComponents<CameraComponent>();
 	for (auto cam : cameras)
 	{
-		cam->mCamera->OnUpdate();
+		cam->mCamera->OnUpdate(deltaTime);
 		auto go = (uint32_t)(*cam).mGO;
 		//It does find 
 		//Check if it is the main camera

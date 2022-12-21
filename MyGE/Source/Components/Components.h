@@ -94,6 +94,7 @@ struct CameraComponent {
 	std::shared_ptr<Camera> mCamera;
 
 	GameObject mGO = 0;
+
 	bool bIsMainCamera = 1;
 	bool bFixedAsceptRatio = false;
 

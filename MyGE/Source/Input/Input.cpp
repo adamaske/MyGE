@@ -13,12 +13,6 @@ bool Input::IsKeyDown(int key)
 	return GetInstance().mKeys[key];
 }
 
-bool Input::IsKeyDownImplentation(int key)
-{
-	auto window = glfwGetCurrentContext();
-	return glfwGetKey(window, key) == GLFW_PRESS ? true : false;
-}
-
 float Input::MouseX()
 {
 	return 0.0f;

@@ -14,19 +14,21 @@ public:
 
 	void CalculateDeltaTime();
 
-	void StartPlaytime();
+	void ExitApplication();
 protected:
 	class RenderWindow* mWindow;
 
+	//Are these managers nessacery, should they be systems instead?
+	// 
 	////Lua scripting
-	class ScriptingManager* mScriptingManager;
+	std::shared_ptr<class ScriptingManager> mScriptingManager;
 	//Scene manager
-	class SceneManager* mSceneManager;
+	std::shared_ptr<class SceneManager>mSceneManager;
 
-	class ShaderManager* mShaderManager;
+	std::shared_ptr<class ShaderManager> mShaderManager;
 
-	class TextureManager* mTextureManger;
-	class Scene* mScene;
+	std::shared_ptr<class TextureManager> mTextureManger;
+	
 
 	RenderWindow* mRenderWindow;
 	float mWindowHeight = 1200;
@@ -43,7 +45,10 @@ protected:
 
 	bool bRuntime = true;
 
-	//std::shared_ptr<MyGEEditor> mEditor;
-	//std::shared_ptr<MyGERuntime> mRuntime;
+	std::shared_ptr<class MyGEMode> mActiveMode;
+	std::shared_ptr<class MyGEEditor> mEditor;
+	std::shared_ptr<class MyGERuntime> mRuntime;
+
+	bool bRunning = true;
 };
 

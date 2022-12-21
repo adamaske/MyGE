@@ -8,11 +8,23 @@ public:
 	virtual void OnUpdate(float deltaTime) override;
 
 	bool LoadScene(std::string fileName);
+	bool LoadScene(std::shared_ptr<Scene> scene);
 
 	void StartPlay();
 	void StopPlay();
 	std::shared_ptr<class Scene> GetScene();
 private:
+	
 	std::shared_ptr<Scene> mEditorScene;
+	std::unordered_map<const char*, std::shared_ptr<class System>> mEditorSystems;
 
+	bool bEditorRunning = true;
+
+
+	//The scene viewport, where we see the scene
+	std::shared_ptr<class RenderWindow> mSceneViewport;
+	//The window where the game view (main camera) is seen
+	std::shared_ptr<class RenderWindow> mGameRenderViewport;
+	//Should we create another window, or use the same one as the editor uses for scene view
+	bool bPopoutRuntime = false;
 };

@@ -27,15 +27,11 @@
 void glfw_onError(int error, const char* desc) {
 	std::cout << "GLFW error : " << error << ", " << desc << std::endl;
 }
-void mouse_callback(GLFWwindow* window, double xpos, double ypos);
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
 MyGE::MyGE() {
 	mWindowWidth = 1280;
 	mWindowHeight = 720;
 
-	//mEditor = std::make_shared<MyGEEditor>();
-	//mRuntime = std::make_shared<MyGERuntime>();
 }
 int MyGE::Run()
 {
@@ -47,14 +43,13 @@ int MyGE::Run()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
 
+
 	//Our window into the game world is a RenderWindow
 	//Init, close if not sucess
 	mRenderWindow = new RenderWindow();
 	mRenderWindow->Init(glfwCreateWindow(mWindowWidth, mWindowHeight, "MyGE", NULL, NULL));
 	//The renderwindow's window has a pointer to this MyGE object,
 	//Should be changed to a Editor later
-	glfwSetWindowUserPointer(mRenderWindow->GetWindow(), this);
-	glfwSetWindowSizeCallback(mRenderWindow->GetWindow(), WindowSizeChangedCallback);
 	//vsync
 	glfwSwapInterval(1);
 	//Loading glad?
@@ -63,10 +58,6 @@ int MyGE::Run()
 		Logger::Log("Failed to initialize GLAD", ERROR, true);
 		return -1;
 	}
-	//glfwSetInputMode(mRenderWindow->GetWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-
-	glfwSetCursorPosCallback(mRenderWindow->GetWindow(), mouse_callback);
-	glfwSetScrollCallback(mRenderWindow->GetWindow(), scroll_callback);
 
 	glEnable(GL_DEPTH_TEST);
 	
@@ -91,8 +82,26 @@ int MyGE::Run()
 	// Time of last frame
 	//mEditor->LoadScene("../Resources/Scenes/MonkeyScene.ge");
 	//mEditor->Init();
+	bool bEditorMode = true;
+	if (bEditorMode) {
+		//We want to launch the editor
+	}
+	else {
+		//we want only the runtime, 
+		//This may require totally different systems
+	}
+	//we want the editor to load
+	mEditor = std::make_shared<MyGEEditor>();
+	//Sets the active mode to this
+	mActiveMode = mEditor;
 	
-	while (!glfwWindowShouldClose(mRenderWindow->GetWindow()))
+	//In the future we want to generlize this, 
+	//with more runtimes which uses the same game engine etc, 
+	//we can have high performance testing and maybe multiplayer testing
+	//It can also be made into a different project
+	mRuntime = std::make_shared<MyGERuntime>();
+
+	while (bRunning)
 	{
 		//Get events
 		glfwPollEvents();
@@ -107,14 +116,14 @@ int MyGE::Run()
 
 
 		//Update scene
-		mScene->OnUpdate(deltaTime);
+		mEditor->OnUpdate(deltaTime);
 		//Rendering
 		mRenderWindow->Render(deltaTime);
 
 		//
 		glfwSwapBuffers(mRenderWindow->GetWindow());
 	}
-
+	//Do cleanup here
 	glfwTerminate();
 
 	return 0;
@@ -152,6 +161,11 @@ void MyGE::CalculateDeltaTime()
 	float currentFrame = glfwGetTime();
 	deltaTime = currentFrame - lastFrame;
 	lastFrame = currentFrame;
+}
+
+void MyGE::ExitApplication()
+{
+	bRunning = false;
 }
 
 // glfw: whenever the mouse scroll wheel scrolls, this callback is called
