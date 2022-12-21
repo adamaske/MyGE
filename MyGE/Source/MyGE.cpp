@@ -3,11 +3,16 @@
 #include "MyGE.h"
 #include "MainWindow.h"
 #include "RenderWindow.h"
-#include "Scene.h"
+#include "Scenes/Scene.h"
+#include "Scenes/MonkeyScene.h"
 #include "Shader.h"
 #include "Systems/System.h"
 #include "Textures/TextureManager.h"
 #include "Textures/Texture.h"
+
+#include "Core/MyGEMode.h"
+#include "Core/MyGEEditor.h"
+#include "Core/MyGERuntime.h"
 
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
@@ -24,6 +29,9 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 MyGE::MyGE() {
 	mWindowWidth = 1280;
 	mWindowHeight = 720;
+
+	//mEditor = std::make_shared<MyGEEditor>();
+	//mRuntime = std::make_shared<MyGERuntime>();
 }
 int MyGE::run()
 {
@@ -57,8 +65,7 @@ int MyGE::run()
 	glfwSetScrollCallback(mRenderWindow->GetWindow(), scroll_callback);
 
 	glEnable(GL_DEPTH_TEST);
-	//Need a registry for every scene, only one scene here
-	Registry::Instance(); // Just in case
+	
 	//Scene Manager 
 	mSceneManager = new SceneManager();
 	//Scripting manager to handle all lua and native scripting
@@ -69,13 +76,18 @@ int MyGE::run()
 	mTextureManger = new TextureManager();
 	mTextureManger->InsertTexture("../Resources/Textures/hammerDiffuse.bmp", "HammerDiffuse");
 
+	//
 	mScene = new Scene();
+	//mSceneManager->AddScene(*mScene);
 	mScene->Init();
-	mSceneManager->AddScene(*mScene);
-
+	
+	//resize window immediatly 
+	ResizeWindow(1200, 800);
 	// Time between current frame and last frame
 	// Time of last frame
-
+	//mEditor->LoadScene("../Resources/Scenes/MonkeyScene.ge");
+	//mEditor->Init();
+	
 	while (!glfwWindowShouldClose(mRenderWindow->GetWindow()))
 	{
 		//Get events
@@ -95,7 +107,7 @@ int MyGE::run()
 		//Rendering
 		mRenderWindow->Render(deltaTime);
 
-		//Display what has been rendered
+		//
 		glfwSwapBuffers(mRenderWindow->GetWindow());
 	}
 
@@ -111,6 +123,10 @@ void MyGE::ProcessInput()
         
         glfwSetWindowShouldClose(mRenderWindow->GetWindow(), true);
     } 
+
+	if (glfwGetKey(mRenderWindow->GetWindow(), GLFW_KEY_P) == GLFW_PRESS) {
+		//mRuntime->Play();
+	}
 }
 
 void mouse_callback(GLFWwindow * window, double xposIn, double yposIn)

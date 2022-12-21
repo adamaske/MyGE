@@ -182,6 +182,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Source\Cameras\CameraMovement.cpp" />
+    <ClCompile Include="Source\Core\MyGEEditor.cpp" />
+    <ClCompile Include="Source\Core\MyGEMode.cpp" />
+    <ClCompile Include="Source\Core\MyGERuntime.cpp" />
     <ClCompile Include="Source\Input\Input.cpp" />
     <ClCompile Include="Source\Logger.cpp" />
     <ClCompile Include="Source\ObjFileReader.cpp" />
@@ -198,14 +201,15 @@
     <ClCompile Include="Source\Registry.cpp" />
     <ClCompile Include="Source\Rendering\Renderer.cpp" />
     <ClCompile Include="Source\Rendering\VertexArray.cpp" />
-    <ClCompile Include="Source\SceneManager.cpp" />
+    <ClCompile Include="Source\Scenes\MonkeyScene.cpp" />
+    <ClCompile Include="Source\Scenes\SceneManager.cpp" />
     <ClCompile Include="Source\Script.cpp" />
     <ClCompile Include="Source\Scripting\NativeScriptingSystem.cpp" />
     <ClCompile Include="Source\Scripting\ScriptableObject.cpp" />
     <ClCompile Include="Source\Scripting\ScriptingManager.cpp" />
     <ClCompile Include="Source\Shader.cpp" />
     <ClCompile Include="Source\RenderWindow.cpp" />
-    <ClCompile Include="Source\Scene.cpp">
+    <ClCompile Include="Source\Scenes\Scene.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
@@ -227,6 +231,9 @@
     <ClInclude Include="Source\Audio\AudioSystem.h" />
     <ClInclude Include="Source\Audio\WavFileReader.h" />
     <ClInclude Include="Source\Cameras\CameraMovement.h" />
+    <ClInclude Include="Source\Core\MyGEEditor.h" />
+    <ClInclude Include="Source\Core\MyGEMode.h" />
+    <ClInclude Include="Source\Core\MyGERuntime.h" />
     <ClInclude Include="Source\Input\Input.h" />
     <ClInclude Include="Source\Logger.h" />
     <ClInclude Include="Source\ObjFileReader.h" />
@@ -237,7 +244,8 @@
     <ClInclude Include="Source\pch.h" />
     <ClInclude Include="Source\Registry.h" />
     <ClInclude Include="Source\Rendering\Renderer.h" />
-    <ClInclude Include="Source\SceneManager.h" />
+    <ClInclude Include="Source\Scenes\MonkeyScene.h" />
+    <ClInclude Include="Source\Scenes\SceneManager.h" />
     <ClInclude Include="Source\Script.h" />
     <ClInclude Include="Source\Scripting\NativeScriptingSystem.h" />
     <ClInclude Include="Source\Scripting\ScriptableObject.h" />
@@ -245,7 +253,7 @@
     <ClInclude Include="Source\ShaderManager.h" />
     <ClInclude Include="Source\Shader.h" />
     <ClInclude Include="Source\RenderWindow.h" />
-    <ClInclude Include="Source\Scene.h" />
+    <ClInclude Include="Source\Scenes\Scene.h" />
     <ClInclude Include="Source\MyGE.h" />
     <ClInclude Include="Source\MainWindow.h" />
     <ClInclude Include="Source\Systems\CameraSystem.h" />

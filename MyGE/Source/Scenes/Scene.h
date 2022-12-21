@@ -1,5 +1,4 @@
 #pragma once
-#include "pch.h"
 
 using GameObject = uint32_t;
 class Scene
@@ -21,7 +20,7 @@ private:
 	std::unordered_map<const char*, GameObject> mGameObjects;
 	std::unordered_map<const char*, class System*> mSystems;
 
-	class Registry* mRegistry;
+	std::shared_ptr<Registry> mRegistry;
 
 	struct CameraComponent* mEditorCamera;
 

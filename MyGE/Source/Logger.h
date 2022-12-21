@@ -39,6 +39,6 @@ private:
 	std::vector<std::pair<LogType, bool>> mActiveLoggingTypes;
 	std::vector<LogEntry> mLogs;
 
-	std::ostream mOut;
+	//std::ostream mOut;
 };
 

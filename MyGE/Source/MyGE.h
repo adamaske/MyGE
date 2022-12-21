@@ -12,8 +12,8 @@
 #include "MainWindow.h"
 #include "RenderWindow.h"
 
-#include "Scene.h"
-#include "../../MyGE/Source/SceneManager.h"
+#include "Scenes/Scene.h"
+#include "Scenes/SceneManager.h"
 
 #include "Script.h"
 #include "Scripting/ScriptingManager.h"
@@ -36,6 +36,8 @@ public:
 	void ResizeWindow(uint32_t width, uint32_t height);
 
 	void CalculateDeltaTime();
+
+	void StartPlaytime();
 protected:
 	RenderWindow* mWindow;
 
@@ -62,4 +64,9 @@ protected:
 		obj->ResizeWindow(width, height);
 	};
 
+	bool bRuntime = true;
+
+	//std::shared_ptr<MyGEEditor> mEditor;
+	//std::shared_ptr<MyGERuntime> mRuntime;
 };
+

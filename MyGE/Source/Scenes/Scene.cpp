@@ -2,21 +2,18 @@
 
 #include "Scene.h"
 
-#include "ShaderManager.h"
-#include "Shader.h"
-
-#include "Textures/TextureManager.h"
-#include "Textures/Texture.h"
-
-#include "Systems/System.h"
-#include "Systems/ObjMeshSystem.h"
-#include "Systems/CameraSystem.h"
-#include "Systems/TerrainSystem.h"
-#include "Systems/RenderSystem.h"
-#include "Scripting/NativeScriptingSystem.h"
-
-#include "Cameras/CameraMovement.h"
-#include "Audio/AudioSystem.h"
+#include "../ShaderManager.h"
+#include "../Shader.h"
+#include "../Textures/TextureManager.h"
+#include "../Textures/Texture.h"
+#include "../Systems/System.h"
+#include "../Systems/ObjMeshSystem.h"
+#include "../Systems/CameraSystem.h"
+#include "../Systems/TerrainSystem.h"
+#include "../Systems/RenderSystem.h"
+#include "../Scripting/NativeScriptingSystem.h"
+#include "../Cameras/CameraMovement.h"
+#include "../Audio/AudioSystem.h"
 
 Scene::Scene()
 {
@@ -24,6 +21,9 @@ Scene::Scene()
 
 void Scene::Init()
 {
+	//Creates registry for this scene
+	mRegistry = std::make_shared<Registry>();
+	mRegistry->SetInstance();
 	//Registering all components, this can be remvoed
 	Registry::Instance().RegisterComponent<RenderComponent>();
 	Registry::Instance().RegisterComponent<TransformComponent>();

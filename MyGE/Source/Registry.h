@@ -4,7 +4,7 @@
 #include <unordered_map>
 #include <string>
 #include <memory>
-
+#include "Logger.h"
 //Needs only to know about all the components and the GameObject 
 #include "Components/Components.h"
 
@@ -93,13 +93,17 @@ public:
 	Registry()   {
 		//Reset the ID keeper
 		mID = 0;
-		std::cout << "Registry : Created" << std::endl;
+		Logger::Log("Registry : Registry created", INFO);
 	};
 
 	~Registry() {
 		//delete mInstance;
 	};
 
+	void SetInstance() {
+		mInstance = this;
+		Logger::Log("Registry : New instance set", INFO);
+	}
 	//Instance 
 	static Registry& Instance() {
 		if (mInstance == nullptr) {
@@ -111,7 +115,6 @@ public:
 	//Always returns a new not in-use ID
 	static const int GetNewID() {
 		Registry::Instance().mID = Registry::Instance().mID + 1;
-		std::cout << "Registry :: GetNewID returned " << Registry::Instance().mID << std::endl;
 		return Registry::Instance().mID;
 	}
 
@@ -138,7 +141,7 @@ public:
 		if (mComponentsHolder.find(typeName) == mComponentsHolder.end()) {
 			mComponentsHolder.insert({ typeName, new UnitHolder<T>() });
 
-			std::cout << "Registered new component " << typeName << std::endl;
+			Logger::Log("Registry : Registered new component " + (std::string)typeName, INFO);
 		}
 	}
 
@@ -149,7 +152,6 @@ public:
 		//this function returns nomatter what
 		//We know we want to register
 		const char* typeName = typeid(T).name();
-		std::cout << "Got order to register a " << typeName << " to object " << go << std::endl;
 		if (mComponentsHolder.find(typeName) != mComponentsHolder.end()) {
 			//If the components is already registered, return
 			//No need to create a new UnitHolder
@@ -185,7 +187,7 @@ public:
 			}
 		}
 		mGameObjects.push_back(go);
-		std::cout << "Registry : RegisterGameObject the GameObject " << go << " was added to mGameObjects" << std::endl;
+		Logger::Log("Registry : Registered GameObject " + go, INFO, true);
 	}
 
 	//Adding a component must also have a entity
@@ -255,7 +257,7 @@ public:
 		const char* typeName = typeid(T).name();
 		if (mComponentsHolder.find(typeName) == mComponentsHolder.end()) {
 			//There is a unit holder with this type
-			std::cout << "Becuse there is no component holder of this type";
+			Logger::Log("Registry::Has(objectID) : There is no " + (std::string)typeName + " type!", ERROR, true);
 			return false;
 		}
 		else {
@@ -277,7 +279,7 @@ private:
 	std::unordered_map <const char*, IUnitHolder*> mComponentsHolder;
 	
 
-	int mID;
+	int mID = 0;
 	//This is the type of array we want to accsess
 	template<typename T>
 	UnitHolder<T>* GetUnitHolder() {
@@ -296,7 +298,7 @@ private:
 		//Casting a IComponentHolder to a ComponentHolder, casts down from IComponent to Component
 		return static_cast<UnitHolder<T>*>(mComponentsHolder[typeName]);
 		//return std::static_pointer_cast<UnitHolder<T>>(mComponentsHolder[typeName]);
-	}
+	};
 
 };
 
