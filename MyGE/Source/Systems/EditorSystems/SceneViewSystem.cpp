@@ -1,20 +1,19 @@
 #include "pch.h"
-#include "RenderSystem.h"
-#include "ObjMeshSystem.h"
+#include "SceneViewSystem.h"
 
-#include "../Textures/Texture.h"
-#include "../ObjFileReader.h"
-
-RenderSystem::RenderSystem() {
-
-
+#include "../ObjMeshSystem.h"
+#include "../../ObjFileReader.h"
+#include "../../Textures/Texture.h"
+SceneViewSystem::SceneViewSystem()
+{
 }
 
-void RenderSystem::Init() {
-	
+void SceneViewSystem::Init()
+{
+	//This should maybe deal with it?
 	///find all render components
 	auto renders = Registry::Instance().GetComponents<RenderComponent>();
-	Logger::Log("RednerSystem : Init renderers = " + std::to_string(renders.size()), INFO);
+	Logger::Log("RednerSystem : Init renderers = " + renders.size(), INFO);
 	for (auto render : renders) {
 
 		Logger::Log("RednerSystem : Init starting init on renderer", INFO);
@@ -34,14 +33,14 @@ void RenderSystem::Init() {
 			shader->Use();
 
 			auto transform = Registry::Instance().GetComponent<TransformComponent>((uint32_t)render->mGO);
-			
+
 
 			if (material->mTexture) {
 				//I maybe think we dont have to do anything here???	
 			}
 
-		
-			
+
+
 		}
 		else {
 
@@ -77,7 +76,8 @@ void RenderSystem::Init() {
 	}
 }
 
-void RenderSystem::OnUpdate(float deltaTime) {
+void SceneViewSystem::OnUpdate(float deltaTime)
+{
 	///find all render components
 	auto renders = Registry::Instance().GetComponents<RenderComponent>();
 	if (renders.size() == 0) {
@@ -111,7 +111,7 @@ void RenderSystem::OnUpdate(float deltaTime) {
 				//This activates the 0'th texture unit
 				glActiveTexture(GL_TEXTURE0);
 				glBindTexture(GL_TEXTURE_2D, texture->id());
-				if(shader) {
+				if (shader) {
 					//The diffuse sampler is using the 0'th texture unit
 					shader->SetUniform1i(0, "diffuseSampler");
 				}
@@ -124,13 +124,13 @@ void RenderSystem::OnUpdate(float deltaTime) {
 			Logger::Log("RenderSystem : No material, cannot render!", ERROR, true);
 		}
 
-		
+
 		auto mesh = Registry::Instance().GetComponent<MeshComponent>((uint32_t)render->mGO);
 		if (!mesh) {
 			Logger::Log("RenderSystem : No MeshComponent", INFO);
 		}
 
-		if(render->bRenderMesh){
+		if (render->bRenderMesh) {
 			//This should be replaced by calling Renderer functions from Renderer.cpp
 			auto vao = render->mVAO;
 			if (!vao) {
@@ -143,6 +143,6 @@ void RenderSystem::OnUpdate(float deltaTime) {
 
 			vao->Unbind();
 		}
-		
+
 	}
 }

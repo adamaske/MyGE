@@ -84,9 +84,10 @@ bool Logger::LogsToFile()
 	filePath.append(fileType);
 	std::ifstream file("../Resources/Logs/" + fileName + ".txt");
 	if (file.is_open()) {
-
+		return true;
 	}
 	else {
 		GetInstance().Log("Could not create file to output logs to!", ERROR);
+		return false;
 	}
 }

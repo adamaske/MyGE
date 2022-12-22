@@ -132,6 +132,9 @@
     <ClCompile Include="Source\Systems\EditorSystems\QuickCreateObjectsSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Systems\EditorSystems\SceneViewSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\MainWindow.h">
@@ -249,6 +252,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Systems\EditorSystems\QuickCreateObjectsSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Systems\EditorSystems\SceneViewSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

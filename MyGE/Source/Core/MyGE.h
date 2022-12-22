@@ -8,8 +8,6 @@ public:
 
 	int Run();
 
-	void ProcessInput();
-
 	void ResizeWindow(uint32_t width, uint32_t height);
 
 	void CalculateDeltaTime();
@@ -19,7 +17,7 @@ protected:
 	class RenderWindow* mWindow;
 
 	//Are these managers nessacery, should they be systems instead?
-	// 
+	// Could be uniqe pointers instead, should these managers exist at all?
 	////Lua scripting
 	std::shared_ptr<class ScriptingManager> mScriptingManager;
 	//Scene manager
@@ -29,10 +27,6 @@ protected:
 
 	std::shared_ptr<class TextureManager> mTextureManger;
 	
-
-	RenderWindow* mRenderWindow;
-	float mWindowHeight = 1200;
-	float mWindowWidth = 900;
 	//Keeping track of deltaTime
 	float deltaTime = 0.0f;
 	float lastFrame = 0.0f;
@@ -43,7 +37,7 @@ protected:
 		obj->ResizeWindow(width, height);
 	};
 
-	bool bRuntime = true;
+	bool bRuntime = false;
 
 	std::shared_ptr<class MyGEMode> mActiveMode;
 	std::shared_ptr<class MyGEEditor> mEditor;

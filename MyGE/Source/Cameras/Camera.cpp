@@ -1,6 +1,10 @@
 #include "pch.h"
 #include "Camera.h"
 #include "../Components/Components.h"
+Camera::Camera()
+{
+	mCameraComponent = std::make_shared<CameraComponent>();
+}
 Camera::Camera(GameObject go)
 {
 	//This should not be used

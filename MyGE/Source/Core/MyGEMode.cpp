@@ -7,3 +7,9 @@ MyGEMode::MyGEMode()
 {
 
 }
+
+MyGEMode::~MyGEMode()
+{
+
+}
+

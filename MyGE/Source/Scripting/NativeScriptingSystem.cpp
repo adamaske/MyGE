@@ -3,6 +3,10 @@
 
 void NativeScriptingSystem::Init()
 {
+	if (!Registry::Instance().Has<NativeScriptComponent>()) {
+		Logger::Log("NativeSCriptingSystem : Registry has no components");
+		return;
+	}
 
 	//We want to find every nativescriptcomponent
 	auto scripts = Registry::Instance().GetComponents<NativeScriptComponent>();

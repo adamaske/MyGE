@@ -1,11 +1,13 @@
 #include "pch.h"
 #include "QuickCreateObjectsSystem.h"
-#include "../System.h"
+
 void QuickCreateObjectSystem::Init() {
 
 }
 
 void QuickCreateObjectSystem::OnUpdate(float deltaTime) {
-
+	if (Input::IsKeyDown(GLFW_KEY_I)) {
+		Logger::Log("QuickCreateObjectSystem : CREATE A OBJECT!");
+	}
 	
 }

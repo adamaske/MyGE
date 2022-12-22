@@ -2,6 +2,7 @@
 using GameObject = uint32_t;
 class Camera {
 public:
+	Camera();
 	Camera(GameObject go);
 	Camera(std::shared_ptr<struct CameraComponent> camera);
 
