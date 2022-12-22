@@ -98,21 +98,21 @@ struct CameraComponent {
 	bool bIsMainCamera = 1;
 	bool bFixedAsceptRatio = false;
 
-	glm::mat4 mViewMatrix = glm::mat4(1);
-	glm::mat4 mProjectionMatrix = glm::mat4(1);
+	glm::mat4 mViewMatrix;
+	glm::mat4 mProjectionMatrix;
 
-	glm::vec3 mUp = { 0,1,0 };
-	glm::vec3 mRight = { 1,0,0 };
-	glm::vec3 mForward = { 0,0,1 };
+	glm::vec3 mUp;
+	glm::vec3 mRight;
+	glm::vec3 mForward;
 
 	glm::vec3 mGlobalUp = { 0,1,0 };
 	glm::vec3 mGlobalRight = { 1,0,0 };
 	glm::vec3 mGlobalForward = { 0,0,1 };
 
-	float mFOV = 90;
+	float mFOV;
 	float mAspectRatio = 4.f / 3.f;
-	float mNearPlane = 0.1f;
-	float mFarPlane = 1000.f;
+	float mNearPlane;
+	float mFarPlane;
 
 	//Incase the camera dosent have a transform component
 	float mYaw = 0;

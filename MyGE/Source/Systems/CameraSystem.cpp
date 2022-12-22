@@ -12,8 +12,7 @@ void CameraSystem::Init(){
 }
 
 void CameraSystem::OnUpdate(float deltaTime) {
-	//returns here, this must be handled differently based on scene or game view
-
+	return;
 	//We want an array of every camera in the scene
 	//If we find a camera whith bisMainCamera  = true, that is the one we want to render the scene view from
 	auto cameras = Registry::Instance().GetComponents<CameraComponent>();

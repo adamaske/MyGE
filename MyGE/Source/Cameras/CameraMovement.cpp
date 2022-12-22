@@ -17,19 +17,19 @@ void CameraMovement::OnUpdate(float deltaTime)
 	//Logger::Log("CAMERA MOVEMENT UPDATE");
 	if (Input::IsKeyDown(GLFW_KEY_W)) {
 		//Move camera forward
-		//Logger::Log("CAMERA MOVEMENT MOVE FORWARD");
+		Logger::Log("CAMERA MOVEMENT MOVE FORWARD");
 		
 	}
 	if (Input::IsKeyDown(GLFW_KEY_S)) {
 		//Move camera forward
-		//Logger::Log("CAMERA MOVEMENT MOVE BACKWARDS");
+		Logger::Log("CAMERA MOVEMENT MOVE BACKWARDS");
 	}
 	if (Input::IsKeyDown(GLFW_KEY_A)) {
 		//Move camera forward
-		//Logger::Log("CAMERA MOVEMENT MOVE LEFT");
+		Logger::Log("CAMERA MOVEMENT MOVE LEFT");
 	}
 	if (Input::IsKeyDown(GLFW_KEY_D)) {
 		//Move camera forward
-		//Logger::Log("CAMERA MOVEMENT MOVE RIGHT");
+		Logger::Log("CAMERA MOVEMENT MOVE RIGHT");
 	}
 }

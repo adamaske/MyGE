@@ -182,7 +182,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Source\Cameras\CameraMovement.cpp" />
-    <ClCompile Include="Source\Cameras\EditorCamera.cpp" />
     <ClCompile Include="Source\Core\MyGEEditor.cpp" />
     <ClCompile Include="Source\Core\MyGEMode.cpp" />
     <ClCompile Include="Source\Core\MyGERuntime.cpp" />
@@ -220,7 +219,6 @@
     <ClCompile Include="Source\MainWindow.cpp" />
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\Systems\CameraSystem.cpp" />
-    <ClCompile Include="Source\Systems\EditorSystems\GameViewSystem.cpp" />
     <ClCompile Include="Source\Systems\EditorSystems\QuickCreateObjectsSystem.cpp" />
     <ClCompile Include="Source\Systems\EditorSystems\SceneViewSystem.cpp" />
     <ClCompile Include="Source\Systems\ObjMeshSystem.cpp" />
@@ -235,7 +233,6 @@
     <ClInclude Include="Source\Audio\AudioSystem.h" />
     <ClInclude Include="Source\Audio\WavFileReader.h" />
     <ClInclude Include="Source\Cameras\CameraMovement.h" />
-    <ClInclude Include="Source\Cameras\EditorCamera.h" />
     <ClInclude Include="Source\Core\MyGEEditor.h" />
     <ClInclude Include="Source\Core\MyGEMode.h" />
     <ClInclude Include="Source\Core\MyGERuntime.h" />
@@ -262,7 +259,6 @@
     <ClInclude Include="Source\Core\MyGE.h" />
     <ClInclude Include="Source\MainWindow.h" />
     <ClInclude Include="Source\Systems\CameraSystem.h" />
-    <ClInclude Include="Source\Systems\EditorSystems\GameViewSystem.h" />
     <ClInclude Include="Source\Systems\EditorSystems\QuickCreateObjectsSystem.h" />
     <ClInclude Include="Source\Systems\EditorSystems\SceneViewSystem.h" />
     <ClInclude Include="Source\Systems\ObjMeshSystem.h" />

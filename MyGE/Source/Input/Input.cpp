@@ -25,8 +25,7 @@ float Input::MouseY()
 
 void Input::KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) { 
 	//GetInstance().mouseX[key] = action;
-	GetInstance().mKeys[key] = (action != GLFW_RELEASE);
-	
+	GetInstance().mKeys[key] = (action == GLFW_PRESS);
 }
 
 void Input::MouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {

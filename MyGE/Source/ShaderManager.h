@@ -21,8 +21,8 @@ public:
 	void Init() {
 		mShaders.insert({ "MyGEShader", std::make_shared<Shader>("../Resources/Shaders/mygeshader.vert",
 								"../Resources/Shaders/mygeshader.frag", "MyGEShader") });
-		//mShaders.insert({ "BillboardShader", std::make_shared<Shader>("../Resources/Shaders/billboardshader.vert",
-		//						"../Resources/Shaders/billboardshader.frag", "BillboardShader")});
+		mShaders.insert({ "BillboardShader", std::make_shared<Shader>("../Resources/Shaders/billboardshader.vert",
+								"../Resources/Shaders/billboardshader.frag", "BillboardShader")});
 		//mShaders.insert({"TestShader", std::make_shared<Shader>("../Resources/Shaders/testshader.vert",
 		//						"../Resources/Shaders/testshader.frag", "TestShader")});
 		//mShaders.insert({ "PlainShader", std::make_shared<Shader>("../Resources/Shaders/plainshader.vert",

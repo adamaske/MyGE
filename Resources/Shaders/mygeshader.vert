@@ -10,10 +10,8 @@ uniform mat4 pMatrix;
 
 out vec2 texCoord;
 
-
-out vec4 colorOut;
 void main(){
     texCoord = vertexTexCoord;
-    colorOut = vertexNormal;
+
     gl_Position = pMatrix * vMatrix * mMatrix * vec4(vertexPosition, 1.0);
 }
