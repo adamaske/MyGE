@@ -21,15 +21,15 @@ protected:
 	//Are these managers nessacery, should they be systems instead?
 	// 
 	////Lua scripting
-	std::shared_ptr<class ScriptingManager> mScriptingManager;
-	//Scene manager
-	std::shared_ptr<class SceneManager>mSceneManager;
-
-	std::shared_ptr<class ShaderManager> mShaderManager;
-
-	std::shared_ptr<class TextureManager> mTextureManger;
+	class ScriptingManager* mScriptingManager;
 	
+	class SceneManager *mSceneManager;
 
+	class ShaderManager* mShaderManager;
+
+	class TextureManager* mTextureManger;
+	
+	class Scene* mScene;
 	RenderWindow* mRenderWindow;
 	float mWindowHeight = 1200;
 	float mWindowWidth = 900;

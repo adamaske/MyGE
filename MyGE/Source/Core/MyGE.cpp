@@ -48,6 +48,7 @@ int MyGE::Run()
 	//Init, close if not sucess
 	mRenderWindow = new RenderWindow();
 	mRenderWindow->Init(glfwCreateWindow(mWindowWidth, mWindowHeight, "MyGE", NULL, NULL));
+	mRenderWindow->MakeCurrent();
 	//The renderwindow's window has a pointer to this MyGE object,
 	//Should be changed to a Editor later
 	//vsync
@@ -71,10 +72,9 @@ int MyGE::Run()
 	mTextureManger = new TextureManager();
 	mTextureManger->InsertTexture("../Resources/Textures/hammerDiffuse.bmp", "HammerDiffuse");
 
-	//
 	mScene = new Scene();
-	//mSceneManager->AddScene(*mScene);
 	mScene->Init();
+	
 	
 	//resize window immediatly 
 	ResizeWindow(1200, 800);
@@ -94,6 +94,7 @@ int MyGE::Run()
 	mEditor = std::make_shared<MyGEEditor>();
 	//Sets the active mode to this
 	mActiveMode = mEditor;
+	mEditor->Init();
 	
 	//In the future we want to generlize this, 
 	//with more runtimes which uses the same game engine etc, 
@@ -105,7 +106,9 @@ int MyGE::Run()
 	{
 		//Get events
 		glfwPollEvents();
-
+		if (Input::IsKeyDown(GLFW_KEY_ESCAPE)) {
+			ExitApplication();
+		}
 		CalculateDeltaTime();
 		
 		//Process input
@@ -115,7 +118,7 @@ int MyGE::Run()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-		//Update scene
+		//Update the editor
 		mEditor->OnUpdate(deltaTime);
 		//Rendering
 		mRenderWindow->Render(deltaTime);

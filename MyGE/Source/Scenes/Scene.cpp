@@ -17,24 +17,12 @@
 
 Scene::Scene()
 {
+	
 }
 
 void Scene::Init()
 {
-	//Creates registry for this scene
-	mRegistry = std::make_shared<Registry>();
-	mRegistry->SetInstance();
-	//Registering all components, this can be remvoed
-	Registry::Instance().RegisterComponent<RenderComponent>();
-	Registry::Instance().RegisterComponent<TransformComponent>();
-	Registry::Instance().RegisterComponent<MeshComponent>();
-	Registry::Instance().RegisterComponent<CameraComponent>();
-	Registry::Instance().RegisterComponent<MaterialComponent>();
-	Registry::Instance().RegisterComponent<AudioSourceComponent>();
-	Registry::Instance().RegisterComponent<AudioListenerComponent>();
-	Registry::Instance().RegisterComponent<TerrainComponent>();
-	Registry::Instance().RegisterComponent<NativeScriptComponent>();
-
+	
 	//File path for obj meshses
 	std::string cubePath =		"../Resources/Meshes/cube.obj";
 	std::string monkeyPath =	"../Resources/Meshes/monkey.obj";
@@ -64,7 +52,7 @@ void Scene::Init()
 	cubeSource->bShouldPlay = true;
 	cubeSource->mGain = 1;
 #pragma endregion
-
+	
 #pragma region Create Monkey
 	//Monkey gameobject and components
 	uint32_t monkeyID = Registry::Instance().NewGameObject();
@@ -81,7 +69,7 @@ void Scene::Init()
 	monkeyMaterial->mShader = ShaderManager::Instance()->GetShader("MyGEShader");
 	monkeyMaterial->mTexture = TextureManager::GetTexture("HammerDiffuse");
 #pragma endregion
-
+	
 #pragma region Create Game Camera
 	//Camera gameobject and components
 	uint32_t cameraID = Registry::Instance().NewGameObject();
@@ -112,8 +100,9 @@ void Scene::Init()
 	ns->Bind<Monkey>();
 
 #pragma endregion
-
+	
 #pragma region Systems
+
 	//Creating systems
 	mSystems.insert({ "RenderSystem", new RenderSystem() });
 	mSystems.insert({ "TerrainSystem", new TerrainSystem() });
@@ -135,18 +124,7 @@ void Scene::Init()
 
 void Scene::OnUpdate(float deltaTime) {
 	
-	////Gets all GameObjects in the registry, a go system
-	auto gameObjects = Registry::Instance().GetGameObjects();
-	//Prints all gameobject id's
-	for (auto& go : gameObjects)
-	{ 
-		
-	}
-
-	for (auto system : mSystems)
-	{
-		system.second->OnUpdate(deltaTime);
-	}
+	
 }
 
 void Scene::ViewportRezised(int width, int height) {

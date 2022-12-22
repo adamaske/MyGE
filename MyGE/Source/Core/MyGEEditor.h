@@ -16,7 +16,7 @@ public:
 private:
 	
 	std::shared_ptr<Scene> mEditorScene;
-	std::unordered_map<const char*, std::shared_ptr<class System>> mEditorSystems;
+	std::unordered_map<const char*, class System*> mSystems;
 
 	bool bEditorRunning = true;
 

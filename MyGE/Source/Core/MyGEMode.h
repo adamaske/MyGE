@@ -9,6 +9,7 @@ public:
 private:
 
 protected:
+	
 	std::shared_ptr<class Scene> mActiveScene;
 	std::shared_ptr<class MyGEEditor> mEditor;
 	std::shared_ptr<class MyGERuntime> mRuntime;
