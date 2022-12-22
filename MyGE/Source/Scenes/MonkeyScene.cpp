@@ -18,12 +18,23 @@
 
 #include "../Cameras/CameraMovement.h"
 
+#include "../Components/Components.h"
 MonkeyScene::MonkeyScene()
 {
 }
 
 void MonkeyScene::Init()
 {
+	//Registering all components, this can be remvoed
+	Registry::Instance().RegisterComponent<RenderComponent>();
+	Registry::Instance().RegisterComponent<TransformComponent>();
+	Registry::Instance().RegisterComponent<MeshComponent>();
+	Registry::Instance().RegisterComponent<CameraComponent>();
+	Registry::Instance().RegisterComponent<MaterialComponent>();
+	Registry::Instance().RegisterComponent<AudioSourceComponent>();
+	Registry::Instance().RegisterComponent<AudioListenerComponent>();
+	Registry::Instance().RegisterComponent<TerrainComponent>();
+	Registry::Instance().RegisterComponent<NativeScriptComponent>();
 	//File path for obj meshses
 	std::string cubePath = "../Resources/Meshes/cube.obj";
 	std::string monkeyPath = "../Resources/Meshes/monkey.obj";
@@ -43,7 +54,7 @@ void MonkeyScene::Init()
 	//Material
 	auto cubeMaterial = Registry::Instance().RegisterComponent<MaterialComponent>(MaterialComponent(), cubeID);
 	cubeMaterial->mShader = ShaderManager::Instance()->GetShader("MyGEShader");
-	cubeMaterial->mTexture = TextureManager::GetTexture("HammerDiffuse");
+	//cubeMaterial->mTexture = TextureManager::GetTexture("HammerDiffuse");
 	auto cubeTransform = Registry::Instance().GetComponent<TransformComponent>(cubeID);
 	cubeTransform->mMatrix = glm::translate(glm::mat4(1), glm::vec3(1, 0, 1));
 
@@ -68,11 +79,11 @@ void MonkeyScene::Init()
 
 	auto monkeyMaterial = Registry::Instance().GetComponent<MaterialComponent>(monkeyID);
 	monkeyMaterial->mShader = ShaderManager::Instance()->GetShader("MyGEShader");
-	monkeyMaterial->mTexture = TextureManager::GetTexture("HammerDiffuse");
+	//monkeyMaterial->mTexture = TextureManager::GetTexture("HammerDiffuse");
 #pragma endregion
 
 #pragma region Create Game Camera
-	//Camera gameobject and components
+	//Camera gameobject and componentsx
 	uint32_t cameraID = Registry::Instance().NewGameObject();
 	auto camera = Registry::Instance().RegisterComponent<CameraComponent>(CameraComponent(), cameraID);
 	camera->bIsMainCamera = true;

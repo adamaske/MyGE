@@ -18,8 +18,10 @@
 //Editor systems
 #include "../Systems/EditorSystems/QuickCreateObjectsSystem.h"
 #include "../Systems/EditorSystems/SceneViewSystem.h"
+#include "../Systems/EditorSystems/GameViewSystem.h"
 
 #include "../Cameras/Camera.h"
+#include "../Cameras/EditorCamera.h"
 void MyGEEditor::Init()
 {
 	//The systems which the Scene use should go in here instead
@@ -29,15 +31,8 @@ void MyGEEditor::Init()
 	//LoadScene(mSceneManager->GetScene(mStartupScene));
 	
 #pragma region Viewports
-	mGameViewport = std::make_shared<RenderWindow>();
-	mGameViewport->Init(glfwCreateWindow(500, 500, "Game", NULL, NULL));
-	mGameViewport->Hide();
-
-	mSceneViewport = std::make_shared<RenderWindow>();
-	mSceneViewport->Init(glfwCreateWindow(1200, 800, "Scene", NULL, NULL));
-	mSceneViewport->MakeCurrent();
-
-
+	// mGameViewport = std::make_shared<RenderWindow>();
+	// mGameViewport->Init(glfwCreateWindow(500, 500, "Game", NULL, NULL));
 #pragma endregion
 
 	mActiveScene = std::make_shared<MonkeyScene>();
@@ -46,23 +41,26 @@ void MyGEEditor::Init()
 	}
 	mActiveScene->Init();
 	
-	mEditorCamera = std::make_shared<Camera>();
+
+	mEditorCamera = std::make_shared<EditorCamera>();
 	//mEditorCamera = std::make_shared<Camera>();
+
+
 #pragma region Create Systems
 	//todo : Move into own function, remove duplicate code between this and runtime
-	// What systems does the editor need
-	// Different performance modes may use differnet systems etc :D
-	//Creating system
-	mSystems.insert({ "RenderSystem", std::make_shared<RenderSystem>()});
+
+	mSystems.insert({ "CameraSystem" , std::make_shared<CameraSystem>() });
+	mSystems.insert({ "RenderSystem", std::make_shared<RenderSystem>() });
 	mSystems.insert({ "TerrainSystem", std::make_shared<TerrainSystem>() });
-	//mSystems.insert({ "CameraSystem" , std::make_shared<CameraSystem>() });
 	//OPENAL32.DLL NOT FOUND CAUSES THIS TO ERROR ->>> 
 	//mSystems.insert({ "AudioSystem", new AudioSystem() });
 	mSystems.insert({ "NativeScripting", std::make_shared<NativeScriptingSystem>() });
 
 	//Editor systems
-	mSystems.insert({"QuickCreateObject", std::make_shared<QuickCreateObjectSystem>()});
+	//mSystems.insert({"QuickCreateObject", std::make_shared<QuickCreateObjectSystem>()});
+	//This deals with everything -> displaying the scene
 	mSystems.insert({ "SceneView", std::make_shared<SceneViewSystem>() });
+	mSystems.insert({ "GameView", std::make_shared<GameViewSystem>() });
 	//Init all systems
 	for (auto system : mSystems)
 	{
@@ -70,37 +68,16 @@ void MyGEEditor::Init()
 		Logger::Log("Starting init for system : " + (std::string)system.first);
 		system.second->Init();
 	}
-#pragma endregion
-
-	
+#pragma endregion	
 }
 
 void MyGEEditor::OnUpdate(float deltaTime)
 {
-	if (mSceneViewport->Focused()) {
-		//Do scene rendering
-		//We may want different stuff showing in the scene viewport
-		auto shaders = ShaderManager::Instance()->GetShaders();
-		//Apply editorcamera to all shaders
-		for (auto shader : shaders) {
-			shader->SetUniformMatrix4(mEditorCamera->GetViewMatrix(), "vMatrix");
-			shader->SetUniformMatrix4(mEditorCamera->GetProjectionMatrix(), "pMatrix");
-		}
-		//Then we render the scene? 
-		//todo : need to 
-	}
-	if (mGameViewport->Focused()) {
-		//
-	}
-	//What should be systems in the scene, what
 	//Maybe it should be a vector instead, we iterate through it every frame
 	for (auto system : mSystems) {
 		system.second->OnUpdate(deltaTime);
 	}
-
-
-	
-	
+	mActiveScene->OnUpdate(deltaTime);
 }
 
 bool MyGEEditor::LoadScene(std::string fileName)
