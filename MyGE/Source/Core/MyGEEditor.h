@@ -31,7 +31,7 @@ private:
 	//Should we do all this in an editor system instead?
 	//for example SceneViewSystem, renders with MyGEEditor.mEditorCamera 
 	//GameViewSystem, gameview renders with the bMainCamera camera
-	std::shared_ptr<class Camera> mEditorCamera;
+	std::shared_ptr<class EditorCamera> mEditorCamera;
 	//The window where the game view (main camera) is seen
 	std::shared_ptr<class RenderWindow> mSceneViewport;
 	//The window where the game view (main camera) is seen

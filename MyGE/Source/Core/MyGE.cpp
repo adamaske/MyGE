@@ -33,7 +33,8 @@ MyGE::MyGE() {
 }
 int MyGE::Run()
 {
-	std::cout << "MyGE : started running" << std::endl;
+	Logger::Init();
+	Logger::Log("MyGE : started running");
 	//Init gl
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -43,6 +44,7 @@ int MyGE::Run()
 	glfwMakeContextCurrent(glfwCreateWindow(100, 100, "MyGE", NULL, NULL));
 	//vsync
 	glfwSwapInterval(1);
+
 	//Loading glad?
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
@@ -50,15 +52,15 @@ int MyGE::Run()
 		return -1;
 	}
 	glfwDestroyWindow(glfwGetCurrentContext());
-	Logger::Init();
+	glEnable(GL_DEPTH_TEST);
+
+	glEnable(GL_TEXTURE_2D);
 	//Scene Manager 
 	mSceneManager = std::make_shared<SceneManager>();
 	//Scripting manager to handle all lua and native scripting
 	mScriptingManager = std::make_shared<ScriptingManager>();
 	//A shader manager to store all shaders
 	ShaderManager::Instance();
-
-
 	mTextureManger = std::make_shared<TextureManager>();
 	mTextureManger->InsertTexture("../Resources/Textures/hammerDiffuse.bmp", "HammerDiffuse");
 
@@ -68,21 +70,15 @@ int MyGE::Run()
 	//This must happend before glad loading
 	//we want the editor to load
 	mActiveMode = mEditor = std::make_shared<MyGEEditor>();
-	//Inits
 	mEditor->Init();
 
 
-
-	glEnable(GL_DEPTH_TEST);
+	//In the future we want to generlize this, 
+	//with more runtimes which uses the same game engine etc, 
+	//we can have high performance testing and maybe multiplayer testing
+	//It can also be made into a different project
+	mRuntime = std::make_shared<MyGERuntime>();
 	
-	//mSceneManager->AddScene(*mScene);
-		
-	//resize window immediatly 
-	ResizeWindow(1200, 800);
-	// Time between current frame and last frame
-	// Time of last frame
-	//mEditor->LoadScene("../Resources/Scenes/MonkeyScene.ge");
-	//mEditor->Init();
 	bool bEditorMode = true;
 	if (bEditorMode) {
 		//We want to launch the editor
@@ -92,11 +88,9 @@ int MyGE::Run()
 		//This may require totally different systems
 	}
 
-	//In the future we want to generlize this, 
-	//with more runtimes which uses the same game engine etc, 
-	//we can have high performance testing and maybe multiplayer testing
-	//It can also be made into a different project
-	mRuntime = std::make_shared<MyGERuntime>();
+	//resize window immediatly 
+	ResizeWindow(1200, 800);
+
 	
 	while (bRunning)
 	{

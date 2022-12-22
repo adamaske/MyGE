@@ -44,7 +44,7 @@ void RenderWindow::Show()
 
 bool RenderWindow::IsHidden()
 {
-	return glfwGetWindowAttrib(mWindow, GLFW_VISIBLE);;
+	return !glfwGetWindowAttrib(mWindow, GLFW_VISIBLE);;
 }
 
 bool RenderWindow::Focused()

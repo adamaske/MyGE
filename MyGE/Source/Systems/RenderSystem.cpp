@@ -140,7 +140,6 @@ void RenderSystem::OnUpdate(float deltaTime) {
 			vao->Bind();
 			//Draws from the bound vao
 			glDrawElements(GL_TRIANGLES, vao->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
-
 			vao->Unbind();
 		}
 		

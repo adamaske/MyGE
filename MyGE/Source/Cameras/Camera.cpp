@@ -22,5 +22,18 @@ void Camera::Init() {
 
 void Camera::OnUpdate(float deltaTime)
 {
-	//Set view and projection matrices 
+}
+
+//void Camera::OnUpdate(float deltaTime)
+//{
+//	//Set view and projection matrices 
+//}
+
+glm::mat4 Camera::GetProjectionMatrix()
+{
+	return mProjectionMatrix;
+}
+glm::mat4 Camera::GetViewMatrix()
+{
+	return mViewMatrix;
 }
