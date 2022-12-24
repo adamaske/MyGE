@@ -29,7 +29,9 @@ void glfw_onError(int error, const char* desc) {
 }
 
 MyGE::MyGE() {
+
 }
+
 int MyGE::Run()
 {
 	Logger::Init();
@@ -54,7 +56,7 @@ int MyGE::Run()
 	}
 	glEnable(GL_DEPTH_TEST);
 
-	glEnable(GL_TEXTURE_2D);
+	//glEnable(GL_TEXTURE_2D);
 
 	//Scene Manager 
 	mSceneManager = std::make_shared<SceneManager>();
@@ -70,7 +72,7 @@ int MyGE::Run()
 
 	//This must happend before glad loading
 	//we want the editor to load
-	mActiveMode = mEditor = std::make_shared<MyGEEditor>();
+	mEditor = std::make_shared<MyGEEditor>();
 	mEditor->Init();
 
 
@@ -133,9 +135,11 @@ void mouse_callback(GLFWwindow * window, double xposIn, double yposIn)
 };
 
 void MyGE::ResizeWindow(uint32_t width, uint32_t height) {
-
+	if (!Registry::Instance().Has<CameraComponent>()) {
+		return;
+	}
 	//Tell the scene that the veiwport is changed
-	//mScene->ViewportRezised(width, height);
+	mEditor->ViewportRezised(width, height);
 	glViewport(0, 0, width, height);
 }
 

@@ -43,16 +43,16 @@ void MyGEEditor::Init()
 	mActiveScene->Init();
 	
 
-	mEditorCamera = std::make_shared<EditorCamera>();
+	//mEditorCamera = std::make_shared<EditorCamera>();
 	//mEditorCamera = std::make_shared<Camera>();
 
 
 #pragma region Systems
 	//todo : Move into own function, remove duplicate code between this and runtime
 
-	mSystems.insert({ "CameraSystem" , std::make_shared<CameraSystem>() });
 	mSystems.insert({ "RenderSystem", std::make_shared<RenderSystem>() });
 	mSystems.insert({ "TerrainSystem", std::make_shared<TerrainSystem>() });
+	mSystems.insert({ "CameraSystem" , std::make_shared<CameraSystem>() });
 	mSystems.insert({ "NativeScripting", std::make_shared<NativeScriptingSystem>() });
 	//OPENAL32.DLL NOT FOUND CAUSES THIS TO ERROR ->>> 
 	//mSystems.insert({ "AudioSystem", new AudioSystem() });

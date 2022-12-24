@@ -19,7 +19,7 @@ public:
 
 	void ViewportRezised(int width, int height);
 
-
+	
 private:
 	
 	std::shared_ptr<Scene> mEditorScene;

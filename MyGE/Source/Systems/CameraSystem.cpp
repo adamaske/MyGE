@@ -44,6 +44,9 @@ void CameraSystem::OnUpdate(float deltaTime) {
 			auto shaders = ShaderManager::Instance()->GetShaders();
 			for (auto shader : shaders) {
 				//Set the variables in the shaders, every shader should have these variables
+				//shader->SetUniformMatrix4(cam->mCamera->GetViewMatrix(), "vMatrix");
+				//shader->SetUniformMatrix4(cam->mCamera->GetProjectionMatrix(), "pMatrix");
+				//Set the variables in the shaders, every shader should have these variables
 				shader->SetUniformMatrix4(cam->mCamera->GetViewMatrix(), "vMatrix");
 				shader->SetUniformMatrix4(cam->mCamera->GetProjectionMatrix(), "pMatrix");
 

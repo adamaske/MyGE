@@ -2,30 +2,33 @@
 #include "MonkeyScene.h"
 #include "Scene.h"
 
-#include "../Shaders/Shader.h"
+#include "../RenderWindow.h"
+
 #include "../Shaders/ShaderManager.h"
+
+#include "../Systems/System.h"
+#include "../Systems/CameraSystem.h"
+#include "../Systems/RenderSystem.h"
+#include "../Systems/TerrainSystem.h"
+#include "../Scripting/NativeScriptingSystem.h"
+//Editor systems
+#include "../Systems/EditorSystems/QuickCreateObjectsSystem.h"
+//#include "../Systems/EditorSystems/SceneViewSystem.h"
+//#include "../Systems/EditorSystems/GameViewSystem.h"
+
+#include "../Cameras/Camera.h"
+#include "../Cameras/CameraMovement.h"
+//#include "../Cameras/EditorCamera.h"
 
 #include "../Textures/Texture.h"
 #include "../Textures/TextureManager.h"
-
-#include "../Systems/System.h"
-#include "../Systems/ObjMeshSystem.h"
-#include "../Systems/CameraSystem.h"
-#include "../Systems/TerrainSystem.h"
-#include "../Systems/RenderSystem.h"
-#include "../Scripting/NativeScriptingSystem.h"
-#include "../Audio/AudioSystem.h"
-
-#include "../Cameras/CameraMovement.h"
-
-#include "../Components/Components.h"
 MonkeyScene::MonkeyScene()
 {
 }
 
 void MonkeyScene::Init()
 {
-	
+	Logger::Log("MONKEYSCENE INIT");
 	//File path for obj meshses
 	std::string cubePath = "../Resources/Meshes/cube.obj";
 	std::string monkeyPath = "../Resources/Meshes/monkey.obj";
@@ -74,7 +77,7 @@ void MonkeyScene::Init()
 #pragma endregion
 
 #pragma region Create Game Camera
-	//Camera gameobject and componentsx
+	//Camera gameobject and components
 	uint32_t cameraID = Registry::Instance().NewGameObject();
 	auto camera = Registry::Instance().RegisterComponent<CameraComponent>(CameraComponent(), cameraID);
 	camera->bIsMainCamera = true;
@@ -103,13 +106,10 @@ void MonkeyScene::Init()
 	ns->Bind<Monkey>();
 
 #pragma endregion
-
-	Logger::Log("MONKEY INIT");
 }
 
 void MonkeyScene::OnUpdate(float deltaTime)
 {
-	if (Input::IsKeyDown(GLFW_KEY_W)) {
-		Logger::Log("MONKEY MOVE FORWARD");
-	}
+
+	//Lol ? 
 }
