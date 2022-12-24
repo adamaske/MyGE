@@ -3,11 +3,8 @@
 #include "Texture.h"
 
 #include "../stb/stb_image.h"
-#include <experimental/filesystem>
-namespace fs = std::experimental::filesystem;
 TextureManager::TextureManager()
 {
-	TextureManagerInstance = this;
 	auto texture = std::make_shared<Texture>();
 
 	mTextures["DummyTexture"] = texture;
@@ -55,6 +52,10 @@ void TextureManager::LoadTextures()
 void TextureManager::InsertTexture(std::string fileName, std::string name)
 {
 	auto texture = std::make_shared<Texture>(fileName);
+	unsigned int t;
+	glGenTextures(1, &t);
+
+	GetInstance().mTextures2[name] = t;
 
 	GetInstance().mTextures[name] = texture;
 
@@ -77,13 +78,13 @@ std::shared_ptr<Texture> TextureManager::GetTextureImpl(std::string name)
 	
 }
 
-std::vector<int> TextureManager::GetTextures()
+std::vector<int> TextureManager::GetTexturesInt()
 {
 	std::vector<int> textures;
 	
-	auto ts = GetInstance().mTextures;
+	auto ts = GetInstance().mTextures2;
 	for (auto t : ts) {
-		textures.push_back(t);
+		textures.push_back(t.second);
 	}
 	return textures;
 }

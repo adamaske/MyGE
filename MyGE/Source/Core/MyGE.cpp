@@ -32,7 +32,6 @@ MyGE::MyGE() {
 
 int MyGE::Run()
 {
-	Logger::Init();
 	Logger::Log("MyGE : started running");
 	//Init gl
 	glfwInit();

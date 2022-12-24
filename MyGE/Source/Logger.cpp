@@ -11,13 +11,6 @@ Logger::~Logger()
 	GetInstance().LogsToFile();
 }
 
-void Logger::Init()
-{
-	GetInstance().StartLoggingType(ERROR);
-	GetInstance().StartLoggingType(WARNING);
-	GetInstance().StartLoggingType(INFO);
-}
-
 void Logger::Log(std::string file)
 {
 	std::cout << file << "\n";

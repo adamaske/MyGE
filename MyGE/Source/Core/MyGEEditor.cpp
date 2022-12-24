@@ -23,6 +23,7 @@
 
 #include "../Cameras/Camera.h"
 #include "../Cameras/EditorCamera.h"
+
 void MyGEEditor::Init()
 {
 	//The systems which the Scene use should go in here instead

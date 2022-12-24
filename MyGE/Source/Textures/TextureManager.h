@@ -1,4 +1,6 @@
 #pragma once
+
+//At this point is there even any diffrences between managers and systems
 class TextureManager {
 public:
 	TextureManager();
@@ -9,14 +11,14 @@ public:
 	std::shared_ptr<Texture> GetTextureImpl(std::string name);
 
 	//Return array of textures
-	std::vector<int> GetTextures();
+	std::vector<int> GetTexturesInt();
 private:
 	std::unordered_map<std::string, std::shared_ptr<Texture>> mTextures;
 
 	// todo here
 	//Remove texture class, textures only need an int to be regonized
 
-	std::unordered_map<std::string, unsinged int> mTextures2;
+	std::unordered_map<std::string,int> mTextures2;
 	
 
 	static TextureManager& GetInstance() {
