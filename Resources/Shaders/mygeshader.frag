@@ -7,5 +7,5 @@ in vec2 texCoord;
 out vec4 fragColor;
 in vec4 colorIn;
 void main(){
-    fragColor = colorIn;
+    fragColor = texture(diffuseSampler, texCoord);
 }   

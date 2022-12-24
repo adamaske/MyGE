@@ -140,6 +140,8 @@ std::pair<std::vector<Vertex>, std::vector<uint32_t>> ObjFileReader::GetMesh(std
 
     }
     file.close();
+
+    
    
 	return std::pair<std::vector<Vertex>, std::vector<uint32_t>>(mVertices, mIndices);
 }
