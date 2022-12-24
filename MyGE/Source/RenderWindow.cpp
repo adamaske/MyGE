@@ -69,4 +69,15 @@ void RenderWindow::FrameBufferSizeCallback(GLFWwindow* window, int width, int he
 	glViewport(0, 0, width, height);
 }
 
+bool RenderWindow::ShouldCloseWindow()
+{
+	return false;
+}
+
+GLFWwindow* RenderWindow::GetWindow()
+{
+
+	return mWindow;
+}
+
 

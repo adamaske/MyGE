@@ -5,7 +5,7 @@
 
 #include "../../Cameras/EditorCamera.h"
 
-#include "../../ShaderManager.h"
+#include "../../Shaders/ShaderManager.h"
 SceneViewSystem::SceneViewSystem()
 {
 }

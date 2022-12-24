@@ -1,10 +1,9 @@
 #pragma once
-#include "MainWindow.h"
-class RenderWindow : public MainWindow
+class RenderWindow
 {
 public:
 	RenderWindow();
-	virtual void Init(struct GLFWwindow* window) override;
+	void Init(struct GLFWwindow* window);
 
 	void MakeCurrent();
 	void Render(float deltaTime);
@@ -14,6 +13,11 @@ public:
 	bool IsHidden();
 
 	bool Focused();
+
+	bool ShouldCloseWindow();
+
+	GLFWwindow* GetWindow();
+
 private:
 	// Callback functions for GLFW input events.
 	static void WindowFocusCallback(GLFWwindow* window, int focused);
@@ -23,7 +27,9 @@ private:
 	float mScreenHeight = 800;
 
 	static bool bFocused;
-	
+
+
+	struct GLFWwindow* mWindow;
 
 };
 

@@ -2,8 +2,8 @@
 
 #include "Scene.h"
 
-#include "../ShaderManager.h"
-#include "../Shader.h"
+#include "../Shaders/ShaderManager.h"
+#include "../Shaders/Shader.h"
 #include "../Textures/TextureManager.h"
 #include "../Textures/Texture.h"
 #include "../Systems/System.h"
@@ -28,16 +28,5 @@ void Scene::Init()
 
 void Scene::OnUpdate(float deltaTime) {
 	
-	////Gets all GameObjects in the registry, a go system
-	auto gameObjects = Registry::Instance().GetGameObjects();
-	//Prints all gameobject id's
-	for (auto& go : gameObjects)
-	{ 
-		
-	}
-
-	for (auto system : mSystems)
-	{
-		system.second->OnUpdate(deltaTime);
-	}
+	
 }

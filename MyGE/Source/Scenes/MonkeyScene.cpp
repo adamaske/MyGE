@@ -2,8 +2,8 @@
 #include "MonkeyScene.h"
 #include "Scene.h"
 
-#include "../Shader.h"
-#include "../ShaderManager.h"
+#include "../Shaders/Shader.h"
+#include "../Shaders/ShaderManager.h"
 
 #include "../Textures/Texture.h"
 #include "../Textures/TextureManager.h"
@@ -54,7 +54,7 @@ void MonkeyScene::Init()
 	//Material
 	auto cubeMaterial = Registry::Instance().RegisterComponent<MaterialComponent>(MaterialComponent(), cubeID);
 	cubeMaterial->mShader = ShaderManager::Instance()->GetShader("MyGEShader");
-	//cubeMaterial->mTexture = TextureManager::GetTexture("HammerDiffuse");
+	cubeMaterial->mTexture = TextureManager::GetTexture("HammerDiffuse");
 	auto cubeTransform = Registry::Instance().GetComponent<TransformComponent>(cubeID);
 	cubeTransform->mMatrix = glm::translate(glm::mat4(1), glm::vec3(1, 0, 1));
 
@@ -79,7 +79,7 @@ void MonkeyScene::Init()
 
 	auto monkeyMaterial = Registry::Instance().GetComponent<MaterialComponent>(monkeyID);
 	monkeyMaterial->mShader = ShaderManager::Instance()->GetShader("MyGEShader");
-	//monkeyMaterial->mTexture = TextureManager::GetTexture("HammerDiffuse");
+	monkeyMaterial->mTexture = TextureManager::GetTexture("HammerDiffuse");
 #pragma endregion
 
 #pragma region Create Game Camera

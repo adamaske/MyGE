@@ -13,7 +13,6 @@ public:
 private:
 
 	std::unordered_map<const char*, GameObject> mGameObjects;
-	std::unordered_map<const char*, class System*> mSystems;
 
 
 

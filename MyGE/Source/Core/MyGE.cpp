@@ -10,7 +10,6 @@
 
 #include "../Components/Components.h"
 
-#include "../MainWindow.h"
 #include "../RenderWindow.h"
 
 #include "../Scenes/Scene.h"
@@ -19,8 +18,8 @@
 #include "../Script.h"
 #include "../Scripting/ScriptingManager.h"
 
-#include "../Shader.h"
-#include "../ShaderManager.h"
+#include "../Shaders/Shader.h"
+#include "../Shaders/ShaderManager.h"
 
 
 #include "../Logger.h"
@@ -41,7 +40,9 @@ int MyGE::Run()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
 	
-	glfwMakeContextCurrent(glfwCreateWindow(100, 100, "MyGE", NULL, NULL));
+	mRenderWindow = std::make_shared<RenderWindow>();
+	mRenderWindow->Init(glfwCreateWindow(1200, 800, "MyGE", NULL, NULL));
+	mRenderWindow->MakeCurrent();
 	//vsync
 	glfwSwapInterval(1);
 

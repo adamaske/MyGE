@@ -1,8 +1,10 @@
 #include "pch.h"
 #include "CameraSystem.h"
 #include "../Cameras/Camera.h"
-#include "../Shader.h"
-#include "../ShaderManager.h"
+
+#include "../Shaders/Shader.h"
+#include "../Shaders/ShaderManager.h"
+
 void CameraSystem::Init(){
     //Init cameras
 	auto cameras = Registry::Instance().GetComponents<CameraComponent>();

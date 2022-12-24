@@ -14,7 +14,7 @@ public:
 
 	void ExitApplication();
 protected:
-	class RenderWindow* mWindow;
+	std::shared_ptr<class RenderWindow> mRenderWindow;
 
 	//Are these managers nessacery, should they be systems instead?
 	// Could be uniqe pointers instead, should these managers exist at all?

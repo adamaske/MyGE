@@ -1,7 +1,7 @@
 #pragma once
 //This should all be in a precompiled header ? 
 #include "../Vertex.h"
-#include "../Shader.h"
+#include "../Shaders/Shader.h"
 #include "../Cameras/Camera.h"
 #include "../GUID.h"
 #include "../Rendering/Buffer.h"

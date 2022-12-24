@@ -1,8 +1,8 @@
 #pragma once
 
 #include "System.h"
-#include "../Shader.h"
-#include "../ShaderManager.h"
+#include "../Shaders/Shader.h"
+#include "../Shaders/ShaderManager.h"
 class ObjMeshSystem : public System {
 public:// Set up vertex data (and buffer(s)) and attribute pointers
 

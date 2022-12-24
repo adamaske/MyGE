@@ -8,7 +8,8 @@
 #include "../Scenes/Scene.h"
 #include "../Scenes/MonkeyScene.h"
 
-#include "../ShaderManager.h"
+#include "../Shaders/Shader.h"
+#include "../Shaders/ShaderManager.h"
 
 #include "../Systems/System.h"
 #include "../Systems/CameraSystem.h"
