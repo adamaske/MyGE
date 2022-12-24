@@ -72,8 +72,8 @@ int MyGE::Run()
 	mTextureManger = new TextureManager();
 	mTextureManger->InsertTexture("../Resources/Textures/hammerDiffuse.bmp", "HammerDiffuse");
 
-	mScene = new Scene();
-	mScene->Init();
+	//mScene = new Scene();
+	//mScene->Init();
 	
 	
 	//resize window immediatly 
@@ -154,7 +154,13 @@ void mouse_callback(GLFWwindow * window, double xposIn, double yposIn)
 void MyGE::ResizeWindow(uint32_t width, uint32_t height) {
 
 	//Tell the scene that the veiwport is changed
-	mScene->ViewportRezised(width, height);
+	if (Registry::Instance().Has<CameraComponent>()) {
+
+	}
+	else {
+		return;
+	}
+	//mScene->ViewportRezised(width, height);
 	glViewport(0, 0, width, height);
 }
 

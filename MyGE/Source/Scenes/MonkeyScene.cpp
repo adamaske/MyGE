@@ -28,7 +28,6 @@ MonkeyScene::MonkeyScene()
 
 void MonkeyScene::Init()
 {
-	return;
 	Logger::Log("MONKEYSCENE INIT");
 	//File path for obj meshses
 	std::string cubePath = "../Resources/Meshes/cube.obj";
@@ -111,4 +110,6 @@ void MonkeyScene::Init()
 
 void MonkeyScene::OnUpdate(float deltaTime)
 {
+
+	//Lol ? 
 }
