@@ -208,7 +208,7 @@
     <ClCompile Include="Source\Scripting\NativeScriptingSystem.cpp" />
     <ClCompile Include="Source\Scripting\ScriptableObject.cpp" />
     <ClCompile Include="Source\Scripting\ScriptingManager.cpp" />
-    <ClCompile Include="Source\Shader.cpp" />
+    <ClCompile Include="Source\Shaders\Shader.cpp" />
     <ClCompile Include="Source\RenderWindow.cpp" />
     <ClCompile Include="Source\Scenes\Scene.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
@@ -255,12 +255,12 @@
     <ClInclude Include="Source\Scripting\NativeScriptingSystem.h" />
     <ClInclude Include="Source\Scripting\ScriptableObject.h" />
     <ClInclude Include="Source\Scripting\ScriptingManager.h" />
-    <ClInclude Include="Source\ShaderManager.h" />
-    <ClInclude Include="Source\Shader.h" />
+    <ClInclude Include="Source\Shaders\Shader.h" />
     <ClInclude Include="Source\RenderWindow.h" />
     <ClInclude Include="Source\Scenes\Scene.h" />
     <ClInclude Include="Source\Core\MyGE.h" />
     <ClInclude Include="Source\MainWindow.h" />
+    <ClInclude Include="Source\Shaders\ShaderManager.h" />
     <ClInclude Include="Source\Systems\CameraSystem.h" />
     <ClInclude Include="Source\Systems\EditorSystems\GameViewSystem.h" />
     <ClInclude Include="Source\Systems\EditorSystems\QuickCreateObjectsSystem.h" />
