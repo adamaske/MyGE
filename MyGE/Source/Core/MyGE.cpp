@@ -42,7 +42,7 @@ int MyGE::Run()
 	
 	mRenderWindow = std::make_shared<RenderWindow>();
 	mRenderWindow->Init(glfwCreateWindow(1200, 800, "MyGE", NULL, NULL));
-	mRenderWindow->MakeCurrent();
+	Input::Init();
 	//vsync
 	glfwSwapInterval(1);
 
@@ -52,10 +52,10 @@ int MyGE::Run()
 		Logger::Log("Failed to initialize GLAD", LogType::ERROR, true);
 		return -1;
 	}
-	glfwDestroyWindow(glfwGetCurrentContext());
 	glEnable(GL_DEPTH_TEST);
 
 	glEnable(GL_TEXTURE_2D);
+
 	//Scene Manager 
 	mSceneManager = std::make_shared<SceneManager>();
 	//Scripting manager to handle all lua and native scripting
@@ -92,8 +92,9 @@ int MyGE::Run()
 	//resize window immediatly 
 	ResizeWindow(1200, 800);
 
+	//Input::Init();
 	
-	while (bRunning)
+	while (bRunning && !mRenderWindow->ShouldCloseWindow())
 	{
 		//Get events
 		glfwPollEvents();
@@ -111,10 +112,12 @@ int MyGE::Run()
 
 		//Update editor
 		mEditor->OnUpdate(deltaTime);
+
 		//Rendering
-		//Renderer->Render(); Should have a queue, so all the opengl code here can go into there
-		//
-		glfwSwapBuffers(glfwGetCurrentContext());
+
+		//Display whats renderered
+		glfwSwapBuffers(mRenderWindow->GetWindow());
+
 	}
 	//Do cleanup here
 	glfwTerminate();

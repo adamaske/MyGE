@@ -47,21 +47,21 @@ void MyGEEditor::Init()
 	//mEditorCamera = std::make_shared<Camera>();
 
 
-#pragma region Create Systems
+#pragma region Systems
 	//todo : Move into own function, remove duplicate code between this and runtime
 
 	mSystems.insert({ "CameraSystem" , std::make_shared<CameraSystem>() });
 	mSystems.insert({ "RenderSystem", std::make_shared<RenderSystem>() });
 	mSystems.insert({ "TerrainSystem", std::make_shared<TerrainSystem>() });
+	mSystems.insert({ "NativeScripting", std::make_shared<NativeScriptingSystem>() });
 	//OPENAL32.DLL NOT FOUND CAUSES THIS TO ERROR ->>> 
 	//mSystems.insert({ "AudioSystem", new AudioSystem() });
-	mSystems.insert({ "NativeScripting", std::make_shared<NativeScriptingSystem>() });
 
 	//Editor systems
 	//mSystems.insert({"QuickCreateObject", std::make_shared<QuickCreateObjectSystem>()});
 	//This deals with everything -> displaying the scene
-	mSystems.insert({ "SceneView", std::make_shared<SceneViewSystem>() });
-	mSystems.insert({ "GameView", std::make_shared<GameViewSystem>() });
+	//mSystems.insert({ "SceneView", std::make_shared<SceneViewSystem>() });
+	//mSystems.insert({ "GameView", std::make_shared<GameViewSystem>() });
 	//Init all systems
 	for (auto system : mSystems)
 	{
@@ -70,6 +70,7 @@ void MyGEEditor::Init()
 		system.second->Init();
 	}
 #pragma endregion	
+
 }
 
 void MyGEEditor::OnUpdate(float deltaTime)
@@ -78,7 +79,7 @@ void MyGEEditor::OnUpdate(float deltaTime)
 	for (auto system : mSystems) {
 		system.second->OnUpdate(deltaTime);
 	}
-	mActiveScene->OnUpdate(deltaTime);
+	//mActiveScene->OnUpdate(deltaTime);
 }
 
 bool MyGEEditor::LoadScene(std::string fileName)

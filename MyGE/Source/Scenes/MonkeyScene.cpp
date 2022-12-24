@@ -25,16 +25,7 @@ MonkeyScene::MonkeyScene()
 
 void MonkeyScene::Init()
 {
-	//Registering all components, this can be remvoed
-	Registry::Instance().RegisterComponent<RenderComponent>();
-	Registry::Instance().RegisterComponent<TransformComponent>();
-	Registry::Instance().RegisterComponent<MeshComponent>();
-	Registry::Instance().RegisterComponent<CameraComponent>();
-	Registry::Instance().RegisterComponent<MaterialComponent>();
-	Registry::Instance().RegisterComponent<AudioSourceComponent>();
-	Registry::Instance().RegisterComponent<AudioListenerComponent>();
-	Registry::Instance().RegisterComponent<TerrainComponent>();
-	Registry::Instance().RegisterComponent<NativeScriptComponent>();
+	
 	//File path for obj meshses
 	std::string cubePath = "../Resources/Meshes/cube.obj";
 	std::string monkeyPath = "../Resources/Meshes/monkey.obj";
@@ -112,6 +103,8 @@ void MonkeyScene::Init()
 	ns->Bind<Monkey>();
 
 #pragma endregion
+
+	Logger::Log("MONKEY INIT");
 }
 
 void MonkeyScene::OnUpdate(float deltaTime)

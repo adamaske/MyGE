@@ -57,8 +57,8 @@ IndexBuffer::IndexBuffer(uint32_t* indices, uint32_t count) : mCount(count) {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(uint32_t), indices, GL_STATIC_DRAW);
 
-	mIndices	= indices;
-	mSize		= count;
+	mIndices = indices;
+	mSize = count;
 };
 
 void IndexBuffer::Bind()

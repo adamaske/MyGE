@@ -3,13 +3,14 @@
 class Input {
 public:
 	Input();
+
+	static void Init();
 	// Check if a specific key is currently being pressed
 	static bool IsKeyDown(int key);
-	bool IsKeyDownImplentation(int key);
-	
+
 	//// Check if a specific key was just released (i.e. went from being pressed to not being pressed)
 	static bool IsKeyReleased(int key);
-	bool IsKeyReleasedImplentation(int key);
+	;
 	//// Check if a specific mouse button is currently being pressed
 	//bool IsMouseButtonDown(int button) const;
 	//

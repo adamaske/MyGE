@@ -32,10 +32,10 @@ private:
 	//for example SceneViewSystem, renders with MyGEEditor.mEditorCamera 
 	//GameViewSystem, gameview renders with the bMainCamera camera
 	std::shared_ptr<class EditorCamera> mEditorCamera;
-	//The window where the game view (main camera) is seen
-	std::shared_ptr<class RenderWindow> mSceneViewport;
-	//The window where the game view (main camera) is seen
-	std::shared_ptr<RenderWindow> mGameViewport;
+	////The window where the game view (main camera) is seen
+	//std::shared_ptr<class RenderWindow> mSceneViewport;
+	////The window where the game view (main camera) is seen
+	//std::shared_ptr<RenderWindow> mGameViewport;
 	//Should we create another window, or use the same one as the editor uses for scene view
 	bool bPopoutRuntime = false;
 };

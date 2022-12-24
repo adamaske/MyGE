@@ -6,6 +6,7 @@
 
 
 bool RenderWindow::bFocused = true;
+
 RenderWindow::RenderWindow(){
 	
 }
@@ -22,6 +23,7 @@ void RenderWindow::Init(GLFWwindow* window)
 	glfwSetFramebufferSizeCallback(mWindow, FrameBufferSizeCallback);
 	glfwSetWindowFocusCallback(mWindow, WindowFocusCallback);
 
+	MakeCurrent();
 }
 
 void RenderWindow::MakeCurrent() {
@@ -71,12 +73,11 @@ void RenderWindow::FrameBufferSizeCallback(GLFWwindow* window, int width, int he
 
 bool RenderWindow::ShouldCloseWindow()
 {
-	return false;
+	return glfwWindowShouldClose(mWindow);
 }
 
 GLFWwindow* RenderWindow::GetWindow()
 {
-
 	return mWindow;
 }
 
