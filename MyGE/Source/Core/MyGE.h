@@ -25,7 +25,7 @@ protected:
 
 	std::shared_ptr<class ShaderManager> mShaderManager;
 
-	std::shared_ptr<class TextureManager> mTextureManger;
+	std::shared_ptr<class TextureManager> mTextureManager;
 	
 	//Keeping track of deltaTime
 	float deltaTime = 0.0f;

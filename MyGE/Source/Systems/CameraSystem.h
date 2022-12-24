@@ -8,6 +8,7 @@ public:
 
     virtual void OnUpdate(float deltaTime) override;
 
+    void SetViewAndProjectionMatrix(std::shared_ptr<struct CameraComponent> cam);
     //Can have other functions than this
 };
 

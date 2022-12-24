@@ -82,7 +82,7 @@ void MonkeyScene::Init()
 	auto camera = Registry::Instance().RegisterComponent<CameraComponent>(CameraComponent(), cameraID);
 	camera->bIsMainCamera = true;
 	auto cameraTransform = Registry::Instance().GetComponent<TransformComponent>(cameraID);
-	cameraTransform->mMatrix = glm::translate(glm::mat4(1), glm::vec3(0, 1, -1));
+	cameraTransform->mMatrix = glm::translate(glm::mat4(1), glm::vec3(0, 2, -2));
 	//This gives the camera a CameraMovement script, which handles input and etc for the camera, this is 
 	auto cameraMovementScript = Registry::Instance().RegisterComponent<NativeScriptComponent>(NativeScriptComponent(), cameraID);
 	cameraMovementScript->Bind<CameraMovement>();
@@ -94,7 +94,13 @@ void MonkeyScene::Init()
 	auto terrain = Registry::Instance().RegisterComponent<TerrainComponent>(TerrainComponent(), terrainID);
 	terrain->mType = TerrainComponent::TerrainType::PerlinNoise;
 
+	//Add grass texture to the terrain
+	auto terrainMaterial = Registry::Instance().GetComponent<MaterialComponent>(terrainID);
+	terrainMaterial->mTexture = TextureManager::GetTexture("GrassDiffuse");
+	terrainMaterial->mShader = ShaderManager::Instance()->GetShader("MyGEShader");
 
+	//Nothing can be rendered without a render component?
+	auto terrainRender = Registry::Instance().RegisterComponent<RenderComponent>(RenderComponent(), terrainID);
 
 #pragma endregion
 

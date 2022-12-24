@@ -16,6 +16,6 @@ void EditorCamera::OnUpdate(float deltaTime)
 		mPosition.x -= 1 * deltaTime;
 	}
 
-	mViewMatrix = glm::lookAt(glm::vec3(0, 2, -2), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
-	mProjectionMatrix = glm::perspective(glm::radians(mFOV), mAspectRatio, 0.1f, 1000.f);
+	//mViewMatrix = glm::lookAt(glm::vec3(0, 2, -2), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+	//mProjectionMatrix = glm::perspective(glm::radians(mFOV), mAspectRatio, 0.1f, 1000.f);
 }

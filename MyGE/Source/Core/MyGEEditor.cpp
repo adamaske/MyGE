@@ -52,6 +52,8 @@ void MyGEEditor::Init()
 
 	mSystems.insert({ "RenderSystem", std::make_shared<RenderSystem>() });
 	mSystems.insert({ "TerrainSystem", std::make_shared<TerrainSystem>() });
+
+	//This myst be replaced by "EditorCamera" or "SceneCamera" systems, the editor should not display the bIsMainCamera 
 	mSystems.insert({ "CameraSystem" , std::make_shared<CameraSystem>() });
 	mSystems.insert({ "NativeScripting", std::make_shared<NativeScriptingSystem>() });
 	//OPENAL32.DLL NOT FOUND CAUSES THIS TO ERROR ->>> 

@@ -3,6 +3,8 @@
 #include "ObjMeshSystem.h"
 
 #include "../Textures/Texture.h"
+#include "../Textures/TextureManager.h"
+
 #include "../ObjFileReader.h"
 
 RenderSystem::RenderSystem() {
@@ -91,10 +93,10 @@ void RenderSystem::OnUpdate(float deltaTime) {
 		}
 
 		//Transform component
-		auto transform = Registry::Instance().GetComponent<TransformComponent>((uint32_t)render->mGO);
+		auto transform = Registry::Instance().GetComponent<TransformComponent>(render->mGO);
 
 		//Check for material, the material should have a shader and a texture
-		auto material = Registry::Instance().GetComponent<MaterialComponent>((uint32_t)render->mGO);
+		auto material = Registry::Instance().GetComponent<MaterialComponent>(render->mGO);
 		if (material) {
 
 			auto shader = material->mShader;
@@ -115,6 +117,7 @@ void RenderSystem::OnUpdate(float deltaTime) {
 					//The diffuse sampler is using the 0'th texture unit
 					shader->SetUniform1i(0, "diffuseSampler");
 				}
+
 			}
 			else {
 				Logger::Log("RenderSystem : No Texture", INFO);

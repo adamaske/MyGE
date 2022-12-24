@@ -1,4 +1,6 @@
 #pragma once
+
+//all of this should be moved to the camera system instead, when "native scripting" the user should never accsess registry 
 using GameObject = uint32_t;
 class Camera {
 public:
@@ -8,32 +10,23 @@ public:
 
 	virtual void Init();
 	virtual void OnUpdate(float deltaTime);
-	//Gets a perspective matrix
-	glm::mat4 GetProjectionMatrix()
-	{
-		return glm::perspective(glm::radians(mFOV), mAspectRatio, 0.1f, 1000.f);
-	}
 
-	
+	void SetViewAndProjectionMatrix();
+	//Gets a perspective matrix
+	glm::mat4 GetProjectionMatrix();
+
 	//Gets a view matrix
-	glm::mat4 GetViewMatrix()
-	{
-		return glm::lookAt(glm::vec3(0, 2, -2), glm::vec3(0,0,0), glm::vec3(0,1,0));
-	}
+	glm::mat4 GetViewMatrix();
+
 	//When the viewport changes we want to change the aspect ratio
 	void SetViewportSize(uint32_t width, uint32_t height) {
-		mViewportWidth = width;
-		mViewportHeight = height;
-		mAspectRatio = (float)mViewportWidth / (float)mViewportHeight;
+		//mViewportWidth = width;
+		//mViewportHeight = height;
+		//mAspectRatio = (float)mViewportWidth / (float)mViewportHeight;
 	}
 	
 protected:
-	glm::mat4 mViewMatrix = glm::mat4(1.f);
-	glm::mat4 mProjectionMatrix = glm::mat4(1.f);
-
-	uint32_t mViewportWidth = 1200, mViewportHeight =800;
-	float mAspectRatio = 1.78f;
-	float mFOV = 90.f;
+	
 
 
 	std::shared_ptr<CameraComponent> mCameraComponent;

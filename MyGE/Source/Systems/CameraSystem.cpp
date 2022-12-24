@@ -5,6 +5,7 @@
 #include "../Shaders/Shader.h"
 #include "../Shaders/ShaderManager.h"
 
+#include "../Components/Components.h"
 void CameraSystem::Init(){
     //Init cameras
 	auto cameras = Registry::Instance().GetComponents<CameraComponent>();
@@ -21,34 +22,27 @@ void CameraSystem::OnUpdate(float deltaTime) {
 	auto cameras = Registry::Instance().GetComponents<CameraComponent>();
 	for (auto cam : cameras)
 	{
-		cam->mCamera->OnUpdate(deltaTime);
-		auto go = (uint32_t)(*cam).mGO;
-		//It does find 
-		//Check if it is the main camera
-		if (cam->bIsMainCamera) {
-			//Gets a transform for the camera
-			auto transform = Registry::Instance().GetComponent<TransformComponent>(go);
-			//Get the shader to apply my view and projection matrix
-			auto shader = ShaderManager::Instance()->GetShader("MyGEShader");
-			
-			//Use this shader
-			shader->Use();
-			//Get a position
-			glm::vec3 pos(transform->mMatrix[3].x, transform->mMatrix[3].y, transform->mMatrix[3].z);
-			//Update matrices 
-			//Should be done by the camera
-			cam->mProjectionMatrix = glm::perspective(glm::radians(90.f), cam->mAspectRatio, 0.1f, 1000.f);
+		//GameObject ID
+		GameObject go = cam->mGO;
+		//Gets a transform for the camera
+		auto transform = Registry::Instance().GetComponent<TransformComponent>(go);
+		//Where is the actor with the camera, add some offset to this probably
+		glm::vec3 pos(transform->mMatrix[3].x, transform->mMatrix[3].y, transform->mMatrix[3].z);
 
-			cam->mViewMatrix = glm::lookAt(pos, pos + glm::vec3(0, 0, 1), glm::vec3(0, 1, 0));
-			
+		//Set p and v matrices
+		cam->mViewMatrix = glm::lookAt(pos, pos + glm::vec3(0, 0, 1), glm::vec3(0, 1, 0));	//add near and far to camera
+		cam->mProjectionMatrix = glm::perspective(glm::radians(90.f), cam->mAspectRatio, 0.1f, 1000.f);
+		
+		//We want the shaders to use the bIsMainCamera for game view,
+		if (cam->bIsMainCamera) {
+			//Get shaders
 			auto shaders = ShaderManager::Instance()->GetShaders();
 			for (auto shader : shaders) {
-				//Set the variables in the shaders, every shader should have these variables
-				//shader->SetUniformMatrix4(cam->mCamera->GetViewMatrix(), "vMatrix");
-				//shader->SetUniformMatrix4(cam->mCamera->GetProjectionMatrix(), "pMatrix");
-				//Set the variables in the shaders, every shader should have these variables
-				shader->SetUniformMatrix4(cam->mCamera->GetViewMatrix(), "vMatrix");
-				shader->SetUniformMatrix4(cam->mCamera->GetProjectionMatrix(), "pMatrix");
+				//Use this shader
+				shader->Use();
+				//Set the variables in the shaders, I currently dont know any scenario where this changes
+				shader->SetUniformMatrix4(cam->mViewMatrix, "vMatrix");
+				shader->SetUniformMatrix4(cam->mProjectionMatrix, "pMatrix");
 
 			}
 		}
@@ -79,5 +73,10 @@ void CameraSystem::OnUpdate(float deltaTime) {
     //    }
     //}
 
+	
+}
+
+void CameraSystem::SetViewAndProjectionMatrix(std::shared_ptr<CameraComponent> cam)
+{
 	
 }

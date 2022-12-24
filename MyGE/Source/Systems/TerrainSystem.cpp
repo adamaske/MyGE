@@ -20,7 +20,10 @@ void TerrainSystem::Init()
 		for (int i = 0; i < terrain->mHeight; i++) {
 			for (int j = 0; j < terrain->mWidth; j++)
 			{
-				verts.push_back(Vertex(glm::vec3(j, 0, i), glm::vec3(0, 0, 0), std::pair<float,float>{0,0}));
+				//			200  * (j / mWidth)
+				float t1 = (j / terrain->mWidth);
+				float t2 =(i / terrain->mHeight);
+				verts.push_back(Vertex(glm::vec3(j, (rand() % 100) / 100.f, i), glm::vec3(0, 0, 0), std::pair<float, float>{t1, t2}));
 			}
 		}
 		//Indeksering
@@ -33,7 +36,6 @@ void TerrainSystem::Init()
 				////Under første
 				inds.push_back(i + ((terrain->mWidth * j) + terrain->mWidth));
 
-				continue;
 				//Høyre for første
 				inds.push_back(i + ((terrain->mWidth * j) + 1));
 				//Under første

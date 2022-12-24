@@ -104,6 +104,8 @@ void Texture::setTexture()
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mColumns, mRows, 0, GL_BGRA, GL_UNSIGNED_BYTE, mBitmap);
 
     glGenerateMipmap(GL_TEXTURE_2D);
+
+    Logger::Log("Texture was with ID " + std::to_string(mId));
 }
 
 void Texture::makeDummyTexture()
