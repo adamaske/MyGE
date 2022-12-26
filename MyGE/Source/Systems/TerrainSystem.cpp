@@ -23,7 +23,7 @@ void TerrainSystem::Init()
 				//UV's
 				float t1 = (j / terrain->mWidth);
 				float t2 =(i / terrain->mHeight);
-				verts.push_back(Vertex(glm::vec3(j, (rand() % 100) / 100.f, i), glm::vec3(0, 0, 0), std::pair<float, float>{t1, t2}));
+				verts.push_back(Vertex(glm::vec3(j, 0, i), glm::vec3(0, 0, 0), std::pair<float, float>{t1, t2}));
 			}
 		}
 		//Indeksering
@@ -87,6 +87,10 @@ void TerrainSystem::OnUpdate(float deltaSeconds)
 	auto terrains = Registry::Instance().GetComponents<TerrainComponent>();
 
 	for (auto terrain : terrains) {
+		if (!terrain->bVisible) {
+			//Dont render
+			continue;
+		}
 		//the terrain has a material
 		//Check for material, the material should have a shader and a texture
 		//Transform component

@@ -23,16 +23,18 @@ void TextureManager::LoadTextures()
 	//for(auto file : dir), if(file = jpg)->
 	// 
 	//Use string here, this happens to so little it wont make a difference
-	std::vector<std::string> texturePaths = { "GrassDiffuse.jpg" };
+	std::vector<std::string> texturePaths = { "GrassDiffuse.jpg", "LavaDiffuse.jpg"};
 	for (auto t : texturePaths) {
 		std::string path = "../Resources/Textures/";
 		path.append(t);
 		//	Gets path and name
-		if (LoadTexture(path, t)) {
+		auto name = t;
+		name.resize(t.size() - 4);
+		if (LoadTexture(path, name)) {
 			Logger::Log("TextureManager : Load texture " + t);
 		}
 		else {
-			Logger::Log("TextureManager : Could not load texture" + path, WARNING);
+			Logger::Log("TextureManager : Could not load texture" + path);
 		}
 	}
 }
@@ -43,7 +45,10 @@ bool TextureManager::LoadTexture(std::string path, std::string name) {
 	int channels;
 
 	unsigned char* image = stbi_load(path.c_str(), &width, &height, &channels, STBI_rgb);
-
+	//Check if the image loaded
+	if (image == NULL) {
+		return false;
+	}
 	// Generate a texture object
 	GLuint texture;
 	glGenTextures(1, &texture);

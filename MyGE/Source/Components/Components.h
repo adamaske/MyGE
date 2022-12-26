@@ -117,7 +117,7 @@ struct CameraComponent {
 	glm::vec3 mGlobalRight = { 1,0,0 };
 	glm::vec3 mGlobalForward = { 0,0,1 };
 
-	float mFOV = 90;
+	float mFOV = 90.f;
 	float mAspectRatio = 4.f / 3.f;
 	float mNearPlane = 0.1f;
 	float mFarPlane = 1000.f;
@@ -127,8 +127,13 @@ struct CameraComponent {
 	float mPitch = 0;
 
 	glm::vec3 mLastPosition = glm::vec3(600, 400, 0);
+	glm::vec3 mTargetOffset = glm::vec3(0, 0, 1);
 };
 
+struct EditorCamera : CameraComponent {
+	glm::vec3 mPosition = glm::vec3(0, 3, -3);
+	float mMoveSpeed = 1.f;
+};
 struct RenderComponent {
 	GameObject mGO;
 
@@ -183,8 +188,8 @@ struct TerrainComponent {
 	std::vector<float> mVertices;
 	std::vector<float> mIndicies;
 
-	float mWidth = 200;  
-	float mHeight = 200;
+	float mWidth = 40;  
+	float mHeight = 20;
 
 	float mResolution = 1;
 
@@ -193,6 +198,8 @@ struct TerrainComponent {
 	std::shared_ptr<VertexArray> mVAO;
 	std::shared_ptr<VertexBuffer> mVBO;
 	std::shared_ptr<IndexBuffer> mIBO;
+
+	bool bVisible = true;
 };
 
 struct BillboardComponent {

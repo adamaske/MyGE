@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Camera.h"
-class EditorCamera : public Camera {
+class EditorCamera2 : public Camera {
 public:
 
 	virtual void OnUpdate(float deltaTime) override;

@@ -18,8 +18,6 @@
 #include "../Scripting/NativeScriptingSystem.h"
 //Editor systems
 #include "../Systems/EditorSystems/QuickCreateObjectsSystem.h"
-#include "../Systems/EditorSystems/SceneViewSystem.h"
-#include "../Systems/EditorSystems/GameViewSystem.h"
 
 #include "../Cameras/Camera.h"
 #include "../Cameras/EditorCamera.h"
@@ -44,7 +42,7 @@ void MyGEEditor::Init()
 	mActiveScene->Init();
 	
 
-	//mEditorCamera = std::make_shared<EditorCamera>();
+	mEditorCamera = std::make_shared<EditorCamera>();
 	//mEditorCamera = std::make_shared<Camera>();
 
 
@@ -54,8 +52,8 @@ void MyGEEditor::Init()
 	mSystems.insert({ "RenderSystem", std::make_shared<RenderSystem>() });
 	mSystems.insert({ "TerrainSystem", std::make_shared<TerrainSystem>() });
 
-	//This myst be replaced by "EditorCamera" or "SceneCamera" systems, the editor should not display the bIsMainCamera 
-	mSystems.insert({ "CameraSystem" , std::make_shared<CameraSystem>() });
+	//The Camera system is for when the scene is rendered and should probably go into the scene systems
+	//mSystems.insert({ "CameraSystem" , std::make_shared<CameraSystem>() });
 	mSystems.insert({ "NativeScripting", std::make_shared<NativeScriptingSystem>() });
 	//OPENAL32.DLL NOT FOUND CAUSES THIS TO ERROR ->>> 
 	//mSystems.insert({ "AudioSystem", new AudioSystem() });
@@ -77,7 +75,56 @@ void MyGEEditor::Init()
 }
 
 void MyGEEditor::OnUpdate(float deltaTime)
-{
+{	
+	//apply changes to editor camera
+	if (Input::IsKeyDown(GLFW_KEY_W)){
+		mEditorCamera->mPosition += glm::vec3(0, 0, mEditorCamera->mMoveSpeed * deltaTime);
+	}
+	//apply changes to editor camera
+	if (Input::IsKeyDown(GLFW_KEY_S)) {
+		mEditorCamera->mPosition += glm::vec3(0, 0, -mEditorCamera->mMoveSpeed * deltaTime);
+	}
+	//apply changes to editor camera
+	if (Input::IsKeyDown(GLFW_KEY_A)) {
+		mEditorCamera->mPosition += glm::vec3(mEditorCamera->mMoveSpeed * deltaTime, 0, 0);
+	}
+	//apply changes to editor camera
+	if (Input::IsKeyDown(GLFW_KEY_D)) {
+		mEditorCamera->mPosition += glm::vec3(-mEditorCamera->mMoveSpeed * deltaTime, 0, 0);
+	}
+	// //Set p and v matrices
+	mEditorCamera->mViewMatrix = glm::lookAt(mEditorCamera->mPosition, mEditorCamera->mPosition + mEditorCamera->mTargetOffset, glm::vec3(0, 1, 0));	//add near and far to camera
+	//cam->mViewMatrix = glm::lookAt(glm::vec3(0, -3), pos + glm::vec3(0, 0, 1), glm::vec3(0, 1, 0));
+	mEditorCamera->mProjectionMatrix = glm::perspective(glm::radians(mEditorCamera->mFOV), mEditorCamera->mAspectRatio, 0.1f, 1000.f);
+
+	//Apply to the shaders
+	auto shaders = ShaderManager::Instance()->GetShaders();
+	for (auto shader : shaders) {
+		//Use this shader
+		shader->Use();
+		//Set the variables in the shaders, I currently dont know any scenario where this changes
+		shader->SetUniformMatrix4(mEditorCamera->mViewMatrix, "vMatrix");
+		shader->SetUniformMatrix4(mEditorCamera->mProjectionMatrix, "pMatrix");
+
+	}
+	//Apply editor camera to the shaders
+	auto cameras = Registry::Instance().GetComponents<CameraComponent>();
+	for (auto cam : cameras)
+	{
+		//GameObject ID
+		GameObject go = cam->mGO;
+		//Gets a transform for the camera
+		auto transform = Registry::Instance().GetComponent<TransformComponent>(go);
+		//Where is the actor with the camera, add some offset to this probably
+		glm::vec3 pos(transform->mMatrix[3].x, transform->mMatrix[3].y, transform->mMatrix[3].z);
+
+		
+		//We want the shaders to use the bIsMainCamera for game view,
+		if (cam->bIsMainCamera) {
+			
+		}
+	}
+
 	//Maybe it should be a vector instead, we iterate through it every frame
 	for (auto system : mSystems) {
 		system.second->OnUpdate(deltaTime);

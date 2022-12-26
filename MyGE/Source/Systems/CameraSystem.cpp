@@ -30,7 +30,8 @@ void CameraSystem::OnUpdate(float deltaTime) {
 		glm::vec3 pos(transform->mMatrix[3].x, transform->mMatrix[3].y, transform->mMatrix[3].z);
 
 		//Set p and v matrices
-		cam->mViewMatrix = glm::lookAt(pos, pos + glm::vec3(0, 0, 1), glm::vec3(0, 1, 0));	//add near and far to camera
+		cam->mViewMatrix = glm::lookAt(pos, pos + cam->mTargetOffset, glm::vec3(0, 1, 0));	//add near and far to camera
+		//cam->mViewMatrix = glm::lookAt(glm::vec3(0, -3), pos + glm::vec3(0, 0, 1), glm::vec3(0, 1, 0));
 		cam->mProjectionMatrix = glm::perspective(glm::radians(90.f), cam->mAspectRatio, 0.1f, 1000.f);
 		
 		//We want the shaders to use the bIsMainCamera for game view,

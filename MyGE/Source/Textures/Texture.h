@@ -2,6 +2,7 @@
 
 #include <vector>
 
+//NB: THIS CLASS IS NOT USED
 
 ///Simple class for creating textures from a bitmap file.
 class Texture 
