@@ -20,7 +20,7 @@ void TerrainSystem::Init()
 		for (int i = 0; i < terrain->mHeight; i++) {
 			for (int j = 0; j < terrain->mWidth; j++)
 			{
-				//			200  * (j / mWidth)
+				//UV's
 				float t1 = (j / terrain->mWidth);
 				float t2 =(i / terrain->mHeight);
 				verts.push_back(Vertex(glm::vec3(j, (rand() % 100) / 100.f, i), glm::vec3(0, 0, 0), std::pair<float, float>{t1, t2}));
@@ -87,6 +87,41 @@ void TerrainSystem::OnUpdate(float deltaSeconds)
 	auto terrains = Registry::Instance().GetComponents<TerrainComponent>();
 
 	for (auto terrain : terrains) {
+		//the terrain has a material
+		//Check for material, the material should have a shader and a texture
+		//Transform component
+		auto transform = Registry::Instance().GetComponent<TransformComponent>(terrain->mGO);
+
+		auto material = Registry::Instance().GetComponent<MaterialComponent>(terrain->mGO);
+		if (material) {
+			auto shader = material->mShader;
+			if (shader) {
+				shader->Use();
+				shader->SetUniformMatrix4(transform->mMatrix, "mMatrix");
+			}
+			else {
+				Logger::Log("RednerSystem : No Shader", INFO);
+			}
+
+			auto texture = material->mTexture;
+			if (texture != -1) {
+				//This activates the 0'th texture unit
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, texture);
+				if (shader) {
+					//The diffuse sampler is using the 0'th texture unit
+					shader->SetUniform1i(0, "diffuseSampler");
+				}
+
+			}
+			else {
+				Logger::Log("RenderSystem : No Texture in the material", INFO);
+			}
+		}
+		else {
+			Logger::Log("RenderSystem : No material, cannot render!", ERROR, true);
+		}
+
 		if (!terrain->mVAO) {
 			Logger::Log("TerrainSystem : Terrain has no VAO!", ERROR);
 			return;

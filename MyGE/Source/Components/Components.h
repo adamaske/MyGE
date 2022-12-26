@@ -72,7 +72,7 @@ struct MaterialComponent {
 
 	//textures
 	std::string mTexturePath = "../Resources/Textures/hammer.bmp";
-	std::shared_ptr<class Texture> mTexture;
+	int mTexture = -1;
 
 	//Shaders
 	int mShaderID = 0;
@@ -85,8 +85,16 @@ struct MaterialComponent {
 
 struct MeshComponent {
 	GameObject mGO = 0;
+	//Replace this with a mesh id or something, 
 	std::string mObjFilePath;
-	std::string mMeshName = " Cube ";
+
+	//moved from rendercomponent, which is being removed
+	std::shared_ptr<VertexArray> mVAO;
+	std::shared_ptr<VertexBuffer> mVBO;
+	std::shared_ptr<IndexBuffer> mIBO;
+
+	bool bVisible = true;
+
 };
 
 struct CameraComponent {
