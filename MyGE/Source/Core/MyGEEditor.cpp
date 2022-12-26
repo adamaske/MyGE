@@ -43,6 +43,9 @@ void MyGEEditor::Init()
 	
 
 	mEditorCamera = std::make_shared<EditorCamera>();
+	mEditorCamera->mOldX = 0;
+	mEditorCamera->mOldY = 0;
+
 	//mEditorCamera = std::make_shared<Camera>();
 
 
@@ -76,22 +79,61 @@ void MyGEEditor::Init()
 
 void MyGEEditor::OnUpdate(float deltaTime)
 {	
+	//TODO put all this in a system or a function
 	//apply changes to editor camera
+#pragma region EditorCamera
+	//Set mouse pos to 0,0
+	
+
+	//Do rotation before movement to have updated vectors
+#pragma region Rotation
+	//Left mouse, rotate when this is down
+	//Not working yet so it wont run
+	if (Input::IsMouseButtonDown(GLFW_MOUSE_BUTTON_2)) {
+		//We want the mosue to be at 0,0 when doing this
+		if (mEditorCamera->bMousePressed) {
+			std::cout << "PRESSED!" << std::endl;
+			mEditorCamera->bMousePressed = false;
+		}
+		float x = Input::MouseX();
+		float y = Input::MouseY();
+		glfwSetCursorPos(glfwGetCurrentContext(), 600, 400);
+
+		float dX = Input::DeltaMouseX();
+		float dY = Input::DeltaMouseY();
+		//Logger::Log("MOUSEBUTTON 2 DOWN");
+		//
+		////find the delta
+		//Ignoring this for now
+		
+		//this is enough for now
+		
+		//how to caluclate this?? we want to update both 
+		//mForward, mRight and mUp based on the target location
+	}
+	
+	
+#pragma endregion
+
+#pragma region Movement
 	if (Input::IsKeyDown(GLFW_KEY_W)){
-		mEditorCamera->mPosition += glm::vec3(0, 0, mEditorCamera->mMoveSpeed * deltaTime);
+		mEditorCamera->mPosition += mEditorCamera->mForward * mEditorCamera->mMoveSpeed * deltaTime;
 	}
 	//apply changes to editor camera
 	if (Input::IsKeyDown(GLFW_KEY_S)) {
-		mEditorCamera->mPosition += glm::vec3(0, 0, -mEditorCamera->mMoveSpeed * deltaTime);
+		mEditorCamera->mPosition += -mEditorCamera->mForward * mEditorCamera->mMoveSpeed * deltaTime;
 	}
 	//apply changes to editor camera
 	if (Input::IsKeyDown(GLFW_KEY_A)) {
-		mEditorCamera->mPosition += glm::vec3(mEditorCamera->mMoveSpeed * deltaTime, 0, 0);
+		mEditorCamera->mPosition += mEditorCamera->mRight * mEditorCamera->mMoveSpeed * deltaTime;
 	}
 	//apply changes to editor camera
 	if (Input::IsKeyDown(GLFW_KEY_D)) {
-		mEditorCamera->mPosition += glm::vec3(-mEditorCamera->mMoveSpeed * deltaTime, 0, 0);
+		mEditorCamera->mPosition += -mEditorCamera->mRight * mEditorCamera->mMoveSpeed * deltaTime;
 	}
+#pragma endregion
+	//Rotaiton
+	// 
 	// //Set p and v matrices
 	mEditorCamera->mViewMatrix = glm::lookAt(mEditorCamera->mPosition, mEditorCamera->mPosition + mEditorCamera->mTargetOffset, glm::vec3(0, 1, 0));	//add near and far to camera
 	//cam->mViewMatrix = glm::lookAt(glm::vec3(0, -3), pos + glm::vec3(0, 0, 1), glm::vec3(0, 1, 0));
@@ -107,23 +149,8 @@ void MyGEEditor::OnUpdate(float deltaTime)
 		shader->SetUniformMatrix4(mEditorCamera->mProjectionMatrix, "pMatrix");
 
 	}
-	//Apply editor camera to the shaders
-	auto cameras = Registry::Instance().GetComponents<CameraComponent>();
-	for (auto cam : cameras)
-	{
-		//GameObject ID
-		GameObject go = cam->mGO;
-		//Gets a transform for the camera
-		auto transform = Registry::Instance().GetComponent<TransformComponent>(go);
-		//Where is the actor with the camera, add some offset to this probably
-		glm::vec3 pos(transform->mMatrix[3].x, transform->mMatrix[3].y, transform->mMatrix[3].z);
 
-		
-		//We want the shaders to use the bIsMainCamera for game view,
-		if (cam->bIsMainCamera) {
-			
-		}
-	}
+#pragma endregion
 
 	//Maybe it should be a vector instead, we iterate through it every frame
 	for (auto system : mSystems) {

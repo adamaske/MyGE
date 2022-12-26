@@ -21,14 +21,34 @@ bool Input::IsKeyReleased(int key)
 	return GetInstance().mKeys[key] == GLFW_RELEASE;
 }
 
+bool Input::IsMouseButtonDown(int button)
+{
+	return GetInstance().mKeys[button] == GLFW_PRESS;
+}
+
+bool Input::IsMouseButtonPressed(int button)
+{
+	return GetInstance().bMouseClick;
+}
+
 float Input::MouseX()
 {
-	return 0.0f;
+	return GetInstance().mMouseX;
 }
 
 float Input::MouseY()
 {
-	return 0.0f;
+	return GetInstance().mMouseY;
+}
+
+float Input::DeltaMouseX()
+{
+	return GetInstance().mDeltaMouseX;
+}
+
+float Input::DeltaMouseY()
+{
+	return GetInstance().mDeltaMouseY;
 }
 
 void Input::KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
@@ -37,8 +57,29 @@ void Input::KeyCallback(GLFWwindow* window, int key, int scancode, int action, i
 }
 
 void Input::MouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
-
+	//Gonna deal with it in the editorcamera
+	//GetInstance().mouseX[key] = action;
+	//if (action == GLFW_PRESS) {
+	//	//This is a press event, check for first mouse
+	//	if (GetInstance().bMouseClick) {
+	//		//If the mouse is clicked already, set it to false;
+	//		GetInstance().bMouseClick = false;
+	//	}
+	//	//we now know when the pressed
+	//}
+	//else if (action == GLFW_RELEASE) {
+	//	////this is a release event
+	//	//if (GetInstance().bMouseClick) {
+	//	//	//If the mouse is clicked already, set it to false;
+	//	//	GetInstance().bMouseClick = false;
+	//	//}
+	//}
+	GetInstance().mKeys[button] = action;
 }
 
 void Input::CursorPosCallback(GLFWwindow* window, double xpos, double ypos) {
+	GetInstance().mDeltaMouseX = xpos - GetInstance().mMouseX;
+	GetInstance().mDeltaMouseY = ypos - GetInstance().mMouseY;
+	GetInstance().mMouseX =	xpos;
+	GetInstance().mMouseY =	ypos;
 }

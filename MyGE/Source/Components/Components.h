@@ -132,7 +132,13 @@ struct CameraComponent {
 
 struct EditorCamera : CameraComponent {
 	glm::vec3 mPosition = glm::vec3(0, 3, -3);
-	float mMoveSpeed = 1.f;
+	float mMoveSpeed = 2.f;
+	float mRotationSpeed = 2.f;
+
+	float mOldX;	
+	float mOldY;
+
+	bool bMousePressed = false;
 };
 struct RenderComponent {
 	GameObject mGO;
