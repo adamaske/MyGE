@@ -21,7 +21,6 @@
 #include "../Shaders/Shader.h"
 #include "../Shaders/ShaderManager.h"
 
-
 void glfw_onError(int error, const char* desc) {
 	std::cout << "GLFW error : " << error << ", " << desc << std::endl;
 }
@@ -62,8 +61,9 @@ int MyGE::Run()
 	//A shader manager to store all shaders
 	ShaderManager::Instance();
 	mTextureManager = std::make_shared<TextureManager>();
-	mTextureManager->InsertTexture("../Resources/Textures/hammerDiffuse.bmp", "HammerDiffuse");
-	mTextureManager->InsertTexture("../Resources/Textures/GrassDiffuse.bmp", "GrassDiffuse");
+	mTextureManager->LoadTextures();
+	//mTextureManager->InsertTexture("../Resources/Textures/hammerDiffuse.bmp", "HammerDiffuse");
+	//mTextureManager->InsertTexture("../Resources/Textures/GrassDiffuse.bmp", "GrassDiffuse");
 	//Here we can parse arguments wheter we launch the editor or runtime for example
 	//if args++ == -e Launch editor, == -r Launch runtime
 

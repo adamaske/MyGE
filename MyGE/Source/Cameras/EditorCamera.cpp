@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "EditorCamera.h"
 
-void EditorCamera::OnUpdate(float deltaTime)
+void EditorCamera2::OnUpdate(float deltaTime)
 {
 	if (Input::IsKeyDown(GLFW_KEY_W)) {
 		mPosition.z += 1 * deltaTime;

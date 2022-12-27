@@ -6,19 +6,19 @@ public:
 	TextureManager();
 	//Go thourgh Resources/Textures and find jpgs, bmps etc
 	static void LoadTextures();
-	static void InsertTexture(std::string fileName, std::string name);
-	static std::shared_ptr<Texture> GetTexture(std::string name);
-	std::shared_ptr<Texture> GetTextureImpl(std::string name);
+	//Actually create the texture in opengl
+	static bool LoadTexture(std::string path, std::string name);
+	//Add the id to this instance
+	void InsertTexture(std::string name, int id);
 
 	//Return array of textures
-	std::vector<int> GetTexturesInt();
-private:
-	std::unordered_map<std::string, std::shared_ptr<Texture>> mTextures;
+	static std::vector<int> GetTextures();
+	std::vector<int> GetTexturesImpl();
 
-	// todo here
-	//Remove texture class, textures only need an int to be regonized
-
-	std::unordered_map<std::string,int> mTextures2;
+	static int GetTexture(std::string name);
+	int GetTextureImpl(std::string name);
+protected:
+	std::unordered_map<std::string,int> mTextures;
 	
 
 	static TextureManager& GetInstance() {

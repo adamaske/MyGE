@@ -18,8 +18,6 @@
 #include "../Scripting/NativeScriptingSystem.h"
 //Editor systems
 #include "../Systems/EditorSystems/QuickCreateObjectsSystem.h"
-#include "../Systems/EditorSystems/SceneViewSystem.h"
-#include "../Systems/EditorSystems/GameViewSystem.h"
 
 #include "../Cameras/Camera.h"
 #include "../Cameras/EditorCamera.h"
@@ -44,7 +42,10 @@ void MyGEEditor::Init()
 	mActiveScene->Init();
 	
 
-	//mEditorCamera = std::make_shared<EditorCamera>();
+	mEditorCamera = std::make_shared<EditorCamera>();
+	mEditorCamera->mOldX = 0;
+	mEditorCamera->mOldY = 0;
+
 	//mEditorCamera = std::make_shared<Camera>();
 
 
@@ -54,8 +55,8 @@ void MyGEEditor::Init()
 	mSystems.insert({ "RenderSystem", std::make_shared<RenderSystem>() });
 	mSystems.insert({ "TerrainSystem", std::make_shared<TerrainSystem>() });
 
-	//This myst be replaced by "EditorCamera" or "SceneCamera" systems, the editor should not display the bIsMainCamera 
-	mSystems.insert({ "CameraSystem" , std::make_shared<CameraSystem>() });
+	//The Camera system is for when the scene is rendered and should probably go into the scene systems
+	//mSystems.insert({ "CameraSystem" , std::make_shared<CameraSystem>() });
 	mSystems.insert({ "NativeScripting", std::make_shared<NativeScriptingSystem>() });
 	//OPENAL32.DLL NOT FOUND CAUSES THIS TO ERROR ->>> 
 	//mSystems.insert({ "AudioSystem", new AudioSystem() });
@@ -77,7 +78,80 @@ void MyGEEditor::Init()
 }
 
 void MyGEEditor::OnUpdate(float deltaTime)
-{
+{	
+	//TODO put all this in a system or a function
+	//apply changes to editor camera
+#pragma region EditorCamera
+	//Set mouse pos to 0,0
+	
+
+	//Do rotation before movement to have updated vectors
+#pragma region Rotation
+	//Left mouse, rotate when this is down
+	//Not working yet so it wont run
+	if (Input::IsMouseButtonDown(GLFW_MOUSE_BUTTON_2)) {
+		//We want the mosue to be at 0,0 when doing this
+		if (mEditorCamera->bMousePressed) {
+			std::cout << "PRESSED!" << std::endl;
+			mEditorCamera->bMousePressed = false;
+		}
+		float x = Input::MouseX();
+		float y = Input::MouseY();
+		glfwSetCursorPos(glfwGetCurrentContext(), 600, 400);
+
+		float dX = Input::DeltaMouseX();
+		float dY = Input::DeltaMouseY();
+		//Logger::Log("MOUSEBUTTON 2 DOWN");
+		//
+		////find the delta
+		//Ignoring this for now
+		
+		//this is enough for now
+		
+		//how to caluclate this?? we want to update both 
+		//mForward, mRight and mUp based on the target location
+	}
+	
+	
+#pragma endregion
+
+#pragma region Movement
+	if (Input::IsKeyDown(GLFW_KEY_W)){
+		mEditorCamera->mPosition += mEditorCamera->mForward * mEditorCamera->mMoveSpeed * deltaTime;
+	}
+	//apply changes to editor camera
+	if (Input::IsKeyDown(GLFW_KEY_S)) {
+		mEditorCamera->mPosition += -mEditorCamera->mForward * mEditorCamera->mMoveSpeed * deltaTime;
+	}
+	//apply changes to editor camera
+	if (Input::IsKeyDown(GLFW_KEY_A)) {
+		mEditorCamera->mPosition += mEditorCamera->mRight * mEditorCamera->mMoveSpeed * deltaTime;
+	}
+	//apply changes to editor camera
+	if (Input::IsKeyDown(GLFW_KEY_D)) {
+		mEditorCamera->mPosition += -mEditorCamera->mRight * mEditorCamera->mMoveSpeed * deltaTime;
+	}
+#pragma endregion
+	//Rotaiton
+	// 
+	// //Set p and v matrices
+	mEditorCamera->mViewMatrix = glm::lookAt(mEditorCamera->mPosition, mEditorCamera->mPosition + mEditorCamera->mTargetOffset, glm::vec3(0, 1, 0));	//add near and far to camera
+	//cam->mViewMatrix = glm::lookAt(glm::vec3(0, -3), pos + glm::vec3(0, 0, 1), glm::vec3(0, 1, 0));
+	mEditorCamera->mProjectionMatrix = glm::perspective(glm::radians(mEditorCamera->mFOV), mEditorCamera->mAspectRatio, 0.1f, 1000.f);
+
+	//Apply to the shaders
+	auto shaders = ShaderManager::Instance()->GetShaders();
+	for (auto shader : shaders) {
+		//Use this shader
+		shader->Use();
+		//Set the variables in the shaders, I currently dont know any scenario where this changes
+		shader->SetUniformMatrix4(mEditorCamera->mViewMatrix, "vMatrix");
+		shader->SetUniformMatrix4(mEditorCamera->mProjectionMatrix, "pMatrix");
+
+	}
+
+#pragma endregion
+
 	//Maybe it should be a vector instead, we iterate through it every frame
 	for (auto system : mSystems) {
 		system.second->OnUpdate(deltaTime);

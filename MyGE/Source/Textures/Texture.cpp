@@ -3,6 +3,7 @@
 
 Texture::Texture()
 {
+    Logger::Log("TEXTURE CREATED; THIS SHOULD NOT HAPPEN!");
 	//Make small dummy texture
 	makeDummyTexture();
 }

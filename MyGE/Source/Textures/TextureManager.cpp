@@ -2,14 +2,14 @@
 #include "TextureManager.h"
 #include "Texture.h"
 
+#define STB_IMAGE_IMPLEMENTATION
 #include "../stb/stb_image.h"
+
 TextureManager::TextureManager()
 {
-	auto texture = std::make_shared<Texture>();
-
-	mTextures["DummyTexture"] = texture;
 }
 
+//Take in a path here, dependecy injection?
 void TextureManager::LoadTextures()
 {
 	//TEsting
@@ -21,73 +21,102 @@ void TextureManager::LoadTextures()
 	//Open some directory
 	//auto dir = Directory::Open("../Resources/Textures");
 	//for(auto file : dir), if(file = jpg)->
-	// float width;
-	// float height;
-	// int channels;
-	//unsigned char* image = stbi_load(fileName.c_str(), &width, &height, &channels, STBI_rgb);
+	// 
+	//Use string here, this happens to so little it wont make a difference
+	std::vector<std::string> texturePaths = { "GrassDiffuse.jpg", "LavaDiffuse.jpg"};
+	for (auto t : texturePaths) {
+		std::string path = "../Resources/Textures/";
+		path.append(t);
+		//	Gets path and name
+		auto name = t;
+		name.resize(t.size() - 4);
+		if (LoadTexture(path, name)) {
+			Logger::Log("TextureManager : Load texture " + t);
+		}
+		else {
+			Logger::Log("TextureManager : Could not load texture" + path);
+		}
+	}
+}
 
+bool TextureManager::LoadTexture(std::string path, std::string name) {
+	int width;
+	int height;
+	int channels;
+
+	unsigned char* image = stbi_load(path.c_str(), &width, &height, &channels, STBI_rgb);
+	//Check if the image loaded
+	if (image == NULL) {
+		return false;
+	}
 	// Generate a texture object
-	//unsinged int texture;
-	//glGenTextures(1, &texture);
+	GLuint texture;
+	glGenTextures(1, &texture);
 
 	// Bind the texture object to the GL_TEXTURE_2D target
-	//glBindTexture(GL_TEXTURE_2D, texture);
-	//
+	glBindTexture(GL_TEXTURE_2D, texture);
+
 	//// Set the texture parameters
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	//
 	//// Upload the texture data to the GPU
-	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-	//
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+
 	//// Free the image data, since it is now stored on the GPU
-	//stbi_image_free(image);
+	stbi_image_free(image);
+
+	// Add the texture to the texture map
+	GetInstance().InsertTexture(name, texture);
+
+	return true;
+}
+
+void TextureManager::InsertTexture(std::string name, int id)
+{
+	//auto texture = std::make_shared<Texture>(fileName);
+	//unsigned int t;
+	//glGenTextures(1, &t);
 	//
-	//// Add the texture to the texture map
-	//m_textures[textureName] = texture;
+	//GetInstance().mTextures2[name] = t;
+	//
+	//GetInstance().mTextures[name] = texture;
+	//
+	//Logger::Log("TextureManager : InsertTexture " + name + " made");
+
+	mTextures[name] = id;
 }
 
-void TextureManager::InsertTexture(std::string fileName, std::string name)
+std::vector<int> TextureManager::GetTextures()
 {
-	auto texture = std::make_shared<Texture>(fileName);
-	unsigned int t;
-	glGenTextures(1, &t);
-
-	GetInstance().mTextures2[name] = t;
-
-	GetInstance().mTextures[name] = texture;
-
-	Logger::Log("TextureManager : InsertTexture " + name + " made");
+	return GetInstance().GetTexturesImpl();
 }
 
-std::shared_ptr<Texture> TextureManager::GetTexture(std::string name)
-{
-	return GetInstance().GetTextureImpl(name);
-}
-
-std::shared_ptr<Texture> TextureManager::GetTextureImpl(std::string name)
-{
-	if (mTextures.find(name) != mTextures.end()) {
-		return mTextures[name];
-	}
-	else {
-		return std::shared_ptr<Texture>();
-	}
-	
-}
-
-std::vector<int> TextureManager::GetTexturesInt()
+std::vector<int> TextureManager::GetTexturesImpl()
 {
 	std::vector<int> textures;
-	
-	auto ts = GetInstance().mTextures2;
-	for (auto t : ts) {
+	for (auto t : mTextures) {
 		textures.push_back(t.second);
 	}
 	return textures;
 }
 
+int TextureManager::GetTexture(std::string name)
+{
+	return GetInstance().GetTextureImpl(name);
+}
+
+int TextureManager::GetTextureImpl(std::string name)
+{
+	if (mTextures.find(name) != mTextures.end()) {
+		return mTextures[name];
+	}
+	else {
+		return 0;
+	}
+	
+}
 
 

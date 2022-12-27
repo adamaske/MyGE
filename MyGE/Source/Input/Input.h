@@ -10,7 +10,10 @@ public:
 
 	//// Check if a specific key was just released (i.e. went from being pressed to not being pressed)
 	static bool IsKeyReleased(int key);
-	;
+	
+	static bool IsMouseButtonDown(int button);
+
+	static bool IsMouseButtonPressed(int button);
 	//// Check if a specific mouse button is currently being pressed
 	//bool IsMouseButtonDown(int button) const;
 	//
@@ -27,11 +30,15 @@ public:
 	//void Update();
 	static float MouseX();
 	static float MouseY();
-
+	static float DeltaMouseX();
+	static float DeltaMouseY();
 	//Change this 350 to the amount of keys, GLFW_LAST_KEY + 1, 
 	//then it goes from 0 to 349 still but updates with opengl updates
 	//Each bool represents if the key is down or not
 	std::array<bool, 350> mKeys;
+
+
+
 private:
 	// Callback functions for GLFW input events.
 	static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
@@ -39,9 +46,11 @@ private:
 	static void CursorPosCallback(GLFWwindow* window, double xpos, double ypos);
 
 	//Mouse position
-	float mouseX = 0;
-	float mouseY = 0;
-
+	float mMouseX = 0;
+	float mMouseY = 0;
+	float mDeltaMouseX = 0;
+	float mDeltaMouseY = 0;
+	bool bMouseClick = false;
 	static Input& GetInstance() {
 		static Input instance;
 		return instance;

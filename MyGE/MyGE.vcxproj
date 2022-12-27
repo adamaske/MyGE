@@ -219,9 +219,7 @@
     <ClCompile Include="Source\Core\MyGE.cpp" />
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\Systems\CameraSystem.cpp" />
-    <ClCompile Include="Source\Systems\EditorSystems\GameViewSystem.cpp" />
     <ClCompile Include="Source\Systems\EditorSystems\QuickCreateObjectsSystem.cpp" />
-    <ClCompile Include="Source\Systems\EditorSystems\SceneViewSystem.cpp" />
     <ClCompile Include="Source\Systems\ObjMeshSystem.cpp" />
     <ClCompile Include="Source\Systems\RenderSystem.cpp" />
     <ClCompile Include="Source\Systems\System.cpp" />
@@ -260,9 +258,7 @@
     <ClInclude Include="Source\Core\MyGE.h" />
     <ClInclude Include="Source\Shaders\ShaderManager.h" />
     <ClInclude Include="Source\Systems\CameraSystem.h" />
-    <ClInclude Include="Source\Systems\EditorSystems\GameViewSystem.h" />
     <ClInclude Include="Source\Systems\EditorSystems\QuickCreateObjectsSystem.h" />
-    <ClInclude Include="Source\Systems\EditorSystems\SceneViewSystem.h" />
     <ClInclude Include="Source\Systems\ObjMeshSystem.h" />
     <ClInclude Include="Source\Systems\PhysicsSystem.h" />
     <ClInclude Include="Source\Systems\RenderSystem.h" />

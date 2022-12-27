@@ -38,17 +38,13 @@ void MonkeyScene::Init()
 	uint32_t cubeID = Registry::Instance().NewGameObject();
 	//Create a shader component, should be replaced with material
 
-	//Createa render component
-	auto cubeRender = Registry::Instance().RegisterComponent<RenderComponent>(RenderComponent(), cubeID);
-	cubeRender->mGO = cubeID;
 	//Create a mesh component
 	auto cubeMesh = Registry::Instance().RegisterComponent<MeshComponent>(MeshComponent(), cubeID);
 	cubeMesh->mObjFilePath = cubePath;
-	cubeMesh->mMeshName = "Cube";
 	//Material
 	auto cubeMaterial = Registry::Instance().RegisterComponent<MaterialComponent>(MaterialComponent(), cubeID);
 	cubeMaterial->mShader = ShaderManager::Instance()->GetShader("MyGEShader");
-	cubeMaterial->mTexture = TextureManager::GetTexture("HammerDiffuse");
+	cubeMaterial->mTexture = TextureManager::GetTexture("LavaDiffuse");
 	auto cubeTransform = Registry::Instance().GetComponent<TransformComponent>(cubeID);
 	cubeTransform->mMatrix = glm::translate(glm::mat4(1), glm::vec3(1, 0, 1));
 
@@ -63,26 +59,25 @@ void MonkeyScene::Init()
 	//Monkey gameobject and components
 	uint32_t monkeyID = Registry::Instance().NewGameObject();
 	//Create render and mesh component, sets path to 
-	auto monkeyRender = Registry::Instance().RegisterComponent<RenderComponent>(RenderComponent(), monkeyID);
-	monkeyRender->mGO = monkeyID;
 	auto monkeyMesh = Registry::Instance().RegisterComponent<MeshComponent>(MeshComponent(), monkeyID); // Register the component to the gameobject
 	monkeyMesh->mObjFilePath = monkeyPath;
-	monkeyMesh->mMeshName = "Monkey";
 	auto monkeyTransform = Registry::Instance().GetComponent<TransformComponent>(monkeyID);
 	monkeyTransform->mMatrix = glm::translate(glm::mat4(1), glm::vec3(-1, 0, 0));
 
 	auto monkeyMaterial = Registry::Instance().GetComponent<MaterialComponent>(monkeyID);
 	monkeyMaterial->mShader = ShaderManager::Instance()->GetShader("MyGEShader");
-	monkeyMaterial->mTexture = TextureManager::GetTexture("HammerDiffuse");
+	monkeyMaterial->mTexture = TextureManager::GetTexture("LavaDiffuse");
 #pragma endregion
 
 #pragma region Create Game Camera
 	//Camera gameobject and components
 	uint32_t cameraID = Registry::Instance().NewGameObject();
 	auto camera = Registry::Instance().RegisterComponent<CameraComponent>(CameraComponent(), cameraID);
+	camera->mTargetOffset = glm::vec3(0, -5, 5);
 	camera->bIsMainCamera = true;
 	auto cameraTransform = Registry::Instance().GetComponent<TransformComponent>(cameraID);
-	cameraTransform->mMatrix = glm::translate(glm::mat4(1), glm::vec3(0, 2, -2));
+	cameraTransform->mMatrix = glm::translate(glm::mat4(1), glm::vec3(0, 10, -10));
+	
 	//This gives the camera a CameraMovement script, which handles input and etc for the camera, this is 
 	auto cameraMovementScript = Registry::Instance().RegisterComponent<NativeScriptComponent>(NativeScriptComponent(), cameraID);
 	cameraMovementScript->Bind<CameraMovement>();
@@ -99,9 +94,10 @@ void MonkeyScene::Init()
 	terrainMaterial->mTexture = TextureManager::GetTexture("GrassDiffuse");
 	terrainMaterial->mShader = ShaderManager::Instance()->GetShader("MyGEShader");
 
-	//Nothing can be rendered without a render component?
-	auto terrainRender = Registry::Instance().RegisterComponent<RenderComponent>(RenderComponent(), terrainID);
-
+	auto terrainTransform = Registry::Instance().GetComponent<TransformComponent>(terrainID);
+	float x = -terrain->mWidth / 2.f;
+	float z = -terrain->mHeight / 2.f;
+	terrainTransform->mMatrix = glm::translate(glm::mat4(1), glm::vec3(x, 0, z));
 #pragma endregion
 
 #pragma region NativeScripting
