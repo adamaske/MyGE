@@ -15,6 +15,12 @@
 #include "../Scenes/Scene.h"
 #include "../Scenes/SceneManager.h"
 
+
+#include "../../ImGUI/imgui.h"
+#include "../../ImGUI/imgui_impl_glfw.h"
+#include "../../ImGUI/imgui_impl_opengl3.h"
+
+
 #include "../Script.h"
 #include "../Scripting/ScriptingManager.h"
 
@@ -72,6 +78,14 @@ int MyGE::Run()
 	mEditor = std::make_shared<MyGEEditor>();
 	mEditor->Init();
 
+
+	//ImGui::CreateContext();
+	//ImGui_ImplGlfw_InitForOpenGL(mRenderWindow->GetWindow(), true);
+	//// Setup DARK ImGui style
+	//ImGui::StyleColorsDark();
+	//bool show_demo_window = true;
+	//bool show_another_window = false;
+	//ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
 	//In the future we want to generlize this, 
 	//with more runtimes which uses the same game engine etc, 
