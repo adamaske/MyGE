@@ -132,6 +132,7 @@ void MyGEEditor::OnUpdate(float deltaTime)
 		mEditorCamera->mPosition += -mEditorCamera->mRight * mEditorCamera->mMoveSpeed * deltaTime;
 	}
 #pragma endregion
+
 	//Rotaiton
 	// 
 	// //Set p and v matrices

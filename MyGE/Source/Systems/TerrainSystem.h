@@ -10,7 +10,7 @@ public:
 	void LoadPerlinNoiseTerrain(std::shared_ptr<TerrainComponent> terrain);
 	void LoadLAZFileTerrain(std::shared_ptr<TerrainComponent> terrain);
 
-	
+	float PerlinNoise(float x, float y);
 private:
 
 

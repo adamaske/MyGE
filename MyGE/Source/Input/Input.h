@@ -37,7 +37,7 @@ public:
 	//Each bool represents if the key is down or not
 	std::array<bool, 350> mKeys;
 
-
+	std::array<bool, 2> mFirstClicks = { 0,0 };
 
 private:
 	// Callback functions for GLFW input events.

@@ -21,9 +21,9 @@ void TerrainSystem::Init()
 			for (int j = 0; j < terrain->mWidth; j++)
 			{
 				//UV's
-				float t1 = (j / terrain->mWidth);
-				float t2 =(i / terrain->mHeight);
-				verts.push_back(Vertex(glm::vec3(j, 0, i), glm::vec3(0, 0, 0), std::pair<float, float>{t1, t2}));
+				float t1 =	(j / terrain->mWidth);
+				float t2 =	(i / terrain->mHeight);
+				verts.push_back(Vertex(glm::vec3(j, PerlinNoise(i, j), i), glm::vec3(0, 0, 0), std::pair<float, float>{t1, t2}));
 			}
 		}
 		//Indeksering
@@ -242,4 +242,10 @@ void TerrainSystem::TerrainSystem::LoadLAZFileTerrain(std::shared_ptr<TerrainCom
 		}
 	}
 	terrain->mIndicies = inds;
+}
+
+float TerrainSystem::PerlinNoise(float x, float y)
+{
+
+	return (rand() % 20) / 100.f;
 }

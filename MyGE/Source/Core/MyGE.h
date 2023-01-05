@@ -30,6 +30,7 @@ protected:
 	//Keeping track of deltaTime
 	float deltaTime = 0.0f;
 	float lastFrame = 0.0f;
+	float mDeltaTime = 0.f;
 
 	static void WindowSizeChangedCallback(GLFWwindow* window, int width, int height) {
 		//This window pointer is associated width his MYGE instance

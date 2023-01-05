@@ -23,12 +23,21 @@ bool Input::IsKeyReleased(int key)
 
 bool Input::IsMouseButtonDown(int button)
 {
+	
 	return GetInstance().mKeys[button] == GLFW_PRESS;
 }
 
 bool Input::IsMouseButtonPressed(int button)
 {
-	return GetInstance().bMouseClick;
+	//We can deal with the first click here?
+	if (GetInstance().mFirstClicks[button]) {
+		//set to false again, we dealt with it
+		GetInstance().mFirstClicks[button] = false;
+		return true;
+	}
+	else {
+		return false;
+	}
 }
 
 float Input::MouseX()

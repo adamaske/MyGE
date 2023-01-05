@@ -20,6 +20,7 @@ public:
 	void SetPosition(glm::vec3 pos);
 	void SetPosition(float x, float y, float z);
 
+	
 private:
 	GameObject mGO;
 

@@ -8,6 +8,8 @@
 #include <array>
 #include <string>
 #include <vector>
+#include <chrono>
+
 #include "glm/glm.hpp" 
 #include "AL/al.h"
 #include "AL/alc.h"

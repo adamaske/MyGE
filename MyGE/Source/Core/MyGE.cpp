@@ -142,6 +142,14 @@ void MyGE::ResizeWindow(uint32_t width, uint32_t height) {
 
 void MyGE::CalculateDeltaTime()
 {
+
+	//static auto previous = std::chrono::high_resolution_clock::now();
+	//auto now = std::chrono::high_resolution_clock::now();
+	//std::chrono::duration<double, std::milli> delta = now - previous;
+	//std::chrono::duration<double> deltaSeconds = now - previous;
+	//mDeltaTime = delta.count();
+	//previous = now;
+	//TODO Change this to std::chrono
 	//Calculate deltatime
 	float currentFrame = glfwGetTime();
 	deltaTime = currentFrame - lastFrame;
@@ -151,11 +159,4 @@ void MyGE::CalculateDeltaTime()
 void MyGE::ExitApplication()
 {
 	bRunning = false;
-}
-
-// glfw: whenever the mouse scroll wheel scrolls, this callback is called
-// ----------------------------------------------------------------------
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
-{
-	
 }

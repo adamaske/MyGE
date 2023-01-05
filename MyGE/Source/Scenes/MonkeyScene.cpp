@@ -107,6 +107,7 @@ void MonkeyScene::Init()
 	//This should now instantiate a Monkey(), and the mObejct i ns is now that Monkey, and everything should work
 	ns->Bind<Monkey>();
 
+
 #pragma endregion
 }
 
