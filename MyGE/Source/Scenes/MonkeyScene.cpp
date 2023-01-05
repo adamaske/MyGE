@@ -50,7 +50,7 @@ void MonkeyScene::Init()
 
 	auto cubeSource = Registry::Instance().RegisterComponent<AudioSourceComponent>(AudioSourceComponent(), cubeID);
 	cubeSource->mName = "Explosion";
-	cubeSource->mFilePath = "";
+	cubeSource->mFilePath = "../Resources/Audio/explosion.obj";
 	cubeSource->bShouldPlay = true;
 	cubeSource->mGain = 1;
 #pragma endregion

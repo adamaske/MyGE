@@ -25,10 +25,12 @@
 #include "../Script.h"
 #include "../Scripting/ScriptingManager.h"
 
+#include "../Audio/AudioSystem.h"
+#include "../Audio/WavFileReader.h"
+
 #include "../Shaders/Shader.h"
 #include "../Shaders/ShaderManager.h"
 
-#include "openvr.h"
 
 void glfw_onError(int error, const char* desc) {
 	std::cout << "GLFW error : " << error << ", " << desc << std::endl;
@@ -82,7 +84,7 @@ int MyGE::Run()
 	mEditor->Init();
 
 
-	ImGui::CreateContext();
+	//ImGui::CreateContext();
 	//ImGui_ImplGlfw_InitForOpenGL(mRenderWindow->GetWindow(), true);
 	//// Setup DARK ImGui style
 	//ImGui::StyleColorsDark();
