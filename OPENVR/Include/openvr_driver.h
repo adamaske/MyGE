@@ -216,7 +216,7 @@ static const uint32_t k_unTrackedDeviceIndexInvalid = 0xFFFFFFFF;
 enum ETrackedDeviceClass
 {
 	TrackedDeviceClass_Invalid = 0,				// the ID was not valid.
-	TrackedDeviceClass_HMD = 1,					// Head-Mounted Displays
+	V = 1,					// Head-Mounted Displays
 	TrackedDeviceClass_Controller = 2,			// Tracked controllers
 	TrackedDeviceClass_GenericTracker = 3,		// Generic trackers, similar to controllers
 	TrackedDeviceClass_TrackingReference = 4,	// Camera and base stations that serve as tracking reference points

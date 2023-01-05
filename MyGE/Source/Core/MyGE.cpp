@@ -5,6 +5,7 @@
 #include "MyGEEditor.h"
 #include "MyGERuntime.h"
 
+
 #include "../Textures/Texture.h"
 #include "../Textures/TextureManager.h"
 
@@ -26,6 +27,8 @@
 
 #include "../Shaders/Shader.h"
 #include "../Shaders/ShaderManager.h"
+
+#include "openvr.h"
 
 void glfw_onError(int error, const char* desc) {
 	std::cout << "GLFW error : " << error << ", " << desc << std::endl;
@@ -79,13 +82,15 @@ int MyGE::Run()
 	mEditor->Init();
 
 
-	//ImGui::CreateContext();
+	ImGui::CreateContext();
 	//ImGui_ImplGlfw_InitForOpenGL(mRenderWindow->GetWindow(), true);
 	//// Setup DARK ImGui style
 	//ImGui::StyleColorsDark();
 	//bool show_demo_window = true;
 	//bool show_another_window = false;
 	//ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+
+	
 
 	//In the future we want to generlize this, 
 	//with more runtimes which uses the same game engine etc, 
