@@ -186,6 +186,27 @@
     <ClCompile Include="Source\Core\MyGEEditor.cpp" />
     <ClCompile Include="Source\Core\MyGEMode.cpp" />
     <ClCompile Include="Source\Core\MyGERuntime.cpp" />
+    <ClCompile Include="Source\ImGUI\imgui.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Source\ImGUI\imgui_demo.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Source\ImGUI\imgui_draw.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Source\ImGUI\imgui_impl_glfw.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Source\ImGUI\imgui_impl_opengl3.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Source\ImGUI\imgui_tables.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Source\ImGUI\imgui_widgets.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Source\Input\Input.cpp" />
     <ClCompile Include="Source\Logger.cpp" />
     <ClCompile Include="Source\ObjFileReader.cpp" />
@@ -236,6 +257,15 @@
     <ClInclude Include="Source\Core\MyGEEditor.h" />
     <ClInclude Include="Source\Core\MyGEMode.h" />
     <ClInclude Include="Source\Core\MyGERuntime.h" />
+    <ClInclude Include="Source\ImGUI\imconfig.h" />
+    <ClInclude Include="Source\ImGUI\imgui.h" />
+    <ClInclude Include="Source\ImGUI\imgui_impl_glfw.h" />
+    <ClInclude Include="Source\ImGUI\imgui_impl_opengl3.h" />
+    <ClInclude Include="Source\ImGUI\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="Source\ImGUI\imgui_internal.h" />
+    <ClInclude Include="Source\ImGUI\imstb_rectpack.h" />
+    <ClInclude Include="Source\ImGUI\imstb_textedit.h" />
+    <ClInclude Include="Source\ImGUI\imstb_truetype.h" />
     <ClInclude Include="Source\Input\Input.h" />
     <ClInclude Include="Source\Logger.h" />
     <ClInclude Include="Source\ObjFileReader.h" />

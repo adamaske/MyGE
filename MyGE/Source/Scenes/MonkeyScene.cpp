@@ -50,7 +50,7 @@ void MonkeyScene::Init()
 
 	auto cubeSource = Registry::Instance().RegisterComponent<AudioSourceComponent>(AudioSourceComponent(), cubeID);
 	cubeSource->mName = "Explosion";
-	cubeSource->mFilePath = "../Resources/Audio/explosion.obj";
+	cubeSource->mFilePath = "../Resources/Audio/explosion.wav";
 	cubeSource->bShouldPlay = true;
 	cubeSource->mGain = 1;
 #pragma endregion
@@ -98,6 +98,10 @@ void MonkeyScene::Init()
 	float x = -terrain->mWidth / 2.f;
 	float z = -terrain->mHeight / 2.f;
 	terrainTransform->mMatrix = glm::translate(glm::mat4(1), glm::vec3(x, 0, z));
+
+#pragma region Create SoundEmitter
+
+
 #pragma endregion
 
 #pragma region NativeScripting

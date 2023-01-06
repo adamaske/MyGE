@@ -76,6 +76,8 @@ void AudioSystem::Init()
 
 void AudioSystem::OnUpdate(float deltaTime)
 {
+
+
     //USE THIS FOR EACH FRAME
     //Gets a vector of all listener components
     auto listeners = Registry::Instance().GetComponents<AudioListenerComponent>();
