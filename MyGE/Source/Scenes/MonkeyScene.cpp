@@ -100,8 +100,16 @@ void MonkeyScene::Init()
 	terrainTransform->mMatrix = glm::translate(glm::mat4(1), glm::vec3(x, 0, z));
 
 #pragma region Create SoundEmitter
+	//uint32_t SoundID = Registry::Instance().NewGameObject();
+	//auto EmitterSource = Registry::Instance().RegisterComponent<AudioSourceComponent>(AudioSourceComponent(), SoundID);
+	//
+	//EmitterSource->mName = "Alarm";
+	//EmitterSource->mFilePath = "../Resources/Audio/air_raid.wav";
+	//EmitterSource->bShouldPlay = false;
+	//EmitterSource->mGain = 1;
 
-
+	GameObject listenerID = Registry::Instance().NewGameObject();
+	auto listener = Registry::Instance().RegisterComponent<AudioListenerComponent>(AudioListenerComponent(), listenerID);
 #pragma endregion
 
 #pragma region NativeScripting

@@ -16,6 +16,7 @@
 #include "../Systems/RenderSystem.h"
 #include "../Systems/TerrainSystem.h"
 #include "../Scripting/NativeScriptingSystem.h"
+#include "../Audio/AudioSystem.h"
 //Editor systems
 #include "../Systems/EditorSystems/QuickCreateObjectsSystem.h"
 
@@ -59,7 +60,7 @@ void MyGEEditor::Init()
 	//mSystems.insert({ "CameraSystem" , std::make_shared<CameraSystem>() });
 	mSystems.insert({ "NativeScripting", std::make_shared<NativeScriptingSystem>() });
 	//OPENAL32.DLL NOT FOUND CAUSES THIS TO ERROR ->>> 
-	//mSystems.insert({ "AudioSystem", new AudioSystem() });
+	mSystems.insert({ "AudioSystem", std::make_shared<AudioSystem>() });
 
 	//Editor systems
 	//mSystems.insert({"QuickCreateObject", std::make_shared<QuickCreateObjectSystem>()});
