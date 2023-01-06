@@ -67,6 +67,11 @@ void MonkeyScene::Init()
 	auto monkeyMaterial = Registry::Instance().GetComponent<MaterialComponent>(monkeyID);
 	monkeyMaterial->mShader = ShaderManager::Instance()->GetShader("MyGEShader");
 	monkeyMaterial->mTexture = TextureManager::GetTexture("LavaDiffuse");
+
+	auto monkeyNativeScript = Registry::Instance().RegisterComponent<NativeScriptComponent>(NativeScriptComponent(), monkeyID);
+	//This should now instantiate a Monkey(), and the mObejct i ns is now that Monkey, and everything should work
+	monkeyNativeScript->Bind<Monkey>();
+
 #pragma endregion
 
 #pragma region Create Game Camera
@@ -100,15 +105,6 @@ void MonkeyScene::Init()
 	terrainTransform->mMatrix = glm::translate(glm::mat4(1), glm::vec3(x, 0, z));
 #pragma endregion
 
-#pragma region NativeScripting
-	auto go = Registry::Instance().NewGameObject();
-
-	auto ns = Registry::Instance().RegisterComponent<NativeScriptComponent>(NativeScriptComponent(), go);
-	//This should now instantiate a Monkey(), and the mObejct i ns is now that Monkey, and everything should work
-	ns->Bind<Monkey>();
-
-
-#pragma endregion
 }
 
 void MonkeyScene::OnUpdate(float deltaTime)

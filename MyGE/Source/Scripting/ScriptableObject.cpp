@@ -41,4 +41,35 @@ void Monkey::Init()
 void Monkey::OnUpdate(float deltaTime)
 {
 	//std::cout << "MONKEY UPDATE" << std::endl;
+	if (Input::IsKeyDown(GLFW_KEY_Q)) {
+		Logger::Log("MOVE MONKEY UP");
+		auto transform = GetComponent<TransformComponent>();
+		if (transform) {
+			transform->mMatrix = glm::translate(transform->mMatrix, glm::vec3(0, 1 * deltaTime, 0));
+		}
+	}
+	//std::cout << "MONKEY UPDATE" << std::endl;
+	if (Input::IsKeyDown(GLFW_KEY_E)) {
+		Logger::Log("MOVE MONKEY DOWN");
+		auto transform = GetComponent<TransformComponent>();
+		if (transform) {
+			transform->mMatrix = glm::translate(transform->mMatrix, glm::vec3(0, -1 * deltaTime, 0));
+		}
+	}
+	//std::cout << "MONKEY UPDATE" << std::endl;
+	if (Input::IsKeyDown(GLFW_KEY_A)) {
+		Logger::Log("MOVE MONKEY LEFT");
+		auto transform = GetComponent<TransformComponent>();
+		if (transform) {
+			transform->mMatrix = glm::translate(transform->mMatrix, glm::vec3(1 * deltaTime, 0, 0));
+		}
+	}
+	//std::cout << "MONKEY UPDATE" << std::endl;
+	if (Input::IsKeyDown(GLFW_KEY_D)) {
+		Logger::Log("MOVE MONKEY LEFT");
+		auto transform = GetComponent<TransformComponent>();
+		if (transform) {
+			transform->mMatrix = glm::translate(transform->mMatrix, glm::vec3(-1 * deltaTime, 0, 0));
+		}
+	}
 }
